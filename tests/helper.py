@@ -37,7 +37,6 @@ def assert_repository(repository):
     assert isinstance(repository, Repository)
     assert repository.id == 731794992
     assert repository.allow_auto_merge is True
-    # assert list(repository.get_pulls())
     assert not list(repository.get_pulls())
 
 
