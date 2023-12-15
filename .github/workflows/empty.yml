@@ -1,0 +1,17 @@
+name: Empty
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches:
+      - master
+
+jobs:
+  empty:
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: ls
