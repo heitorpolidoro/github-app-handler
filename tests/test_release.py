@@ -2,7 +2,7 @@ import pytest
 import vcr
 
 from github_app.Event import Event
-from github_app.ReleaseEvent import ReleaseReleasedEvent, ReleaseCreatedEvent
+from github_app.ReleaseEvent import ReleaseCreatedEvent, ReleaseReleasedEvent
 from tests.helper import assert_event, get_webhook_request
 
 
@@ -15,6 +15,8 @@ def test_release_created():
     assert event.action == "created"
 
     assert_event(event)
+
+
 @pytest.mark.vcr
 def test_release_released():
     headers, body = get_webhook_request("release", "released")

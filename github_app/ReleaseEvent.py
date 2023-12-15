@@ -26,5 +26,7 @@ class ReleaseEvent(Event):
 
 class ReleaseReleasedEvent(ReleaseEvent):
     action = "released"
+
+
 class ReleaseCreatedEvent(ReleaseEvent):
     action = "created"
