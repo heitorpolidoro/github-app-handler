@@ -1,0 +1,720 @@
+interactions:
+- request:
+    body: '{"permissions": {}}'
+    headers:
+      Accept:
+      - application/vnd.github.machine-man-preview+json
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer token
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '19'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - PyGithub/Python
+    method: POST
+    uri: https://api.github.com/app/installations/45043978/access_tokens
+  response:
+    body:
+      string: '{"token":"token","expires_at":"2023-12-15T01:25:12Z","permissions":{"actions":"write","actions_variables":"write","administration":"write","checks":"write","codespaces":"write","codespaces_lifecycle_admin":"write","codespaces_metadata":"read","codespaces_secrets":"write","contents":"write","dependabot_secrets":"write","deployments":"write","discussions":"write","environments":"write","issues":"write","merge_queues":"write","metadata":"read","packages":"write","pages":"write","pull_requests":"write","repository_advisories":"write","repository_hooks":"write","repository_projects":"admin","secrets":"write","secret_scanning_alerts":"write","security_events":"write","statuses":"write","vulnerability_alerts":"write","workflows":"write"},"repository_selection":"all"}'
+    headers:
+      Access-Control-Allow-Origin:
+      - '*'
+      Access-Control-Expose-Headers:
+      - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
+        X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes,
+        X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO,
+        X-GitHub-Request-Id, Deprecation, Sunset
+      Cache-Control:
+      - public, max-age=60, s-maxage=60
+      Content-Length:
+      - '805'
+      Content-Security-Policy:
+      - default-src 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Fri, 15 Dec 2023 00:25:13 GMT
+      ETag:
+      - '"0aff5f625cf732b99cf43c1de68f05ff9d86ac43567a5065d634367feea119b7"'
+      Referrer-Policy:
+      - origin-when-cross-origin, strict-origin-when-cross-origin
+      Server:
+      - GitHub.com
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains; preload
+      Vary:
+      - Accept
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-GitHub-Media-Type:
+      - github.v3; param=machine-man-preview; format=json
+      X-GitHub-Request-Id:
+      - E556:AD5AB:84B346:8E66E8:657B9CE8
+      X-XSS-Protection:
+      - '0'
+      x-github-api-version-selected:
+      - '2022-11-28'
+    status:
+      code: 201
+      message: Created
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - token token
+      Connection:
+      - keep-alive
+      User-Agent:
+      - PyGithub/Python
+    method: GET
+    uri: https://api.github.com/repos/heitorpolidoro/GithubAppHandlerBase/releases/134019540
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA7WVb6ubMBTGv8rFl6Vt1OrlThiXbr3bhdF1G7tjbAyJmmq2aEISLa30u+/E2lKl
+        26jcvRL0nN+TPOePtVVKZgVWprVQAUJY0GlKdVZG05jnSBLBFcoI1VwKzmjCJUdvm+9zIR5xkTAi
+        X2FFIJIReCrkzDzbeeF7tjW2sFJEq/C/SaCDACiVgnGc9JQOL9VzXahVq+8LnJMxwxFhe5DOdM56
+        wmcOXuWdximq7KkzwUxkGNg0sYKToeBnqTMuraC2GE9pYerWKc0xw7uzb2e2PbYKnpDQQKzl4uPt
+        l6/vWfzzwV4t5u5yN9+YClVYY9mvUPPy6FupiIx5oUmhm54okdPy76uXHjBS2VIaIVOMv7WUwfVb
+        6koXIXzNGeMbIPWP3u3fS2LolHvi0CIdzIHcGnGdEXARrmY6IqXqX11/8WBNXo3MA4pmSArqIEm/
+        r3tDepHVZsLRNgWcqm5GuUGWkYolFZryYoh7nXzgcZnigu7wUB7kK8A0m2ZAEZo8yCcV9OcQwCGx
+        RkLSCsdbY5EkMaEV2D4Y2iMAU28Fgel4ghYxRaCahDjJzQyvMVNkfz6rnx7CX5vF6p3vr5ZL7zH8
+        UDwZAk5Ds3mA0tkR0CIp0SGMZk41VRl8z7HSjc6l+ETitW5lx5aQpF3dp1exJFjD7TFEWa7tziaO
+        O3G8z64bzPzA874BWJQRA60/RN0Fvm+i2vUcfP9hji8jzPqbcvD/psV11+WOiufUaHFdjYgnW/Bl
+        NHpTMnbzOsNFSmAbj0bBzfEneuX6P1ROncvsfwML45OFmAcAAA==
+    headers:
+      Access-Control-Allow-Origin:
+      - '*'
+      Access-Control-Expose-Headers:
+      - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
+        X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes,
+        X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO,
+        X-GitHub-Request-Id, Deprecation, Sunset
+      Cache-Control:
+      - private, max-age=60, s-maxage=60
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - default-src 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Fri, 15 Dec 2023 00:25:13 GMT
+      ETag:
+      - W/"0e470dce8e6037c109da537501b370026ccdbab9e2dab0ab7530ed0ad6dc7fdb"
+      Last-Modified:
+      - Thu, 14 Dec 2023 22:38:55 GMT
+      Referrer-Policy:
+      - origin-when-cross-origin, strict-origin-when-cross-origin
+      Server:
+      - GitHub.com
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains; preload
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept, Authorization, Cookie, X-GitHub-OTP
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-GitHub-Media-Type:
+      - github.v3; format=json
+      X-GitHub-Request-Id:
+      - E557:245370:DDDF04:EE01FB:657B9CE9
+      X-RateLimit-Limit:
+      - '6100'
+      X-RateLimit-Remaining:
+      - '6081'
+      X-RateLimit-Reset:
+      - '1702603453'
+      X-RateLimit-Resource:
+      - core
+      X-RateLimit-Used:
+      - '19'
+      X-XSS-Protection:
+      - '0'
+      x-accepted-github-permissions:
+      - contents=read
+      x-github-api-version-selected:
+      - '2022-11-28'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - token token
+      Connection:
+      - keep-alive
+      User-Agent:
+      - PyGithub/Python
+    method: GET
+    uri: https://api.github.com/repos/heitorpolidoro/GithubAppHandlerBase/releases/134019540/assets
+  response:
+    body:
+      string: '[]'
+    headers:
+      Access-Control-Allow-Origin:
+      - '*'
+      Access-Control-Expose-Headers:
+      - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
+        X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes,
+        X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO,
+        X-GitHub-Request-Id, Deprecation, Sunset
+      Cache-Control:
+      - private, max-age=60, s-maxage=60
+      Content-Length:
+      - '2'
+      Content-Security-Policy:
+      - default-src 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Fri, 15 Dec 2023 00:25:13 GMT
+      ETag:
+      - '"ddba813ab165393292ea730c887eba806c5b446dfdc9b7bd6a0ded6d6d478c87"'
+      Referrer-Policy:
+      - origin-when-cross-origin, strict-origin-when-cross-origin
+      Server:
+      - GitHub.com
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains; preload
+      Vary:
+      - Accept, Authorization, Cookie, X-GitHub-OTP
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-GitHub-Media-Type:
+      - github.v3; format=json
+      X-GitHub-Request-Id:
+      - E557:245370:DDDF1C:EE021A:657B9CE9
+      X-RateLimit-Limit:
+      - '6100'
+      X-RateLimit-Remaining:
+      - '6080'
+      X-RateLimit-Reset:
+      - '1702603453'
+      X-RateLimit-Resource:
+      - core
+      X-RateLimit-Used:
+      - '20'
+      X-XSS-Protection:
+      - '0'
+      x-accepted-github-permissions:
+      - contents=read
+      x-github-api-version-selected:
+      - '2022-11-28'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"permissions": {}}'
+    headers:
+      Accept:
+      - application/vnd.github.machine-man-preview+json
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer token
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '19'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - PyGithub/Python
+    method: POST
+    uri: https://api.github.com/app/installations/45043978/access_tokens
+  response:
+    body:
+      string: '{"token":"token","expires_at":"2023-12-15T01:25:13Z","permissions":{"actions":"write","actions_variables":"write","administration":"write","checks":"write","codespaces":"write","codespaces_lifecycle_admin":"write","codespaces_metadata":"read","codespaces_secrets":"write","contents":"write","dependabot_secrets":"write","deployments":"write","discussions":"write","environments":"write","issues":"write","merge_queues":"write","metadata":"read","packages":"write","pages":"write","pull_requests":"write","repository_advisories":"write","repository_hooks":"write","repository_projects":"admin","secrets":"write","secret_scanning_alerts":"write","security_events":"write","statuses":"write","vulnerability_alerts":"write","workflows":"write"},"repository_selection":"all"}'
+    headers:
+      Access-Control-Allow-Origin:
+      - '*'
+      Access-Control-Expose-Headers:
+      - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
+        X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes,
+        X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO,
+        X-GitHub-Request-Id, Deprecation, Sunset
+      Cache-Control:
+      - public, max-age=60, s-maxage=60
+      Content-Length:
+      - '805'
+      Content-Security-Policy:
+      - default-src 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Fri, 15 Dec 2023 00:25:13 GMT
+      ETag:
+      - '"f5d2605cc26488de8e3486c59f84480bb279445f92e776de556eb4bd4d6fca23"'
+      Referrer-Policy:
+      - origin-when-cross-origin, strict-origin-when-cross-origin
+      Server:
+      - GitHub.com
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains; preload
+      Vary:
+      - Accept
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-GitHub-Media-Type:
+      - github.v3; param=machine-man-preview; format=json
+      X-GitHub-Request-Id:
+      - E558:BAE04:86B376:906734:657B9CE9
+      X-XSS-Protection:
+      - '0'
+      x-github-api-version-selected:
+      - '2022-11-28'
+    status:
+      code: 201
+      message: Created
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - token token
+      Connection:
+      - keep-alive
+      User-Agent:
+      - PyGithub/Python
+    method: GET
+    uri: https://api.github.com/repos/heitorpolidoro/GithubAppHandlerBase
+  response:
+    body:
+      string: !!binary |
+        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
+        g0eomHO7Qqz10kD/uVanmePH/wEg8VF9rxkAAA==
+    headers:
+      Access-Control-Allow-Origin:
+      - '*'
+      Access-Control-Expose-Headers:
+      - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
+        X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes,
+        X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO,
+        X-GitHub-Request-Id, Deprecation, Sunset
+      Cache-Control:
+      - private, max-age=60, s-maxage=60
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - default-src 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Fri, 15 Dec 2023 00:25:14 GMT
+      ETag:
+      - W/"1788d83cc2b74879e8cd6750fb92353579d320d99f98cc3ec9031505faae8abc"
+      Last-Modified:
+      - Thu, 14 Dec 2023 22:35:44 GMT
+      Referrer-Policy:
+      - origin-when-cross-origin, strict-origin-when-cross-origin
+      Server:
+      - GitHub.com
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains; preload
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept, Authorization, Cookie, X-GitHub-OTP
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-GitHub-Media-Type:
+      - github.v3; format=json
+      X-GitHub-Request-Id:
+      - E559:AF644:863E9D:8FF282:657B9CEA
+      X-RateLimit-Limit:
+      - '6100'
+      X-RateLimit-Remaining:
+      - '6079'
+      X-RateLimit-Reset:
+      - '1702603453'
+      X-RateLimit-Resource:
+      - core
+      X-RateLimit-Used:
+      - '21'
+      X-XSS-Protection:
+      - '0'
+      x-accepted-github-permissions:
+      - metadata=read
+      x-github-api-version-selected:
+      - '2022-11-28'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - token token
+      Connection:
+      - keep-alive
+      User-Agent:
+      - PyGithub/Python
+    method: GET
+    uri: https://api.github.com/repos/heitorpolidoro/GithubAppHandlerBase/pulls
+  response:
+    body:
+      string: '[]'
+    headers:
+      Access-Control-Allow-Origin:
+      - '*'
+      Access-Control-Expose-Headers:
+      - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
+        X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes,
+        X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO,
+        X-GitHub-Request-Id, Deprecation, Sunset
+      Cache-Control:
+      - private, max-age=60, s-maxage=60
+      Content-Length:
+      - '2'
+      Content-Security-Policy:
+      - default-src 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Fri, 15 Dec 2023 00:25:14 GMT
+      ETag:
+      - '"601cfec923157282fc04a28472031045f74f65f9915fb910ac5fe63682605096"'
+      Referrer-Policy:
+      - origin-when-cross-origin, strict-origin-when-cross-origin
+      Server:
+      - GitHub.com
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains; preload
+      Vary:
+      - Accept, Authorization, Cookie, X-GitHub-OTP
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-GitHub-Media-Type:
+      - github.v3; format=json
+      X-GitHub-Request-Id:
+      - E559:AF644:863EB0:8FF292:657B9CEA
+      X-RateLimit-Limit:
+      - '6100'
+      X-RateLimit-Remaining:
+      - '6078'
+      X-RateLimit-Reset:
+      - '1702603453'
+      X-RateLimit-Resource:
+      - core
+      X-RateLimit-Used:
+      - '22'
+      X-XSS-Protection:
+      - '0'
+      x-accepted-github-permissions:
+      - pull_requests=read
+      x-github-api-version-selected:
+      - '2022-11-28'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"permissions": {}}'
+    headers:
+      Accept:
+      - application/vnd.github.machine-man-preview+json
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer token
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '19'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - PyGithub/Python
+    method: POST
+    uri: https://api.github.com/app/installations/45043978/access_tokens
+  response:
+    body:
+      string: '{"token":"token","expires_at":"2023-12-15T01:25:14Z","permissions":{"actions":"write","actions_variables":"write","administration":"write","checks":"write","codespaces":"write","codespaces_lifecycle_admin":"write","codespaces_metadata":"read","codespaces_secrets":"write","contents":"write","dependabot_secrets":"write","deployments":"write","discussions":"write","environments":"write","issues":"write","merge_queues":"write","metadata":"read","packages":"write","pages":"write","pull_requests":"write","repository_advisories":"write","repository_hooks":"write","repository_projects":"admin","secrets":"write","secret_scanning_alerts":"write","security_events":"write","statuses":"write","vulnerability_alerts":"write","workflows":"write"},"repository_selection":"all"}'
+    headers:
+      Access-Control-Allow-Origin:
+      - '*'
+      Access-Control-Expose-Headers:
+      - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
+        X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes,
+        X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO,
+        X-GitHub-Request-Id, Deprecation, Sunset
+      Cache-Control:
+      - public, max-age=60, s-maxage=60
+      Content-Length:
+      - '805'
+      Content-Security-Policy:
+      - default-src 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Fri, 15 Dec 2023 00:25:14 GMT
+      ETag:
+      - '"0199f3a8fda3d122ace3e8c335eb93a4ee80139783a88e8147dc13b06f2611ef"'
+      Referrer-Policy:
+      - origin-when-cross-origin, strict-origin-when-cross-origin
+      Server:
+      - GitHub.com
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains; preload
+      Vary:
+      - Accept
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-GitHub-Media-Type:
+      - github.v3; param=machine-man-preview; format=json
+      X-GitHub-Request-Id:
+      - E55A:B96F3:85430B:8EF79E:657B9CEA
+      X-XSS-Protection:
+      - '0'
+      x-github-api-version-selected:
+      - '2022-11-28'
+    status:
+      code: 201
+      message: Created
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - token token
+      Connection:
+      - keep-alive
+      User-Agent:
+      - PyGithub/Python
+    method: GET
+    uri: https://api.github.com/users/heitorpolidoro
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA51UwW7TQBD9lZUvHJrEdpKGxhKiIa0ESIUgCkK9ROv1xh603l3trpOmUfkIriBx
+        4MR39If4BGZtp4X0gOST7dl5b57fzswuECoHGSRBwcEpo5WATBkV9ALIgiQen0STURT1AqkyvvSh
+        4OLs3eTjpzeCfT6P3p7Nhhc3sw2m0zV11CwrIzyZc9omYdgE7SAHV1RpZblhSjou3YCpMqzCPf/z
+        9bMxcuSmZakLYeCATUPL1MCRzoaPdBeuFAcymvI16FH6SgmhNsh0KP3/xcJ7LEpt3kHmnXkQuwuV
+        Kzi6iL926w0B67oIq3G70D/w0jyTxcsxPOsgrkWitI1EVbvQcK1qyiq1zIB2oGQXkf/gkU+ZnEq4
+        oV35EG+RxsvrIqfGIZ6vsT+7EDTAXagNrCnbeosMZxzWaHtn0gMG5HRbzXE6PmCL+EsAx5c0K/0M
+        r6iwHEeVlj7hZT3QZPEw0dj/msotnp2uwFjHqMmo1gRpUlwDzcgJxeobwK/3dz8Vea3s3S+SKUvm
+        tESHeuSFoRaEd6qk+NyvjsF+d5zmPu6nDXMKMJymAgXJSggsBAoRC6Nw1suSmwHZv2P7EwuScfIl
+        nk6PB+TVkzUnep+ZEZDEoo+GCiKozCuac1SzMqokM2t5mYotoTIj83B+dEScIoutK5SsY+cCrsEX
+        q0N9oZCH/P7x9VuvPerjpReVBWodMH/y3Vu9AefacWxcbX5CV6kAtmw6Jomf9oI2Us9dkOC+fFgN
+        CR7fLwe/UnsBQ08cdgV16MUwio/70bQ/HF3G42Q4SaLpFdaudPZ3znDUj4f96OQyniSjcRIdXwW3
+        fwCfSpAnvQUAAA==
+    headers:
+      Access-Control-Allow-Origin:
+      - '*'
+      Access-Control-Expose-Headers:
+      - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
+        X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes,
+        X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO,
+        X-GitHub-Request-Id, Deprecation, Sunset
+      Cache-Control:
+      - private, max-age=60, s-maxage=60
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - default-src 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Fri, 15 Dec 2023 00:25:15 GMT
+      ETag:
+      - W/"99202334ff4587bb0a4c4092c05fea1ddde9502ca76ddc34648a7c0b3b249681"
+      Last-Modified:
+      - Fri, 08 Dec 2023 16:34:05 GMT
+      Referrer-Policy:
+      - origin-when-cross-origin, strict-origin-when-cross-origin
+      Server:
+      - GitHub.com
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains; preload
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept, Authorization, Cookie, X-GitHub-OTP
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-GitHub-Media-Type:
+      - github.v3; format=json
+      X-GitHub-Request-Id:
+      - E55B:BE5F2:85D2AF:8F876A:657B9CEB
+      X-RateLimit-Limit:
+      - '6100'
+      X-RateLimit-Remaining:
+      - '6077'
+      X-RateLimit-Reset:
+      - '1702603453'
+      X-RateLimit-Resource:
+      - core
+      X-RateLimit-Used:
+      - '23'
+      X-XSS-Protection:
+      - '0'
+      x-github-api-version-selected:
+      - '2022-11-28'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - token token
+      Connection:
+      - keep-alive
+      User-Agent:
+      - PyGithub/Python
+    method: GET
+    uri: https://api.github.com/users/heitorpolidoro/followers
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA62Y0W6iQBSG34XrtjhWLJo0m01k77RpYje7aTYNhRHHRYbAoG1N330PCmUY0Oxw
+        uGhs9fwfvwNfhvJ8MEIesMiYGv6Whty4MphvTO3JHRlcGRH36Uv+tzGfPY5//lqE3iawFh/OHubc
+        nSvc5CVLQvh8LUScTk3z9GZ6EzCxzl6zlCYejwSNxI3Ht2ZmHsHfdvcjAARJgTgeAd5QUDErMKcs
+        sFKzLLkW21A59OmQx9lyasXDkO8hp7Y8iza/ItDn9DuLAt04RA4mF2sKywO1P/Mvy1KhUeM4fjDz
+        FzgBOSCFxU6o//9VigAU2UfQ4WAmNOZHUvaaegmLBeORRqVaDDA8CdyIfbiaGIilkM7LaBz8OA4x
+        uoNrSSN3mj+YccJ2rveef/2EepTtYCV1WUoQUOI9pnDpPsE5zteVCfri+tvcppUbpvTzqrKL+rkK
+        cE5gML/eyciy7s4o5gwWy6fb+ff7exjupNmJjvBMrnvZNXlSy7evYHfnVATGu4qFcq/C9OefxJTV
+        7eJghdL1sErqu1hl+/FR7lKTWc/JDawB9TfJkBRSjqwxsSaT9o3vkSw2DnlY/u1sZYFHaFlrfNnL
+        2qiWmFWyu5kNBkZNCYZyU+L0J6cMxdopsXT1lKL6fkrhfgSttUEYKtbMDXiYrngissgV5f0pIRYZ
+        TMgZU523xdLZPywdq/P+WfARqrZVv2xsW0JL3Aagu7/nUBiNm0yUzU1cf1K3sLFuN5G6ijcJ+qY3
+        Gf0I3+Si7paz6HoH/7ZRv7xbHg7IcGiP2ndm530+g59NMOjse8FH+C5Xvuy5PKnl91ewu9cqAuNz
+        xUJ5XGH681diYr2tULq+Vkl9T6tsP37KXRD78YqGLI7pdUID94OVu/EtGRPbtkm7nfM3uG8ePcyC
+        t652lnyEnc3ilx1tzmuZqsS7+9oOwlirElHuqrD+DG6QsR6rQF2b1by+0yqhH7NVKmrf/eG+Mu6t
+        3ZiH5YMq+24Abo/tdrmD2/ksALl/5w90Oz2qKvkIuZXWl81WhrW0lrPdnW6hYISu4VA210j9qVzH
+        Yj2u0XQlroX1Da7F+9FXaaS7N//5BzSbCtbBGQAA
+    headers:
+      Access-Control-Allow-Origin:
+      - '*'
+      Access-Control-Expose-Headers:
+      - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
+        X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes,
+        X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO,
+        X-GitHub-Request-Id, Deprecation, Sunset
+      Cache-Control:
+      - private, max-age=60, s-maxage=60
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - default-src 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Fri, 15 Dec 2023 00:25:15 GMT
+      ETag:
+      - W/"46d35f464a5d3a7b3cedceec18da1d6a68171b0f4fb8f5caf7a4d1067e1e14b3"
+      Referrer-Policy:
+      - origin-when-cross-origin, strict-origin-when-cross-origin
+      Server:
+      - GitHub.com
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains; preload
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept, Authorization, Cookie, X-GitHub-OTP
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-GitHub-Media-Type:
+      - github.v3; format=json
+      X-GitHub-Request-Id:
+      - E55B:BE5F2:85D2C1:8F8785:657B9CEB
+      X-RateLimit-Limit:
+      - '6100'
+      X-RateLimit-Remaining:
+      - '6076'
+      X-RateLimit-Reset:
+      - '1702603453'
+      X-RateLimit-Resource:
+      - core
+      X-RateLimit-Used:
+      - '24'
+      X-XSS-Protection:
+      - '0'
+      x-github-api-version-selected:
+      - '2022-11-28'
+    status:
+      code: 200
+      message: OK
+version: 1
