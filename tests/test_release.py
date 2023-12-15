@@ -7,8 +7,8 @@ from github_app.IssueCommentEvent import (
     IssueCommentDeletedEvent,
 )
 from github_app.ReleaseEvent import ReleaseReleasedEvent
-
 from tests.helper import assert_event, get_webhook_request
+
 
 @pytest.mark.vcr
 def test_release_released():
