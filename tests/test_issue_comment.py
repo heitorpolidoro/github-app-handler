@@ -5,7 +5,6 @@ from github_app.IssueCommentEvent import (
     IssueCommentCreatedEvent,
     IssueCommentDeletedEvent,
 )
-
 from tests.helper import assert_event, get_webhook_request
 
 
