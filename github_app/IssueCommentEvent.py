@@ -3,8 +3,8 @@ from github.IssueComment import IssueComment
 from github.NamedUser import NamedUser
 from github.Repository import Repository
 
-from github_app.LazyCompletableGithubObject import LazyCompletableGithubObject
 from github_app.Event import Event
+from github_app.LazyCompletableGithubObject import LazyCompletableGithubObject
 
 
 class IssueCommentEvent(Event):

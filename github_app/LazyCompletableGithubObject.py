@@ -46,7 +46,6 @@ class LazyCompletableGithubObject(CompletableGithubObject):
             and not self._lazy_refreshed
             and value is None
         ):
-
             headers, data = self.lazy_requester.requestJsonAndCheck("GET", self.url)
             parent_github_class = next(
                 filter(
@@ -56,7 +55,9 @@ class LazyCompletableGithubObject(CompletableGithubObject):
                 ),
                 None,
             )
-            new_self = parent_github_class(self.lazy_requester, headers, data, completed=True)
+            new_self = parent_github_class(
+                self.lazy_requester, headers, data, completed=True
+            )
             assert (
                 self.url == new_self.url
             ), f"{self.url} != {new_self.url}\n{self.lazy_requester.base_url=}"

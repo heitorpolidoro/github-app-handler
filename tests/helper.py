@@ -1,8 +1,8 @@
 import json
 import os
 
-from github.GitRelease import GitRelease
 from github.GithubObject import CompletableGithubObject
+from github.GitRelease import GitRelease
 from github.Issue import Issue
 from github.IssueComment import IssueComment
 from github.NamedUser import NamedUser
