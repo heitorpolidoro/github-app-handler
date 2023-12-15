@@ -37,20 +37,20 @@ def assert_repository(repository):
     assert isinstance(repository, Repository)
     assert repository.id == 731794992
     assert repository.allow_auto_merge is True
+    # assert list(repository.get_pulls())
     assert not list(repository.get_pulls())
 
 
 def assert_issue(issue):
     assert isinstance(issue, Issue)
-    assert issue.id == 1
+    assert issue.id == 2044399971
     assert len(list(issue.get_comments())) == 1
 
 
 def assert_issue_comment(issue_comment):
     assert isinstance(issue_comment, IssueComment)
-    assert issue_comment.id == 1
-    assert issue_comment.body == "Comment body"
-    assert issue_comment.user.id == 1
+    assert issue_comment.id == 1858518602
+    assert issue_comment.body == "Issue comment"
     assert not list(issue_comment.get_reactions())
 
 

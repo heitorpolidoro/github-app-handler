@@ -23,13 +23,12 @@ class IssueCommentEvent(Event):
         self.repository: Repository = LazyCompletableGithubObject.get_lazy_instance(
             Repository, attributes=repository
         )
-        self.sender: NamedUser = LazyCompletableGithubObject.get_lazy_instance(
-            NamedUser, attributes=sender
-        )
-
-
+        self.sender: NamedUser = LazyCompletableGithubObject.get_lazy_instance(NamedUser, attributes=sender)
 class IssueCommentCreatedEvent(IssueCommentEvent):
     action = "created"
+
+
+
 
 
 class IssueCommentDeletedEvent(IssueCommentEvent):

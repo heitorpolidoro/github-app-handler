@@ -3,6 +3,7 @@ A handler helper to create Github App easily
 
 [![codecov](https://codecov.io/gh/heitorpolidoro/GithubAppHandlerBase/graph/badge.svg?token=JcFgZlsm0y)](https://codecov.io/gh/heitorpolidoro/GithubAppHandlerBase)
 
+
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=heitorpolidoro_GithubAppHandlerBase&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=heitorpolidoro_GithubAppHandlerBase)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=heitorpolidoro_GithubAppHandlerBase&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=heitorpolidoro_GithubAppHandlerBase)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=heitorpolidoro_GithubAppHandlerBase&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=heitorpolidoro_GithubAppHandlerBase)
