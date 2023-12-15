@@ -17,7 +17,7 @@ PyJWT==2.8.0
 PyNaCl==1.5.0
 pytest==7.4.3
 pytest-cov==4.1.0
-pytest-recording==0.13.1
+pytest-vcr==1.0.2
 pytest-xdist==3.5.0
 python-dateutil==2.8.2
 PyYAML==6.0.1
@@ -26,5 +26,6 @@ six==1.16.0
 tomli==2.0.1
 typing_extensions==4.9.0
 urllib3==1.26.18
+vcrpy==5.1.0
 wrapt==1.16.0
 yarl==1.9.4
