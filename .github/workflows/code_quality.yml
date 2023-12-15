@@ -43,6 +43,7 @@ jobs:
 
   code_analyzers:
     name: Code Analyzers
+    needs: tests
     uses: heitorpolidoro/.github/.github/workflows/code_quality_analyzers.yml@master
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
