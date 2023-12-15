@@ -6,7 +6,6 @@ from github_app.IssueCommentEvent import (
     IssueCommentDeletedEvent,
 )
 
-# pytest.register_assert_rewrite("tests.helper")
 from tests.helper import assert_event, get_webhook_request
 
 
