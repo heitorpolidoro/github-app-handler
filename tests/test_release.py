@@ -1,8 +1,4 @@
 from github_app import ReleaseReleasedEvent
-from github_app.IssueCommentEvent import (
-    IssueCommentCreatedEvent,
-    IssueCommentDeletedEvent,
-)
 from github_app.ReleaseEvent import ReleaseCreatedEvent
 from tests.factory import event_factory
 

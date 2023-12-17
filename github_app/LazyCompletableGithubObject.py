@@ -58,20 +58,9 @@ class LazyCompletableGithubObject(CompletableGithubObject):
             and value is None
         ):
             headers, data = self.lazy_requester.requestJsonAndCheck("GET", self.url)
-            # parent_github_class = next(
-            #     filter(
-            #         lambda c: c != LazyCompletableGithubObject
-            #                   and issubclass(c, CompletableGithubObject),
-            #         self.__class__.__bases__,
-            #     ),
-            #     None,
-            # )
             new_self = self.__class__(
                 self.lazy_requester, headers, data, completed=True
             )
-            # assert (
-            #         self.url == new_self.url
-            # ), f"{self.url} != {new_self.url}\n{self.lazy_requester.base_url=}"
             self.__dict__.update(new_self.__dict__)
             value = super().__getattribute__(item)
         return value
@@ -81,6 +70,3 @@ class LazyCompletableGithubObject(CompletableGithubObject):
         if LazyCompletableGithubObject not in cls.__bases__:
             cls.__bases__ = tuple([LazyCompletableGithubObject] + list(cls.__bases__))
         return cls(attributes=attributes)
-        # return type(cls.__name__, (cls, LazyCompletableGithubObject), {})(
-        #     attributes=attributes
-        # )

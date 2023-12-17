@@ -1,8 +1,7 @@
 from typing import Any, Union
 from unittest import mock
 
-import pytest
-from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+from github.GithubObject import CompletableGithubObject, Attribute, NotSet
 
 from github_app.LazyCompletableGithubObject import LazyCompletableGithubObject
 
@@ -19,23 +18,9 @@ class LazyClass(CompletableGithubObject):
     def none_value(self) -> Union[str, None]:
         self._completeIfNotSet(self._none_value)
         return self._none_value.value
-
+    @staticmethod
     def url(self):
         return "url"
-
-
-# noinspection PyPep8Naming
-# @pytest.fixture(autouse=True)
-# def mock_CompletableGithubObject():
-#     with mock.patch(
-#             "github_app.LazyCompletableGithubObject.CompletableGithubObject") as mocked:
-#         yield mocked
-# noinspection PyPep8Naming
-# @pytest.fixture(autouse=True)
-# def mock_GithubIntegration():
-#     with mock.patch(
-#             "github_app.LazyCompletableGithubObject.GithubIntegration") as mocked:
-#         yield mocked
 
 
 def test_lazy():
@@ -47,7 +32,7 @@ def test_lazy_requester():
     instance = LazyCompletableGithubObject.get_lazy_instance(LazyClass, attributes={})
 
     class RequesterTest:
-        def requestJsonAndCheck(*_args):
+        def requestJsonAndCheck(self, *_args):
             return {}, {"none_value": "none_value"}
 
     with (

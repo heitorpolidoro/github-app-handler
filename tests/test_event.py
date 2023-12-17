@@ -1,6 +1,3 @@
-import gc
-import sys
-
 import pytest
 
 from github_app.Event import Event
@@ -44,6 +41,7 @@ def test_parse_event_missing_event():
         )
 
 
+# noinspection PyUnusedLocal
 def test_validate_unique_event_name():
     class EventDupTest(Event):
         name = "dup_event"
@@ -63,6 +61,7 @@ def test_validate_unique_event_name():
     assert str(err.value) == "Multiple webhook classes for 'dup_event'"
 
 
+# noinspection PyUnusedLocal
 def test_validate_unique_action():
     class EventDupActionTest(EventTest):
         action = "dup_action"
