@@ -9,14 +9,7 @@ class CreateEvent(Event):
     """This class represents a branch or tag creation event."""
 
     name = "create"
-
-    def __new__(cls, *args, **kwargs):
-        if cls is CreateEvent:
-            if kwargs.get("ref_type") == "branch":
-                cls = CreateBranchEvent
-            elif kwargs.get("ref_type") == "tag":
-                cls = CreateTagEvent
-        return super().__new__(cls)
+    sub_type = "ref_type"  # TODO comment
 
     def __init__(
         self,
