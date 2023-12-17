@@ -32,7 +32,7 @@ class Event:
     def parse_event(cls, headers, body):
         """Returns an Event classe for the event in webhook"""
         event = headers["X-Github-Event"]
-        action = body.pop("action")
+        action = body.pop("action", None)
         event_class = cls.get_webhook_class(event, action)
         return event_class(headers=headers, **body)
 
@@ -44,6 +44,8 @@ class Event:
             raise ValueError(f"Multiple webhook classes for '{event}'")
         if len(event_classes) == 1:
             event_class = event_classes[0]
+            if action is None:
+                return event_class
             action_classes = list(
                 filter(lambda x: x.action == action, event_class.__subclasses__())
             )
