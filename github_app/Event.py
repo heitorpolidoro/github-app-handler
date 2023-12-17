@@ -1,5 +1,3 @@
-
-
 class Event:
     """Event base class
 
