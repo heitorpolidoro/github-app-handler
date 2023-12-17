@@ -46,12 +46,10 @@ class CreateEvent(Event):
 class CreateBranchEvent(CreateEvent):
     """This class represents a branch creation event."""
 
-    ref_type  = "branch"
-
-
+    ref_type = "branch"
 
 
 class CreateTagEvent(CreateEvent):
     """This class represents a tag creation event."""
 
-    ref_type = 'tag'
+    ref_type = "tag"

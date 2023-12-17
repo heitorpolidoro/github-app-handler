@@ -1,4 +1,4 @@
-from github_app.CreateEvent import CreateEvent, CreateBranchEvent, CreateTagEvent
+from github_app.CreateEvent import CreateBranchEvent, CreateEvent, CreateTagEvent
 from tests.factory import event_factory
 
 
@@ -18,6 +18,7 @@ def test_create():
     )
     assert isinstance(event, CreateEvent)
 
+
 def test_create_branch():
     event = event_factory(
         "create",
@@ -34,6 +35,7 @@ def test_create_branch():
         ],
     )
     assert isinstance(event, CreateBranchEvent)
+
 
 def test_create_tag():
     event = event_factory(

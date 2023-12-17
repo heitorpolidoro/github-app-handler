@@ -1,10 +1,10 @@
+from github_app.CreateEvent import CreateBranchEvent, CreateEvent, CreateTagEvent
 from github_app.IssueCommentEvent import (
     IssueCommentCreatedEvent,
     IssueCommentDeletedEvent,
     IssueCommentEvent,
 )
 from github_app.ReleaseEvent import ReleaseEvent, ReleaseReleasedEvent
-from github_app.CreateEvent import CreateEvent, CreateBranchEvent, CreateTagEvent
 
 __version__ = "0.0.1"
 
