@@ -1,32 +1,23 @@
-# import pytest
-#
-# from github_app.Event import Event
-# from github_app.IssueCommentEvent import (
-#     IssueCommentCreatedEvent,
-#     IssueCommentDeletedEvent,
-# )
-#
-# # pytest.register_assert_rewrite("tests.helper")
-# from tests.helper import assert_event, get_webhook_request
-#
-#
-# @pytest.mark.vcr
-# def test_issue_comment_created():
-#     headers, body = get_webhook_request("issue_comment", "created")
-#     event = Event.parse_event(headers, body)
-#     assert isinstance(event, IssueCommentCreatedEvent)
-#     assert event.name == "issue_comment"
-#     assert event.action == "created"
-#
-#     assert_event(event)
-#
-#
-# @pytest.mark.vcr
-# def test_issue_comment_deleted():
-#     headers, body = get_webhook_request("issue_comment", "deleted")
-#     event = Event.parse_event(headers, body)
-#     assert isinstance(event, IssueCommentDeletedEvent)
-#     assert event.name == "issue_comment"
-#     assert event.action == "deleted"
-#
-#     assert_event(event)
+from github_app.IssueCommentEvent import (
+    IssueCommentCreatedEvent,
+    IssueCommentDeletedEvent,
+)
+from tests.factory import event_factory
+
+
+def test_issue_comment_created():
+    event = event_factory(
+        "issue_comment",
+        "created",
+        add_to_body=["issue", "repository", "sender", "comment"],
+    )
+    assert isinstance(event, IssueCommentCreatedEvent)
+
+
+def test_issue_comment_deleted():
+    event = event_factory(
+        "issue_comment",
+        "deleted",
+        add_to_body=["issue", "repository", "sender", "comment"],
+    )
+    assert isinstance(event, IssueCommentDeletedEvent)
