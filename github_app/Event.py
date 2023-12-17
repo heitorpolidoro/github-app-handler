@@ -49,7 +49,9 @@ class Event:
             raise ValueError(f"Multiple webhook classes for '{event}'")
         if len(event_classes) == 1:
             event_class = event_classes[0]
-            action_classes = list(filter(lambda x: x.action == action, event_class.__subclasses__()))
+            action_classes = list(
+                filter(lambda x: x.action == action, event_class.__subclasses__())
+            )
             if len(action_classes) > 1:
                 raise ValueError(f"Multiple webhook classes for '{event}.{action}'")
             if len(action_classes) == 1:

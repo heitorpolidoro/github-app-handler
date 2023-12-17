@@ -25,9 +25,10 @@ def test_parse_event_missing_action():
         Event.parse_event(
             {
                 "X-Github-Event": "event",
-            }, {
+            },
+            {
                 "action": "action2",
-            }
+            },
         )
 
 
@@ -36,9 +37,10 @@ def test_parse_event_missing_event():
         Event.parse_event(
             {
                 "X-Github-Event": "event2",
-            }, {
+            },
+            {
                 "action": "action",
-            }
+            },
         )
 
 
@@ -53,9 +55,10 @@ def test_validate_unique_event_name():
         Event.parse_event(
             {
                 "X-Github-Event": "dup_event",
-            }, {
+            },
+            {
                 "action": "action",
-            }
+            },
         )
     assert str(err.value) == "Multiple webhook classes for 'dup_event'"
 
@@ -71,8 +74,9 @@ def test_validate_unique_action():
         Event.parse_event(
             {
                 "X-Github-Event": "event",
-            }, {
+            },
+            {
                 "action": "dup_action",
-            }
+            },
         )
     assert str(err.value) == "Multiple webhook classes for 'event.dup_action'"

@@ -30,12 +30,12 @@ def private_key():
 #     # setup code
 #     os.environ["PRIVATE_KEY"] = private_key
 #     yield
-    # teardown code
-    # if not request.session.testsfailed:
-    #     not_read_webhooks = sorted(
-    #         file for file, value in all_webhooks.items() if not value
-    #     )
-    #     logging.warning(f"Not read webhooks: {not_read_webhooks}")
+# teardown code
+# if not request.session.testsfailed:
+#     not_read_webhooks = sorted(
+#         file for file, value in all_webhooks.items() if not value
+#     )
+#     logging.warning(f"Not read webhooks: {not_read_webhooks}")
 
 
 @pytest.fixture(scope="session")

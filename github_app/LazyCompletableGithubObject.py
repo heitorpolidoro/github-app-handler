@@ -10,12 +10,13 @@ from github_app.Event import Event
 
 
 class LazyCompletableGithubObject(CompletableGithubObject):
-    def __init__(self,
-                 requester: "Requester" = None,
-                 headers: dict[str, Union[str, int]] = None,
-                 attributes: dict[str, Any] = None,
-                 completed: bool = True,
-                 ):
+    def __init__(
+        self,
+        requester: "Requester" = None,
+        headers: dict[str, Union[str, int]] = None,
+        attributes: dict[str, Any] = None,
+        completed: bool = True,
+    ):
         self._lazy_initialized = False
         # noinspection PyTypeChecker
         CompletableGithubObject.__init__(
@@ -23,7 +24,7 @@ class LazyCompletableGithubObject(CompletableGithubObject):
             requester=requester,
             headers=headers or {},
             attributes=attributes,
-            completed=completed
+            completed=completed,
         )
         self._lazy_initialized = True
         self._lazy_requester = None
@@ -51,10 +52,10 @@ class LazyCompletableGithubObject(CompletableGithubObject):
     def __getattribute__(self, item):
         value = super().__getattribute__(item)
         if (
-                not item.startswith("_lazy")
-                and self._lazy_initialized
-                and self._lazy_requester is None
-                and value is None
+            not item.startswith("_lazy")
+            and self._lazy_initialized
+            and self._lazy_requester is None
+            and value is None
         ):
             headers, data = self.lazy_requester.requestJsonAndCheck("GET", self.url)
             # parent_github_class = next(
