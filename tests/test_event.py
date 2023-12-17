@@ -11,14 +11,18 @@ class EventTest(Event):
 class EventActionTest(EventTest):
     action = "action"
 
+
 class EventDupTest(Event):
     name = "dup_event"
+
 
 class EventDupTest2(Event):
     name = "dup_event"
 
+
 class EventDupActionTest(EventTest):
     action = "dup_action"
+
 
 class EventDupActionTest2(EventTest):
     action = "dup_action"
