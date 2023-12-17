@@ -7,6 +7,10 @@ from github_app.LazyCompletableGithubObject import LazyCompletableGithubObject
 
 
 class LazyClass(CompletableGithubObject):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._none_value = None
+
     def _initAttributes(self) -> None:
         self._none_value: Attribute[str] = NotSet
 
@@ -20,7 +24,7 @@ class LazyClass(CompletableGithubObject):
         return self._none_value.value
 
     @staticmethod
-    def url(self):
+    def url():
         return "url"
 
 
