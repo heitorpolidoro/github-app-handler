@@ -14,6 +14,7 @@ class LazyCompletableGithubObject(CompletableGithubObject):
     A lazy CompletableGithubObject that will only initialize when it is accessed.
     In the initialization will create a github.Requester.Requester
     """
+
     def __init__(
         self,
         requester: "Requester" = None,
@@ -37,7 +38,9 @@ class LazyCompletableGithubObject(CompletableGithubObject):
     def lazy_requester(self):
         if self._lazy_requester is None:
             token = (
-                GithubIntegration(auth=AppAuth( os.getenv("GITHUB_APP_ID"), os.getenv("PRIVATE_KEY")))
+                GithubIntegration(
+                    auth=AppAuth(os.getenv("GITHUB_APP_ID"), os.getenv("PRIVATE_KEY"))
+                )
                 .get_access_token(Event.installation_id)
                 .token
             )
@@ -72,7 +75,9 @@ class LazyCompletableGithubObject(CompletableGithubObject):
 
     @staticmethod
     def get_lazy_instance(clazz, attributes):
-        """ Makes the clazz a subclass of LazyCompletableGithubObject"""
+        """Makes the clazz a subclass of LazyCompletableGithubObject"""
         if LazyCompletableGithubObject not in clazz.__bases__:
-            clazz.__bases__ = tuple([LazyCompletableGithubObject] + list(clazz.__bases__))
+            clazz.__bases__ = tuple(
+                [LazyCompletableGithubObject] + list(clazz.__bases__)
+            )
         return clazz(attributes=attributes)
