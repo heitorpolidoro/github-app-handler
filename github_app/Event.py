@@ -1,6 +1,3 @@
-import os
-
-from github import GithubIntegration
 
 
 class Event:
