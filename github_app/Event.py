@@ -3,17 +3,23 @@ import os
 from github import GithubIntegration
 
 
-def requester(_):
-    if Event._requester is None:
-        integration = GithubIntegration(681139, os.getenv("PRIVATE_KEY"))
-        Event._requester = integration.get_app()._requester
-    return Event._requester
-
-
 class Event:
+    """Event base class
+
+    This class represents a generic GitHub webhook event. It provides common
+    attributes and methods for parsing event data from the request headers and body.
+
+    Attributes:
+        name (str): The name of the event (e.g. 'issue').
+        action (str): The action that triggered the event (e.g. 'opened').
+
+    Methods:
+        parse_event(headers, body): Parses the event from the request.
+    """
+
     name = None
     action = None
-    _requester = None
+    installation_id = None
 
     def __init__(self, headers, installation):
         self.hook_id = headers["X-Github-Hook-Id"]
@@ -25,10 +31,11 @@ class Event:
         self.hook_installation_target_id = headers[
             "X-Github-Hook-Installation-Target-Id"
         ]
-        self.installation_id = installation["id"]
+        Event.installation_id = installation["id"]
 
     @classmethod
     def parse_event(cls, headers, body):
+        """Returns an Event classe for the event in webhook"""
         event = headers["X-Github-Event"]
         action = body.pop("action")
         event_class = cls.get_webhook_class(event, action)
@@ -36,10 +43,16 @@ class Event:
 
     @classmethod
     def get_webhook_class(cls, event, action):
-        for event_class in cls.__subclasses__():
-            if event_class.name == event:
-                for action_class in event_class.__subclasses__():
-                    if action_class.action == action:
-                        return action_class
+        """Returns the webhook class for the event and action in webhook"""
+        event_classes = list(filter(lambda x: x.name == event, cls.__subclasses__()))
+        if len(event_classes) > 1:
+            raise ValueError(f"Multiple webhook classes for '{event}'")
+        if len(event_classes) == 1:
+            event_class = event_classes[0]
+            action_classes = list(filter(lambda x: x.action == action, event_class.__subclasses__()))
+            if len(action_classes) > 1:
+                raise ValueError(f"Multiple webhook classes for '{event}.{action}'")
+            if len(action_classes) == 1:
+                return action_classes[0]
 
         raise NotImplementedError(f"No webhook class for '{event}.{action}'")

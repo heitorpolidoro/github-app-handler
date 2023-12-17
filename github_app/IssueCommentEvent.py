@@ -8,6 +8,7 @@ from github_app.LazyCompletableGithubObject import LazyCompletableGithubObject
 
 
 class IssueCommentEvent(Event):
+    """This class represents a generic issue comment event."""
     name = "issue_comment"
 
     def __init__(self, comment, issue, repository, sender, **kwargs):
@@ -29,8 +30,10 @@ class IssueCommentEvent(Event):
 
 
 class IssueCommentCreatedEvent(IssueCommentEvent):
+    """This class represents an event when a comment in an Issue is created."""
     action = "created"
 
 
 class IssueCommentDeletedEvent(IssueCommentEvent):
+    """This class represents an event when a comment in an Issue is deleted."""
     action = "deleted"
