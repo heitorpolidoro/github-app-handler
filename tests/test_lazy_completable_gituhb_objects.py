@@ -1,7 +1,7 @@
 from typing import Any, Union
 from unittest import mock
 
-from github.GithubObject import CompletableGithubObject, Attribute, NotSet
+from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 from github_app.LazyCompletableGithubObject import LazyCompletableGithubObject
 
@@ -18,6 +18,7 @@ class LazyClass(CompletableGithubObject):
     def none_value(self) -> Union[str, None]:
         self._completeIfNotSet(self._none_value)
         return self._none_value.value
+
     @staticmethod
     def url(self):
         return "url"

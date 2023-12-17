@@ -20,5 +20,5 @@ __all__ = [
     "ReleaseReleasedEvent",
     "IssueCommentEvent",
     "IssueCommentCreatedEvent",
-    "IssueCommentDeletedEvent"
+    "IssueCommentDeletedEvent",
 ]
