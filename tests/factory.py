@@ -4,7 +4,9 @@ from github_app.Event import Event
 def event_factory(event="event", action="action", add_to_body=None):
     """Factory to create events"""
     add_to_body = add_to_body or []
-    body = {"action": action, "installation": {"id": 123}}
+    body = {"installation": {"id": 123}}
+    if action:
+        body["action"] = action
     for item in add_to_body:
         body.update({item: {}})
     return Event.parse_event(
