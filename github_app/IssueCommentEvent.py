@@ -41,13 +41,12 @@ class IssueCommentDeletedEvent(IssueCommentEvent):
 
     action = "deleted"
 
+
 class IssueCommentEditedEvent(IssueCommentEvent):
     """This class represents an event when a comment in an Issue is edited."""
+
     def __init__(self, changes, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.changes = changes
-
-
-
 
     action = "edited"
