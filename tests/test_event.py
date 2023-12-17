@@ -11,6 +11,18 @@ class EventTest(Event):
 class EventActionTest(EventTest):
     action = "action"
 
+class EventDupTest(Event):
+    name = "dup_event"
+
+class EventDupTest2(Event):
+    name = "dup_event"
+
+class EventDupActionTest(EventTest):
+    action = "dup_action"
+
+class EventDupActionTest2(EventTest):
+    action = "dup_action"
+
 
 def test_parse_event():
     event_class = event_factory()
@@ -41,14 +53,7 @@ def test_parse_event_missing_event():
         )
 
 
-# noinspection PyUnusedLocal
 def test_validate_unique_event_name():
-    class EventDupTest(Event):
-        name = "dup_event"
-
-    class EventDupTest2(Event):
-        name = "dup_event"
-
     with pytest.raises(ValueError) as err:
         Event.parse_event(
             {
@@ -61,14 +66,7 @@ def test_validate_unique_event_name():
     assert str(err.value) == "Multiple webhook classes for 'dup_event'"
 
 
-# noinspection PyUnusedLocal
 def test_validate_unique_action():
-    class EventDupActionTest(EventTest):
-        action = "dup_action"
-
-    class EventDupActionTest2(EventTest):
-        action = "dup_action"
-
     with pytest.raises(ValueError) as err:
         Event.parse_event(
             {
