@@ -1,14 +1,17 @@
 from github_app.Event import Event
 
 
-def event_factory(event="event", action="action", add_to_body=None):
+def event_factory(event="event", action="action", extra=None, add_to_body=None):
     """Factory to create events"""
     add_to_body = add_to_body or []
+    extra = extra or {}
     body = {"installation": {"id": 123}}
     if action:
         body["action"] = action
     for item in add_to_body:
         body.update({item: {}})
+    if extra:
+        body.update(extra)
     return Event.parse_event(
         {
             "X-Github-Event": event,

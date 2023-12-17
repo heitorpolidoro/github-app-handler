@@ -10,6 +10,14 @@ class CreateEvent(Event):
 
     name = "create"
 
+    def __new__(cls, *args, **kwargs):
+        if cls is CreateEvent:
+            if kwargs.get("ref_type") == "branch":
+                cls = CreateBranchEvent
+            elif kwargs.get("ref_type") == "tag":
+                cls = CreateTagEvent
+        return super().__new__(cls)
+
     def __init__(
         self,
         description,
@@ -33,3 +41,17 @@ class CreateEvent(Event):
         self.sender: NamedUser = LazyCompletableGithubObject.get_lazy_instance(
             NamedUser, attributes=sender
         )
+
+
+class CreateBranchEvent(CreateEvent):
+    """This class represents a branch creation event."""
+
+    ref_type  = "branch"
+
+
+
+
+class CreateTagEvent(CreateEvent):
+    """This class represents a tag creation event."""
+
+    ref_type = 'tag'
