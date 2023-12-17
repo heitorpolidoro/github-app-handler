@@ -10,7 +10,17 @@ class CreateEvent(Event):
 
     name = "create"
 
-    def __init__(self, description, master_branch, pusher_type, ref, ref_type, repository, sender, **kwargs):
+    def __init__(
+        self,
+        description,
+        master_branch,
+        pusher_type,
+        ref,
+        ref_type,
+        repository,
+        sender,
+        **kwargs,
+    ):
         super().__init__(**kwargs)
         self.description: str = description
         self.master_branch: str = master_branch
