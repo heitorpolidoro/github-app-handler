@@ -7,6 +7,7 @@ from github_app.LazyCompletableGithubObject import LazyCompletableGithubObject
 
 
 class ReleaseEvent(Event):
+    """This class represents a generic release event."""
     name = "release"
 
     def __init__(self, release, repository, sender, **kwargs):
@@ -23,8 +24,10 @@ class ReleaseEvent(Event):
 
 
 class ReleaseReleasedEvent(ReleaseEvent):
+    """This class represents an event when a release is released."""
     action = "released"
 
 
 class ReleaseCreatedEvent(ReleaseEvent):
+    """This class represents an event when a release is created."""
     action = "created"
