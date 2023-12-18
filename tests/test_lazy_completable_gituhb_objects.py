@@ -36,6 +36,7 @@ def test_lazy():
 
 def test_lazy_requester():
     instance = LazyCompletableGithubObject.get_lazy_instance(LazyClass, attributes={})
+
     class RequesterTest:
         @staticmethod
         def requestJsonAndCheck(*_args):
