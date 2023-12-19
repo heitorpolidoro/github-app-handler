@@ -3,6 +3,7 @@ import logging
 from github import Github
 from github.Auth import AppInstallationAuth
 
+
 class Event:
     """Event base class
 
@@ -78,4 +79,3 @@ class Event:
             event_name += f".{action}"
 
         logging.warning(f"No webhook class for '{event_name}'")
-
