@@ -39,9 +39,7 @@ class Flask(OriginalFlask):
                 self._webhooks_[key](event)
         return "OK"
 
-    def _register_handler(self, func, event=None, action=None):
-        if not (action is None or event is not None):
-            raise AssertionError("action must be specified with event")
+    def _register_handler(self, func, event: str, action=None):
         validate_signature(func)
         key = event
         if action:
