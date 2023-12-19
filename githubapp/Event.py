@@ -23,7 +23,6 @@ class Event:
     app_id = None
     app_auth = None
 
-
     def __init__(self, headers, installation):
         self.hook_id = headers["X-Github-Hook-Id"]
         self.name = headers["X-Github-Event"]

@@ -13,6 +13,7 @@ class Handler:
 
     def root(self):
         return f"{self.name} App up and running!"
+
     def call_webhook(self, headers, body):
         event = Event.parse_event(headers, body)
 

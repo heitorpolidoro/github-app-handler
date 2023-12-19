@@ -30,7 +30,6 @@ class EventDupActionTest2(EventTest):
     action = "dup_action"
 
 
-
 def test_parse_event():
     event_class = event_factory()
     assert isinstance(event_class, EventActionTest)

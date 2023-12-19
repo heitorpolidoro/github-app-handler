@@ -1,14 +1,22 @@
-from flask import Flask as OriginalFlask, request
+from flask import Flask as OriginalFlask
+from flask import request
 
-from githubapp import ReleaseEvent, ReleaseReleasedEvent, CreateBranchEvent, CreateEvent, IssueCommentEvent, \
-    IssueCommentCreatedEvent, IssueCommentDeletedEvent
+from githubapp import (
+    CreateBranchEvent,
+    CreateEvent,
+    IssueCommentCreatedEvent,
+    IssueCommentDeletedEvent,
+    IssueCommentEvent,
+    ReleaseEvent,
+    ReleaseReleasedEvent,
+)
 from githubapp.Event import Event
 from githubapp.handlers.handler import Handler
 
 
 # noinspection PyPep8Naming
 class Flask(OriginalFlask, Handler):
-    """ Flask shell to create and handle GitHub webhooks """
+    """Flask shell to create and handle GitHub webhooks"""
 
     def __init__(self, name, *args, **kwargs):
         OriginalFlask.__init__(self, name, *args, **kwargs)
@@ -51,5 +59,6 @@ class Flask(OriginalFlask, Handler):
 
     def IssueCommentEdited(self, func):
         self._register_handler(func, IssueCommentDeletedEvent)
+
     def IssueCommentDeleted(self, func):
         self._register_handler(func, IssueCommentDeletedEvent)

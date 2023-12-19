@@ -6,8 +6,8 @@ import pytest
 
 from githubapp import Flask, SignatureError
 from githubapp.Event import Event
-from githubapp.ReleaseEvent import ReleaseReleasedEvent
 from githubapp.handlers.handler import Handler
+from githubapp.ReleaseEvent import ReleaseReleasedEvent
 
 
 @pytest.fixture(autouse=True)
