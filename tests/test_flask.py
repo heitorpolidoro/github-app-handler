@@ -4,9 +4,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from githubapp import Flask, SignatureError
+from githubapp import Flask
 from githubapp.Event import Event
-from githubapp.handlers.handler import Handler
 from githubapp.ReleaseEvent import ReleaseReleasedEvent
 
 
