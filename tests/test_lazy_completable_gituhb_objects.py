@@ -3,6 +3,7 @@ from unittest import mock
 from unittest.mock import PropertyMock
 
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
+
 from githubapp.LazyCompletableGithubObject import LazyCompletableGithubObject
 
 
