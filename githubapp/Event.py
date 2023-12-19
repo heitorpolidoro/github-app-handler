@@ -1,8 +1,5 @@
 import logging
 
-from github import Github
-from github.Auth import AppInstallationAuth
-
 
 class Event:
     """Event base class
@@ -74,7 +71,3 @@ class Event:
                         break
             return clazz
         logging.warning(f"No webhook class for '{event}.{action}'")
-
-    @staticmethod
-    def get_gh():
-        return Github(app_auth=Event.app_auth)
