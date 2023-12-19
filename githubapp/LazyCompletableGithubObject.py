@@ -16,11 +16,11 @@ class LazyCompletableGithubObject(CompletableGithubObject):
     """
 
     def __init__(
-        self,
-        requester: "Requester" = None,
-        headers: dict[str, Union[str, int]] = None,
-        attributes: dict[str, Any] = None,
-        completed: bool = True,
+            self,
+            requester: "Requester" = None,
+            headers: dict[str, Union[str, int]] = None,
+            attributes: dict[str, Any] = None,
+            completed: bool = True,
     ):
         self._lazy_initialized = False
         # noinspection PyTypeChecker
@@ -38,7 +38,7 @@ class LazyCompletableGithubObject(CompletableGithubObject):
     def lazy_requester(self):
         if self._lazy_requester is None:
             if not (private_key := os.getenv("PRIVATE_KEY")):
-                with open("private-key.pem", "rb") as key_file:
+                with open("private-key.pem", "rb") as key_file:  # pragma no cover
                     private_key = key_file.read().decode()
             app_auth = AppAuth(Event.app_id, private_key)
             token = (
@@ -63,10 +63,10 @@ class LazyCompletableGithubObject(CompletableGithubObject):
         """If the value is None, makes a request to update the object."""
         value = super().__getattribute__(item)
         if (
-            not item.startswith("_lazy")
-            and self._lazy_initialized
-            and self._lazy_requester is None
-            and value is None
+                not item.startswith("_lazy")
+                and self._lazy_initialized
+                and self._lazy_requester is None
+                and value is None
         ):
             headers, data = self.lazy_requester.requestJsonAndCheck("GET", self.url)
             new_self = self.__class__(
