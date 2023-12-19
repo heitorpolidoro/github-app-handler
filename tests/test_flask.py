@@ -1,10 +1,13 @@
+from collections import defaultdict
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
 import pytest
 
 from githubapp import Flask, SignatureError
+from githubapp.Event import Event
 from githubapp.ReleaseEvent import ReleaseReleasedEvent
+from githubapp.handlers.handler import Handler
 
 
 @pytest.fixture(autouse=True)
@@ -18,7 +21,7 @@ def event_mock(monkeypatch):
 class FlaskTest(TestCase):
     def setUp(self):
         app = Flask("testing")
-        app._webhooks_ = {}
+        app._webhooks = defaultdict(list)
         app.testing = True
         self.app = app
         self.client = app.test_client()
@@ -43,20 +46,25 @@ class FlaskTest(TestCase):
         response = self.client.get("/", **self.release_released)
         assert response.text == "testing App up and running!"
 
+    def test_register_webhooks(self):
+        all_events = []
+
+        def _register_all(event=Event):
+            for sub_event in event.__subclasses__():
+                if "Test" in sub_event.__name__:
+                    continue
+                all_events.append(sub_event)
+                getattr(self.app, sub_event.__name__[:-5])(lambda e: sub_event)
+                _register_all(sub_event)
+
+        _register_all()
+        for e in all_events:
+            self.assertIn(e, self.app._webhooks)
+
     def test_no_hooks(self):
         response = self.client.post("/", **self.release_released)
 
         self.assertEqual(response.status_code, 200)
-
-    def test_event_handler_method_validation(self):
-        with pytest.raises(SignatureError) as err:
-            self.app.any(lambda: None)
-
-        expected_message = (
-            "Method FlaskTest.test_event_handler_method_validation.<locals>.<lambda>() "
-            "signature error. The method must accept only one argument of the Event type"
-        )
-        assert str(err.value.message) == expected_message
 
     def test_call_any_event(self):
         called = False

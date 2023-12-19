@@ -1,3 +1,5 @@
+import logging
+
 class Event:
     """Event base class
 
@@ -34,7 +36,8 @@ class Event:
         event = headers["X-Github-Event"]
         action = body.pop("action", None)
         event_class = cls.get_webhook_class(event, action, body)
-        return event_class(headers=headers, **body)
+        if event_class:
+            return event_class(headers=headers, **body)
 
     @classmethod
     def get_webhook_class(cls, event, action, body=None):
@@ -65,4 +68,4 @@ class Event:
                         clazz = sub_type_class
                         break
             return clazz
-        raise NotImplementedError(f"No webhook class for '{event}.{action}'")
+        logging.warning(f"No webhook class for '{event}.{action}'")

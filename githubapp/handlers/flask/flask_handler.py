@@ -1,58 +1,55 @@
-import inspect
+from flask import Flask as OriginalFlask, request
 
-from flask import Flask as OriginalFlask
-from flask import request
-
+from githubapp import ReleaseEvent, ReleaseReleasedEvent, CreateBranchEvent, CreateEvent, IssueCommentEvent, \
+    IssueCommentCreatedEvent, IssueCommentDeletedEvent
 from githubapp.Event import Event
-from githubapp.handlers.exceptions import SignatureError
+from githubapp.handlers.handler import Handler
 
 
-def validate_signature(func):
-    parameters = inspect.signature(func).parameters
-    try:
-        assert len(parameters) == 1
-    except AssertionError:
-        signature = ""
-        raise SignatureError(func, signature)
+# noinspection PyPep8Naming
+class Flask(OriginalFlask, Handler):
+    """ Flask shell to create and handle GitHub webhooks """
 
-
-class Flask(OriginalFlask):
-    _webhooks_ = {}
-
-    def __init__(self, *args, **kwargs):
-        super(Flask, self).__init__(*args, **kwargs)
-        self.route("/", methods=["GET"])(self.root)
+    def __init__(self, name, *args, **kwargs):
+        OriginalFlask.__init__(self, name, *args, **kwargs)
+        Handler.__init__(self, name, *args, **kwargs)
         self.route("/", methods=["GET"])(self.root)
         self.route("/", methods=["POST"])(self.webhook)
 
-    #
-    def root(self):
-        return f"{self.name} App up and running!"
-
     def webhook(self):
-        data = request.json
+        body = request.json
         headers = dict(request.headers)
-        event = Event.parse_event(headers, data)
-
-        for key in ["__any__", event.name, f"{event.name}.{event.action}"]:
-            if key in self._webhooks_:
-                self._webhooks_[key](event)
+        self.call_webhook(headers, body)
         return "OK"
 
-    def _register_handler(self, func, event: str, action=None):
-        validate_signature(func)
-        key = event
-        if action:
-            key += f".{action}"
-
-        self._webhooks_[key] = func
-        return func
-
     def any(self, func):
-        self._register_handler(func, "__any__")
+        self._register_handler(func, Event)
 
     def Release(self, func):
-        self._register_handler(func, "release")
+        self._register_handler(func, ReleaseEvent)
 
     def ReleaseReleased(self, func):
-        self._register_handler(func, "release", "released")
+        self._register_handler(func, ReleaseReleasedEvent)
+
+    def ReleaseCreated(self, func):
+        self._register_handler(func, ReleaseReleasedEvent)
+
+    def Create(self, func):
+        self._register_handler(func, CreateEvent)
+
+    def CreateBranch(self, func):
+        self._register_handler(func, CreateBranchEvent)
+
+    def CreateTag(self, func):
+        self._register_handler(func, CreateBranchEvent)
+
+    def IssueComment(self, func):
+        self._register_handler(func, IssueCommentEvent)
+
+    def IssueCommentCreated(self, func):
+        self._register_handler(func, IssueCommentCreatedEvent)
+
+    def IssueCommentEdited(self, func):
+        self._register_handler(func, IssueCommentDeletedEvent)
+    def IssueCommentDeleted(self, func):
+        self._register_handler(func, IssueCommentDeletedEvent)

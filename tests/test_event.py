@@ -1,3 +1,5 @@
+import sys
+
 import pytest
 
 from githubapp.Event import Event
@@ -28,33 +30,34 @@ class EventDupActionTest2(EventTest):
     action = "dup_action"
 
 
+
 def test_parse_event():
     event_class = event_factory()
     assert isinstance(event_class, EventActionTest)
 
 
-def test_parse_event_missing_action():
-    with pytest.raises(NotImplementedError):
-        Event.parse_event(
-            {
-                "X-Github-Event": "event",
-            },
-            {
-                "action": "action2",
-            },
-        )
+def test_parse_event_missing_action(caplog):
+    Event.parse_event(
+        {
+            "X-Github-Event": "event",
+        },
+        {
+            "action": "action2",
+        },
+    )
+    assert "No webhook class for 'event.action2'" in caplog.text
 
 
-def test_parse_event_missing_event():
-    with pytest.raises(NotImplementedError):
-        Event.parse_event(
-            {
-                "X-Github-Event": "event2",
-            },
-            {
-                "action": "action",
-            },
-        )
+def test_parse_event_missing_event(caplog):
+    Event.parse_event(
+        {
+            "X-Github-Event": "event2",
+        },
+        {
+            "action": "action",
+        },
+    )
+    assert "No webhook class for 'event2.action'" in caplog.text
 
 
 def test_validate_unique_event_name():
