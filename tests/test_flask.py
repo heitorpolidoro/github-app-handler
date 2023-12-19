@@ -61,7 +61,7 @@ class FlaskTest(TestCase):
     def test_call_any_event(self):
         called = False
 
-        def method(_):
+        def method(_event):
             nonlocal called
             called = True
 
@@ -75,7 +75,7 @@ class FlaskTest(TestCase):
     def test_call_event(self):
         called = False
 
-        def method(event):
+        def method(_event):
             nonlocal called
             called = True
 
@@ -89,7 +89,7 @@ class FlaskTest(TestCase):
     def test_call_event_action(self):
         called = False
 
-        def method(event):
+        def method(_event):
             nonlocal called
             called = True
 
@@ -103,7 +103,7 @@ class FlaskTest(TestCase):
     def test_call_all(self):
         calls = 0
 
-        def method(event):
+        def method(_event):
             nonlocal calls
             calls += 1
 
