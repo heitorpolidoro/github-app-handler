@@ -23,10 +23,10 @@ dynamic = ["version", "dependencies"]
 "Homepage" = "https://github.com/heitorpolidoro/PyGithubApp"
 
 [tool.setuptools]
-packages = ["github_app"]
+packages = ["githubapp"]
 
 [tool.setuptools.dynamic]
-version = {attr = "github_app.__version__"}
+version = {attr = "githubapp.__version__"}
 dependencies = {file = ["requirements.txt"]}
 
 [tool.coverage.run]

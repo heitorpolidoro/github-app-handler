@@ -1,4 +1,4 @@
-from github_app.CreateEvent import CreateBranchEvent, CreateEvent, CreateTagEvent
+from githubapp.CreateEvent import CreateBranchEvent, CreateEvent, CreateTagEvent
 from tests.factory import event_factory
 
 
