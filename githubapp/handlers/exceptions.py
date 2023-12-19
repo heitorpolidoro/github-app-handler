@@ -1,5 +1,5 @@
 class SignatureError(Exception):
-    """ Exception when the method has a wrong signature """
+    """Exception when the method has a wrong signature"""
 
     def __init__(self, method, signature):
         self.message = (

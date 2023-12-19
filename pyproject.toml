@@ -36,3 +36,7 @@ relative_files = true
 
 [project.optional-dependencies]
 flask = ["flask"]
+
+
+[tool.black]
+max_line_length = 120
