@@ -1,5 +1,4 @@
 from githubapp.CreateEvent import CreateBranchEvent, CreateEvent, CreateTagEvent
-
 from githubapp.handlers.exceptions import SignatureError
 from githubapp.IssueCommentEvent import (
     IssueCommentCreatedEvent,
