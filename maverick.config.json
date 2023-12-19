@@ -1,0 +1,5 @@
+{
+    "supported_file_extensions": ["py"],
+    "ignored_directories": ["tests"],
+    "auto_review_all_prs": true
+}
