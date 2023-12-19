@@ -14,7 +14,7 @@ class Event:
 
     name = None
     action = None
-    installation_id = None
+    app_id = None
 
     def __init__(self, headers, installation):
         self.hook_id = headers["X-Github-Hook-Id"]
@@ -26,7 +26,7 @@ class Event:
         self.hook_installation_target_id = headers[
             "X-Github-Hook-Installation-Target-Id"
         ]
-        Event.installation_id = installation["id"]
+        Event.app_id = installation["id"]
 
     @classmethod
     def parse_event(cls, headers, body):

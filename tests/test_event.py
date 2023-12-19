@@ -1,6 +1,6 @@
 import pytest
 
-from github_app.Event import Event
+from githubapp.Event import Event
 from tests.factory import event_factory
 
 

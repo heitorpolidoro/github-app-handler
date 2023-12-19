@@ -1,4 +1,4 @@
-from github_app.Event import Event
+from githubapp.Event import Event
 
 
 def event_factory(event="event", action="action", extra=None, add_to_body=None):

@@ -6,7 +6,7 @@ from github.Auth import AppAuth, Token
 from github.GithubObject import CompletableGithubObject
 from github.Requester import Requester
 
-from github_app.Event import Event
+from githubapp.Event import Event
 
 
 class LazyCompletableGithubObject(CompletableGithubObject):
@@ -38,10 +38,8 @@ class LazyCompletableGithubObject(CompletableGithubObject):
     def lazy_requester(self):
         if self._lazy_requester is None:
             token = (
-                GithubIntegration(
-                    auth=AppAuth(int(os.getenv("GITHUB_APP_ID")), os.getenv("PRIVATE_KEY"))
-                )
-                .get_access_token(Event.installation_id)
+                GithubIntegration(auth=AppAuth(Event.app_id, os.getenv("PRIVATE_KEY")))
+                .get_access_token(Event.app_id)
                 .token
             )
             self._lazy_requester = Requester(

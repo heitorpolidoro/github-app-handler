@@ -1,10 +1,12 @@
 import os
 from typing import Any, Union
 from unittest import mock
+from unittest.mock import PropertyMock
 
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
-from github_app.LazyCompletableGithubObject import LazyCompletableGithubObject
+from githubapp.Event import Event
+from githubapp.LazyCompletableGithubObject import LazyCompletableGithubObject
 
 
 class LazyClass(CompletableGithubObject):
@@ -36,18 +38,24 @@ def test_lazy():
 
 def test_lazy_requester():
     instance = LazyCompletableGithubObject.get_lazy_instance(LazyClass, attributes={})
+
     class RequesterTest:
         @staticmethod
         def requestJsonAndCheck(*_args):
             return {}, {"none_value": "none_value"}
 
     with (
-        mock.patch("github_app.LazyCompletableGithubObject.GithubIntegration"),
-        mock.patch("github_app.LazyCompletableGithubObject.AppAuth") as app_auth,
-        mock.patch("github_app.LazyCompletableGithubObject.Token"),
+        mock.patch("githubapp.LazyCompletableGithubObject.GithubIntegration"),
+        mock.patch("githubapp.LazyCompletableGithubObject.AppAuth") as app_auth,
+        mock.patch("githubapp.LazyCompletableGithubObject.Token"),
         mock.patch(
-            "github_app.LazyCompletableGithubObject.Requester",
+            "githubapp.LazyCompletableGithubObject.Requester",
             return_value=RequesterTest,
+        ),
+        mock.patch(
+            "githubapp.LazyCompletableGithubObject.Event.app_id",
+            new_callable=PropertyMock,
+            return_value=123,
         ),
     ):
         assert instance._none_value.value is None
