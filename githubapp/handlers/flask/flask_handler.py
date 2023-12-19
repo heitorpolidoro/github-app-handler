@@ -88,9 +88,7 @@ class Flask(OriginalFlask):
         return "OK"
 
     def _register_handler(self, func, event=None, action=None):
-        if not (
-            action is None or event is not None
-        ):
+        if not (action is None or event is not None):
             raise AssertionError("action must be specified with event")
         validate_signature(func)
         key = event
