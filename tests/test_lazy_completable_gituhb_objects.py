@@ -1,3 +1,4 @@
+import os
 from typing import Any, Union
 from unittest import mock
 
@@ -35,7 +36,6 @@ def test_lazy():
 
 def test_lazy_requester():
     instance = LazyCompletableGithubObject.get_lazy_instance(LazyClass, attributes={})
-
     class RequesterTest:
         @staticmethod
         def requestJsonAndCheck(*_args):
@@ -43,7 +43,7 @@ def test_lazy_requester():
 
     with (
         mock.patch("github_app.LazyCompletableGithubObject.GithubIntegration"),
-        mock.patch("github_app.LazyCompletableGithubObject.AppAuth"),
+        mock.patch("github_app.LazyCompletableGithubObject.AppAuth") as app_auth,
         mock.patch("github_app.LazyCompletableGithubObject.Token"),
         mock.patch(
             "github_app.LazyCompletableGithubObject.Requester",
@@ -53,3 +53,5 @@ def test_lazy_requester():
         assert instance._none_value.value is None
         assert instance.none_value == "none_value"
         assert instance._none_value.value == "none_value"
+
+    app_auth.assert_called_once_with(123, None)
