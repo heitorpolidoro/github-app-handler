@@ -37,9 +37,14 @@ class LazyCompletableGithubObject(CompletableGithubObject):
     @property
     def lazy_requester(self):
         if self._lazy_requester is None:
-            app_auth = AppAuth(Event.app_id, os.getenv("PRIVATE_KEY"))
+            if not (private_key := os.getenv("PRIVATE_KEY")):
+                with open("private-key.pem", "rb") as key_file:
+                    private_key = key_file.read().decode()
+            app_auth = AppAuth(Event.app_id, private_key)
             token = (
-                GithubIntegration(auth=app_auth).get_access_token(Event.app_id).token
+                GithubIntegration(auth=app_auth)
+                .get_access_token(Event.installation_id)
+                .token
             )
             Event.app_auth = app_auth
             self._lazy_requester = Requester(
