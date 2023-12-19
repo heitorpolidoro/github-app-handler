@@ -1,3 +1,4 @@
+import os
 from typing import Any, Union
 from unittest import mock
 from unittest.mock import PropertyMock
@@ -55,9 +56,10 @@ def test_lazy_requester():
             new_callable=PropertyMock,
             return_value=123,
         ),
+        mock.patch.dict(os.environ, {"PRIVATE_KEY": "private-key"}, clear=True),
     ):
         assert instance._none_value.value is None
         assert instance.none_value == "none_value"
         assert instance._none_value.value == "none_value"
 
-    app_auth.assert_called_once_with(123, None)
+    app_auth.assert_called_once_with(123, "private-key")
