@@ -1,5 +1,5 @@
-from github_app import ReleaseReleasedEvent
-from github_app.ReleaseEvent import ReleaseCreatedEvent
+from githubapp import ReleaseReleasedEvent
+from githubapp.ReleaseEvent import ReleaseCreatedEvent
 from tests.factory import event_factory
 
 

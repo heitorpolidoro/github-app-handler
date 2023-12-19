@@ -2,8 +2,8 @@ from github.GitRelease import GitRelease
 from github.NamedUser import NamedUser
 from github.Repository import Repository
 
-from github_app.Event import Event
-from github_app.LazyCompletableGithubObject import LazyCompletableGithubObject
+from githubapp.Event import Event
+from githubapp.LazyCompletableGithubObject import LazyCompletableGithubObject
 
 
 class ReleaseEvent(Event):

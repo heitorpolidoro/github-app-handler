@@ -1,4 +1,4 @@
-from github_app.IssueCommentEvent import (
+from githubapp.IssueCommentEvent import (
     IssueCommentCreatedEvent,
     IssueCommentDeletedEvent,
     IssueCommentEditedEvent,
