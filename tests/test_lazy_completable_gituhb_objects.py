@@ -1,11 +1,9 @@
-import os
 from typing import Any, Union
 from unittest import mock
 from unittest.mock import PropertyMock
 
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
-from githubapp.Event import Event
 from githubapp.LazyCompletableGithubObject import LazyCompletableGithubObject
 
 
