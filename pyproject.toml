@@ -22,9 +22,6 @@ dynamic = ["version", "dependencies"]
 [project.urls]
 "Homepage" = "https://github.com/heitorpolidoro/PyGithubApp"
 
-[tool.setuptools]
-packages = ["githubapp"]
-
 [tool.setuptools.dynamic]
 version = {attr = "githubapp.__version__"}
 dependencies = {file = ["requirements.txt"]}
