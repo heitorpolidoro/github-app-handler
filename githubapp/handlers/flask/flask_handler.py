@@ -4,16 +4,17 @@ from flask import request
 from githubapp import (
     CreateBranchEvent,
     CreateEvent,
+    CreateTagEvent,
     IssueCommentCreatedEvent,
     IssueCommentDeletedEvent,
     IssueCommentEvent,
     ReleaseEvent,
-    ReleaseReleasedEvent, CreateTagEvent,
+    ReleaseReleasedEvent,
 )
 from githubapp.Event import Event
+from githubapp.handlers.handler import Handler
 from githubapp.IssueCommentEvent import IssueCommentEditedEvent
 from githubapp.ReleaseEvent import ReleaseCreatedEvent
-from githubapp.handlers.handler import Handler
 
 
 # noinspection PyPep8Naming

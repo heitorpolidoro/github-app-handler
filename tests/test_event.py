@@ -58,6 +58,7 @@ def test_parse_event_missing_event(caplog):
     )
     assert "No webhook class for 'event2.action'" in caplog.text
 
+
 def test_parse_event_missing_event_without_action(caplog):
     Event.parse_event(
         {

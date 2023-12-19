@@ -56,7 +56,9 @@ class FlaskTest(TestCase):
                     continue
                 event_name = sub_event.__name__[:-5]
                 ret = getattr(self.app, event_name)(func)
-                assert func == ret, f"Method {event_name} does not return the method itself"
+                assert (
+                    func == ret
+                ), f"Method {event_name} does not return the method itself"
                 assert sub_event in self.app._webhooks, f"{event_name} not registered"
                 self.app._webhooks = defaultdict(list)
                 _register_all(sub_event)
