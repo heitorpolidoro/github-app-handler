@@ -1,3 +1,5 @@
+import logging
+
 from githubapp.CreateEvent import CreateBranchEvent, CreateEvent, CreateTagEvent
 from githubapp.handlers.exceptions import SignatureError
 from githubapp.IssueCommentEvent import (
@@ -7,6 +9,9 @@ from githubapp.IssueCommentEvent import (
 )
 from githubapp.ReleaseEvent import ReleaseEvent, ReleaseReleasedEvent
 
+logging.basicConfig(
+    format="%(levelname)s:%(module)s:%(funcName)s:%(message)s", level=logging.INFO
+)
 try:
     from githubapp.handlers.flask.flask_handler import Flask
 except ImportError:  # pragma no cover
