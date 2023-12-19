@@ -1,5 +1,6 @@
 import logging
 
+
 class Event:
     """Event base class
 
