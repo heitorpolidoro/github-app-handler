@@ -34,7 +34,6 @@ class LazyCompletableGithubObject(CompletableGithubObject):
         self._lazy_initialized = True
         self._lazy_requester = None
 
-
     def _initAttributes(self) -> None:
         raise NotImplementedError("BUG: Not Implemented _initAttributes")
 
@@ -43,6 +42,7 @@ class LazyCompletableGithubObject(CompletableGithubObject):
 
     def _completeIfNeeded(self) -> None:
         raise NotImplementedError("BUG: Not Implemented _completeIfNeeded")
+
     @property
     def lazy_requester(self):
         if self._lazy_requester is None:
