@@ -1,6 +1,5 @@
-import json
 from unittest import TestCase
-from unittest.mock import MagicMock, Mock, PropertyMock, patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
