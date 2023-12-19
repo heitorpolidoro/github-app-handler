@@ -52,7 +52,11 @@ def test_lazy_requester():
             "githubapp.LazyCompletableGithubObject.Requester",
             return_value=RequesterTest,
         ),
-        mock.patch('githubapp.LazyCompletableGithubObject.Event.app_id', new_callable=PropertyMock, return_value=123)
+        mock.patch(
+            "githubapp.LazyCompletableGithubObject.Event.app_id",
+            new_callable=PropertyMock,
+            return_value=123,
+        ),
     ):
         assert instance._none_value.value is None
         assert instance.none_value == "none_value"

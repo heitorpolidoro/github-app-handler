@@ -1,11 +1,11 @@
 import json
 from unittest import TestCase
-from unittest.mock import patch, PropertyMock, Mock, MagicMock
+from unittest.mock import MagicMock, Mock, PropertyMock, patch
+
+import pytest
 
 from githubapp import Flask, SignatureError
 from githubapp.ReleaseEvent import ReleaseReleasedEvent
-
-import pytest
 
 
 @pytest.fixture(autouse=True)
@@ -29,7 +29,7 @@ class FlaskTest(TestCase):
                 "X-Github-Event": "release",
                 "X-Github-Delivery": "96940560-962a-11ee-9b3e-f1cfed967ee9",
                 "X-Github-Hook-Installation-Target-ID": "684296",
-                "X-Github-Hook-Installation-Target-Type": "integration"
+                "X-Github-Hook-Installation-Target-Type": "integration",
             },
             "json": {
                 "action": "released",
@@ -37,7 +37,7 @@ class FlaskTest(TestCase):
                 "repository": {},
                 "sender": {},
                 "installation": {"id": "1"},
-            }
+            },
         }
         # default_header = {
         #     "User-Agent": "GitHub-Hookshot/0e9769b",
@@ -54,17 +54,11 @@ class FlaskTest(TestCase):
         #     self.issue_opened["headers"]["X-GitHub-Event"] = "issues"
 
     def test_root(self):
-        response = self.client.get(
-            '/',
-            **self.release_released
-        )
+        response = self.client.get("/", **self.release_released)
         assert response.text == "testing App up and running!"
 
     def test_no_hooks(self):
-        response = self.client.post(
-            '/',
-            **self.release_released
-        )
+        response = self.client.post("/", **self.release_released)
 
         self.assertEqual(response.status_code, 200)
 
@@ -73,8 +67,8 @@ class FlaskTest(TestCase):
             self.app.any(lambda: None)
 
         expected_message = (
-            'Method FlaskTest.test_event_handler_method_validation.<locals>.<lambda>() '
-            'signature error. The method must accept only one argument of the Event type'
+            "Method FlaskTest.test_event_handler_method_validation.<locals>.<lambda>() "
+            "signature error. The method must accept only one argument of the Event type"
         )
         assert str(err.value.message) == expected_message
 
@@ -87,10 +81,7 @@ class FlaskTest(TestCase):
 
         self.app.any(method)
 
-        response = self.client.post(
-            '/',
-            **self.release_released
-        )
+        response = self.client.post("/", **self.release_released)
 
         self.assertEqual(response.status_code, 200)
         assert called
@@ -104,10 +95,7 @@ class FlaskTest(TestCase):
 
         self.app.Release(method)
 
-        response = self.client.post(
-            '/',
-            **self.release_released
-        )
+        response = self.client.post("/", **self.release_released)
 
         self.assertEqual(response.status_code, 200)
         assert called
@@ -121,10 +109,7 @@ class FlaskTest(TestCase):
 
         self.app.ReleaseReleased(method)
 
-        response = self.client.post(
-            '/',
-            **self.release_released
-        )
+        response = self.client.post("/", **self.release_released)
 
         self.assertEqual(response.status_code, 200)
         assert called
@@ -140,10 +125,7 @@ class FlaskTest(TestCase):
         self.app.Release(method)
         self.app.ReleaseReleased(method)
 
-        response = self.client.post(
-            '/',
-            **self.release_released
-        )
+        response = self.client.post("/", **self.release_released)
 
         self.assertEqual(response.status_code, 200)
         assert calls == 3

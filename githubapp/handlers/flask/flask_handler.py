@@ -1,9 +1,10 @@
 import inspect
 
-from flask import Flask as OriginalFlask, request
+from flask import Flask as OriginalFlask
+from flask import request
+
 from githubapp.Event import Event
 from githubapp.handlers.exceptions import SignatureError
-
 
 # from githubapp_utils.models import Hook, IssuesHook
 # from githubapp_utils.webhooks import IssuesWebhooks
@@ -39,7 +40,6 @@ def validate_signature(func):
     except AssertionError:
         signature = ""
         raise SignatureError(func, signature)
-
 
 
 class Flask(OriginalFlask):
@@ -88,7 +88,9 @@ class Flask(OriginalFlask):
         return "OK"
 
     def _register_handler(self, func, event=None, action=None):
-        assert action is None or event is not None, "action must be specified with event"
+        assert (
+            action is None or event is not None
+        ), "action must be specified with event"
         validate_signature(func)
         key = event
         if action:
@@ -99,10 +101,13 @@ class Flask(OriginalFlask):
 
     def any(self, func):
         self._register_handler(func, "__any__")
+
     def Release(self, func):
         self._register_handler(func, "release")
+
     def ReleaseReleased(self, func):
         self._register_handler(func, "release", "released")
+
     #
     # @staticmethod
     # def clear_and_call(f: Callable):
