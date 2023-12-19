@@ -46,6 +46,7 @@ class LazyCompletableGithubObject(CompletableGithubObject):
                 .get_access_token(Event.installation_id)
                 .token
             )
+            Event.app_auth = app_auth
             self._lazy_requester = Requester(
                 auth=Token(token),
                 base_url=Consts.DEFAULT_BASE_URL,
