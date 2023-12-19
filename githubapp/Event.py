@@ -22,6 +22,7 @@ class Event:
     action = None
     app_id = None
     installation_id = None
+
     def __init__(self, headers, installation):
         self.hook_id = headers["X-Github-Hook-Id"]
         self.name = headers["X-Github-Event"]
@@ -78,4 +79,3 @@ class Event:
             event_name += f".{action}"
 
         logging.warning(f"No webhook class for '{event_name}'")
-
