@@ -21,13 +21,14 @@ except ImportError:  # pragma no cover
 __version__ = "0.0.1"
 
 __all__ = [
+    "CreateEvent",
+    "CreateBranchEvent",
+    "CreateTagEvent",
     "IssueCommentEvent",
     "IssueCommentCreatedEvent",
     "IssueCommentDeletedEvent",
     "ReleaseEvent",
     "ReleaseReleasedEvent",
+    "SignatureError",
     "Flask",
-    "CreateEvent",
-    "CreateBranchEvent",
-    "CreateTagEvent",
 ]
