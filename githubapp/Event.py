@@ -21,8 +21,7 @@ class Event:
     name = None
     action = None
     app_id = None
-    app_auth = None
-
+    installation_id = None
     def __init__(self, headers, installation):
         self.hook_id = headers["X-Github-Hook-Id"]
         self.name = headers["X-Github-Event"]
@@ -33,7 +32,8 @@ class Event:
         self.hook_installation_target_id = headers[
             "X-Github-Hook-Installation-Target-Id"
         ]
-        Event.app_id = installation["id"]
+        Event.app_id = int(self.hook_installation_target_id)
+        Event.installation_id = int(installation["id"])
 
     @classmethod
     def parse_event(cls, headers, body):
@@ -73,8 +73,9 @@ class Event:
                         clazz = sub_type_class
                         break
             return clazz
-        logging.warning(f"No webhook class for '{event}.{action}'")
+        event_name = event
+        if action:
+            event_name += f".{action}"
 
-    @staticmethod
-    def get_gh():
-        return Github(app_auth=Event.app_auth)
+        logging.warning(f"No webhook class for '{event_name}'")
+
