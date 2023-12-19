@@ -38,7 +38,7 @@ class LazyCompletableGithubObject(CompletableGithubObject):
     def lazy_requester(self):
         if self._lazy_requester is None:
             if not (private_key := os.getenv("PRIVATE_KEY")):
-                with open("private-key.pem", "rb") as key_file:
+                with open("private-key.pem", "rb") as key_file:  # pragma no cover
                     private_key = key_file.read().decode()
             app_auth = AppAuth(Event.app_id, private_key)
             token = (

@@ -47,19 +47,23 @@ class FlaskTest(TestCase):
         assert response.text == "testing App up and running!"
 
     def test_register_webhooks(self):
-        all_events = []
+        def func(_):
+            pass
 
         def _register_all(event=Event):
             for sub_event in event.__subclasses__():
                 if "Test" in sub_event.__name__:
                     continue
-                all_events.append(sub_event)
-                getattr(self.app, sub_event.__name__[:-5])(lambda e: sub_event)
+                event_name = sub_event.__name__[:-5]
+                ret = getattr(self.app, event_name)(func)
+                assert (
+                    func == ret
+                ), f"Method {event_name} does not return the method itself"
+                assert sub_event in self.app._webhooks, f"{event_name} not registered"
+                self.app._webhooks = defaultdict(list)
                 _register_all(sub_event)
 
         _register_all()
-        for e in all_events:
-            self.assertIn(e, self.app._webhooks)
 
     def test_no_hooks(self):
         response = self.client.post("/", **self.release_released)

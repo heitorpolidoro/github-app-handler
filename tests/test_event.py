@@ -59,6 +59,16 @@ def test_parse_event_missing_event(caplog):
     assert "No webhook class for 'event2.action'" in caplog.text
 
 
+def test_parse_event_missing_event_without_action(caplog):
+    Event.parse_event(
+        {
+            "X-Github-Event": "event2",
+        },
+        {},
+    )
+    assert "No webhook class for 'event2'" in caplog.text
+
+
 def test_validate_unique_event_name():
     with pytest.raises(ValueError) as err:
         Event.parse_event(
