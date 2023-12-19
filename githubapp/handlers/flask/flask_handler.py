@@ -7,7 +7,6 @@ from githubapp.Event import Event
 from githubapp.handlers.exceptions import SignatureError
 
 
-
 def validate_signature(func):
     parameters = inspect.signature(func).parameters
     try:
@@ -60,4 +59,3 @@ class Flask(OriginalFlask):
 
     def ReleaseReleased(self, func):
         self._register_handler(func, "release", "released")
-

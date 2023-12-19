@@ -115,4 +115,3 @@ class FlaskTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
         assert calls == 3
-
