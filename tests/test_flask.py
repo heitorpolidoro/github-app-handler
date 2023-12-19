@@ -38,19 +38,6 @@ class FlaskTest(TestCase):
                 "installation": {"id": "1"},
             },
         }
-        # default_header = {
-        #     "User-Agent": "GitHub-Hookshot/0e9769b",
-        #     "X-GitHub-Delivery": "96940560-962a-11ee-9b3e-f1cfed967ee9",
-        #     "X-GitHub-Hook-ID": "447832437",
-        #     "X-GitHub-Hook-Installation-Target-ID": "684296",
-        #     "X-GitHub-Hook-Installation-Target-Type": "integration"
-        # }
-        # with open("tests/issue_opened_bot.json") as f:
-        #     self.issue_opened = {
-        #         "json": json.load(f),
-        #         "headers": default_header,
-        #     }
-        #     self.issue_opened["headers"]["X-GitHub-Event"] = "issues"
 
     def test_root(self):
         response = self.client.get("/", **self.release_released)
@@ -128,50 +115,3 @@ class FlaskTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
         assert calls == 3
-
-    # def test_issues_call_with_some_arguments(self):
-    #     def issues(issue, repository):
-    #         assert issue.number == 10
-    #         assert repository.name == "github-app-utils"
-    #
-    #     self.app.issues(issues)
-    #
-    #     response = self.client.post(
-    #         '/',
-    #         **self.issue_opened
-    #     )
-    #
-    #     self.assertEqual(response.status_code, 200)
-    #
-    # def test_issues_call_with_wrong_argument(self):
-    #     def issues(issue, repository, comment):
-    #         assert False
-    #
-    #     self.app.issues(issues)
-    #
-    #     with pytest.raises(AttributeError) as err:
-    #         self.client.post(
-    #             '/',
-    #             **self.issue_opened
-    #         )
-    #
-    #     assert str(err.value) == ("'IssuesOpenedHook' object has no attribute 'comment',"
-    #                               " check https://docs.github.com/en/webhooks/webhook-events-and-payload")
-    #
-    # def test_issues_opened(self):
-    #     # Testing call for event function
-    #
-    #     def issues_opened(issue, repository):
-    #         assert issue.number == 10
-    #         assert repository.name == "github-app-utils"
-    #
-    #     issues = self.app.issues(Mock())
-    #     self.app.issues.opened(issues_opened)
-    #
-    #     response = self.client.post(
-    #         '/',
-    #         **self.issue_opened
-    #     )
-    #
-    #     self.assertEqual(response.status_code, 200)
-    #     issues.assert_not_called()
