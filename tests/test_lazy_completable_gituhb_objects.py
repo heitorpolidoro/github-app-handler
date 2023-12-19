@@ -56,7 +56,7 @@ def test_lazy_requester():
             new_callable=PropertyMock,
             return_value=123,
         ),
-        mock.patch.dict(os.environ, {"PRIVATE_KEY": "private-key"}, clear=True)
+        mock.patch.dict(os.environ, {"PRIVATE_KEY": "private-key"}, clear=True),
     ):
         assert instance._none_value.value is None
         assert instance.none_value == "none_value"
