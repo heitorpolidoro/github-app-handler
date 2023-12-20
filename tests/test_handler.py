@@ -13,7 +13,6 @@ from githubapp.webhook_handler import WebhookHandler
 from tests.mocks import EventTest, SubEventTest
 
 
-
 def test_add_handler_sub_event(method):
     WebhookHandler.add_handler(SubEventTest, method)
 

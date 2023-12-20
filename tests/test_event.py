@@ -1,6 +1,5 @@
 import inspect
 
-from githubapp.events import *
 # import pytest
 #
 # from githubapp.Event import Event
@@ -10,7 +9,6 @@ from githubapp.events import *
 from githubapp.events import Event
 from tests.conftest import event_action_request
 from tests.mocks import EventTest, SubEventTest
-
 
 
 def fill_body(body, *attributes):
