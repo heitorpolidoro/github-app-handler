@@ -2,17 +2,16 @@ from github.GitRelease import GitRelease
 from github.NamedUser import NamedUser
 from github.Repository import Repository
 
-from githubapp.Event import Event
+from githubapp.events import Event
 from githubapp.LazyCompletableGithubObject import LazyCompletableGithubObject
 
 
 class ReleaseEvent(Event):
     """This class represents a generic release event."""
+    event_identifier = {"event": "release"}
 
-    name = "release"
-
-    def __init__(self, release, repository, sender, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, headers, release, repository, sender, **kwargs):
+        super().__init__(headers, kwargs)
         self.release: GitRelease = LazyCompletableGithubObject.get_lazy_instance(
             GitRelease, attributes=release
         )
@@ -26,11 +25,9 @@ class ReleaseEvent(Event):
 
 class ReleaseReleasedEvent(ReleaseEvent):
     """This class represents an event when a release is released."""
-
-    action = "released"
+    event_identifier = {"action": "released"}
 
 
 class ReleaseCreatedEvent(ReleaseEvent):
     """This class represents an event when a release is created."""
-
-    action = "created"
+    event_identifier = {"action": "created"}

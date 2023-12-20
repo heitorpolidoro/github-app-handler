@@ -10,20 +10,20 @@ from githubapp.LazyCompletableGithubObject import LazyCompletableGithubObject
 
 class LazyClass(CompletableGithubObject):
     def __init__(self, *args, **kwargs):
-        self._none_value = None
+        self._attr1 = None
         super().__init__(*args, **kwargs)
 
     def _initAttributes(self) -> None:
-        self._none_value: Attribute[str] = NotSet
+        self._attr1: Attribute[str] = NotSet
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
-        if "none_value" in attributes:  # pragma no branch
-            self._none_value = self._makeStringAttribute(attributes["none_value"])
+        if "attr1" in attributes:  # pragma no branch
+            self._attr1 = self._makeStringAttribute(attributes["attr1"])
 
     @property
-    def none_value(self) -> Union[str, None]:
-        self._completeIfNotSet(self._none_value)
-        return self._none_value.value
+    def attr1(self) -> Union[str, None]:
+        self._completeIfNotSet(self._attr1)
+        return self._attr1.value
 
     @staticmethod
     def url():
@@ -38,10 +38,11 @@ def test_lazy():
 def test_lazy_requester():
     instance = LazyCompletableGithubObject.get_lazy_instance(LazyClass, attributes={})
 
+    # noinspection PyPep8Naming
     class RequesterTest:
         @staticmethod
         def requestJsonAndCheck(*_args):
-            return {}, {"none_value": "none_value"}
+            return {}, {"attr1": "value1"}
 
     with (
         mock.patch("githubapp.LazyCompletableGithubObject.GithubIntegration"),
@@ -52,14 +53,14 @@ def test_lazy_requester():
             return_value=RequesterTest,
         ),
         mock.patch(
-            "githubapp.LazyCompletableGithubObject.Event.app_id",
+            "githubapp.LazyCompletableGithubObject.Event.hook_installation_target_id",
             new_callable=PropertyMock,
             return_value=123,
         ),
         mock.patch.dict(os.environ, {"PRIVATE_KEY": "private-key"}, clear=True),
     ):
-        assert instance._none_value.value is None
-        assert instance.none_value == "none_value"
-        assert instance._none_value.value == "none_value"
+        assert instance._attr1.value is None
+        assert instance.attr1 == "value1"
+        assert instance._attr1.value == "value1"
 
     app_auth.assert_called_once_with(123, "private-key")

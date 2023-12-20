@@ -6,7 +6,7 @@ from github.Auth import AppAuth, Token
 from github.GithubObject import CompletableGithubObject
 from github.Requester import Requester
 
-from githubapp.Event import Event
+from githubapp.events import Event
 
 
 class LazyCompletableGithubObject(CompletableGithubObject):
@@ -40,7 +40,7 @@ class LazyCompletableGithubObject(CompletableGithubObject):
             if not (private_key := os.getenv("PRIVATE_KEY")):
                 with open("private-key.pem", "rb") as key_file:  # pragma no cover
                     private_key = key_file.read().decode()
-            app_auth = AppAuth(Event.app_id, private_key)
+            app_auth = AppAuth(Event.hook_installation_target_id, private_key)
             token = (
                 GithubIntegration(auth=app_auth)
                 .get_access_token(Event.installation_id)
