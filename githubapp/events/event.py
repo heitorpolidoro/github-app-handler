@@ -26,24 +26,25 @@ class Event:
     # app_id = None
     # installation_id = None
 
-    delivery  = None
-    event  = None
-    hook_id  = None
-    hook_installation_target_id  = None
-    hook_installation_target_type  = None
+    delivery = None
+    event = None
+    hook_id = None
+    hook_installation_target_id = None
+    hook_installation_target_type = None
     installation_id = None
     event_identifier = None
 
     _raw_body = None
-    _raw_headers  = None
+    _raw_headers = None
+
     #
     def __init__(self, headers, body):
         Event.delivery = headers["X-Github-Delivery"]
         Event.event = headers["X-Github-Event"]
         Event.hook_id = int(headers["X-Github-Hook-Id"])
-        Event.hook_installation_target_id = int(headers[
-            "X-Github-Hook-Installation-Target-Id"
-        ])
+        Event.hook_installation_target_id = int(
+            headers["X-Github-Hook-Installation-Target-Id"]
+        )
         Event.hook_installation_target_type = headers[
             "X-Github-Hook-Installation-Target-Type"
         ]
