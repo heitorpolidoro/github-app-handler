@@ -8,14 +8,15 @@ name: Snorkell.ai - Revolutionizing Documentation on GitHub
 # The 'on' field below specifies the events that trigger the workflow. This workflow is triggered by a push to the master branch or a manual workflow dispatch.
 on:
   push:
-    branches: ["master"]
+    branches:
+      - master
   workflow_dispatch:
 
 # The 'jobs' field below specifies the jobs that the workflow runs. This workflow has one job called 'Documentation'.
 jobs:
   Documentation:
     # The 'runs-on' field below specifies the type of runner that the job will run on. This job runs on the latest version of Ubuntu.
-runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
     # The 'steps' field below specifies the steps that the job will run. There is one step that uses the Snorkell DocGen Client.
     steps:
     - name: Snorkell DocGen Client
