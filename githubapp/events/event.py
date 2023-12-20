@@ -38,7 +38,7 @@ class Event:
     _raw_headers = None
 
     #
-    def __init__(self, headers, body):
+    def __init__(self, headers, **kwargs):
         Event.delivery = headers["X-Github-Delivery"]
         Event.event = headers["X-Github-Event"]
         Event.hook_id = int(headers["X-Github-Hook-Id"])
@@ -48,10 +48,10 @@ class Event:
         Event.hook_installation_target_type = headers[
             "X-Github-Hook-Installation-Target-Type"
         ]
-        Event.installation_id = int(body["installation"]["id"])
+        Event.installation_id = int(kwargs["installation"]["id"])
 
         Event._raw_headers = headers
-        Event._raw_body = body
+        Event._raw_body = kwargs
 
     @staticmethod
     def normalize_dicts(*dicts) -> dict[str, str]:

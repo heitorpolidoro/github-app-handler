@@ -3,13 +3,13 @@ from unittest.mock import Mock
 
 import pytest
 
-from githubapp.handlers import Handler
+from githubapp.webhook_handler import WebhookHandler
 
 
 @pytest.fixture(autouse=True)
 def setup_and_teardown():
     yield
-    Handler.handlers = defaultdict(list)
+    WebhookHandler.handlers = defaultdict(list)
 
 
 @pytest.fixture
@@ -21,21 +21,7 @@ def event_action_request():
         "X-Github-Hook-Installation-Target-Type": "type",
         "X-Github-Hook-Installation-Target-Id": "2",
     }
-    body = {}
-    for txt in [
-        "action",
-        "release",
-        "master_branch",
-        "pusher_type",
-        "ref",
-        "description",
-        "comment",
-    ]:
-        body[txt] = txt
-    for obj in ["installation", "repository", "sender", "issue", "changes"]:
-        body[obj] = {}
-
-    body["installation"]["id"] = "3"
+    body = {"installation": {"id": "3"}, "action": "action"}
     yield handlers, body
 
 

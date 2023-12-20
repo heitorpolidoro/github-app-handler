@@ -13,7 +13,7 @@ class IssueCommentEvent(Event):
     event_identifier = {"event": "issue_comment"}
 
     def __init__(self, headers, comment, issue, repository, sender, **kwargs):
-        super().__init__(headers, kwargs)
+        super().__init__(headers, **kwargs)
         self.issue: Issue = LazyCompletableGithubObject.get_lazy_instance(
             Issue, attributes=issue
         )

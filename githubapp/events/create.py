@@ -22,7 +22,7 @@ class CreateEvent(Event):
         sender,
         **kwargs,
     ):
-        super().__init__(headers, kwargs)
+        super().__init__(headers, **kwargs)
         self.description: str = description
         self.master_branch: str = master_branch
         self.pusher_type: str = pusher_type

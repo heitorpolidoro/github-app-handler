@@ -1,3 +1,6 @@
+import inspect
+
+from githubapp.events import *
 # import pytest
 #
 # from githubapp.Event import Event
@@ -9,16 +12,36 @@ from tests.conftest import event_action_request
 from tests.mocks import EventTest, SubEventTest
 
 
+
+def fill_body(body, *attributes):
+    if isinstance(body, tuple):
+        _, body = body
+    for txt in [
+        "action",
+        "release",
+        "master_branch",
+        "pusher_type",
+        "ref",
+        "description",
+        "comment",
+    ]:
+        if txt in attributes:
+            body[txt] = txt
+    for obj in ["repository", "sender", "issue", "changes"]:
+        if obj in attributes:
+            body[obj] = {}
+
+
 # noinspection PyUnresolvedReferences
 def test_init(event_action_request):
-    event = SubEventTest(*event_action_request)
-    assert event.event == "event"
-    assert event.hook_id == 1
-    assert event.delivery == "a1b2c3d4"
-    assert event.hook_installation_target_type == "type"
-    assert event.hook_installation_target_id == 2
-    assert event.action == "action"
-    assert event.installation["id"] == 3
+    headers, body = event_action_request
+    SubEventTest(headers, **body)
+    assert Event.event == "event"
+    assert Event.hook_id == 1
+    assert Event.delivery == "a1b2c3d4"
+    assert Event.hook_installation_target_type == "type"
+    assert Event.hook_installation_target_id == 2
+    assert Event.installation_id == 3
 
 
 def test_normalize_dicts():
@@ -61,6 +84,10 @@ def test_all_events(event_action_request):
             body.update(sub_event_class.event_identifier)
             event = Event.get_event(headers, body)
             assert event == sub_event_class
+            for attr in inspect.signature(event).parameters:
+                if attr != "headers":
+                    body[attr] = "value"
+
             event(headers, **body)
 
 

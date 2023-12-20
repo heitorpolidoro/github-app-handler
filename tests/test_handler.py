@@ -9,58 +9,59 @@
 import pytest
 
 from githubapp.handlers import SignatureError
-from githubapp.handlers import Handler
+from githubapp.webhook_handler import WebhookHandler
 from tests.mocks import EventTest, SubEventTest
 
 
-def test_add_handler_sub_event(method):
-    Handler.add_handler(SubEventTest, method)
 
-    assert len(Handler.handlers) == 1
-    assert Handler.handlers.get(SubEventTest) == [method]
+def test_add_handler_sub_event(method):
+    WebhookHandler.add_handler(SubEventTest, method)
+
+    assert len(WebhookHandler.handlers) == 1
+    assert WebhookHandler.handlers.get(SubEventTest) == [method]
 
 
 def test_add_handler_event(method):
-    Handler.add_handler(EventTest, method)
+    WebhookHandler.add_handler(EventTest, method)
 
-    assert len(Handler.handlers) == 1
-    assert EventTest not in Handler.handlers
-    assert Handler.handlers.get(SubEventTest) == [method]
+    assert len(WebhookHandler.handlers) == 1
+    assert EventTest not in WebhookHandler.handlers
+    assert WebhookHandler.handlers.get(SubEventTest) == [method]
 
 
 def test_add_handler_event_and_sub_event(method):
-    Handler.add_handler(EventTest, method)
-    Handler.add_handler(SubEventTest, method)
+    WebhookHandler.add_handler(EventTest, method)
+    WebhookHandler.add_handler(SubEventTest, method)
 
-    assert len(Handler.handlers) == 1
-    assert EventTest not in Handler.handlers
-    assert Handler.handlers.get(SubEventTest) == [method] * 2
+    assert len(WebhookHandler.handlers) == 1
+    assert EventTest not in WebhookHandler.handlers
+    assert WebhookHandler.handlers.get(SubEventTest) == [method] * 2
 
 
 def test_handle_sub_event(method, event_action_request):
-    Handler.add_handler(SubEventTest, method)
-    Handler.handle(*event_action_request)
+    WebhookHandler.add_handler(SubEventTest, method)
+    WebhookHandler.handle(*event_action_request)
     method.assert_called_once()
     assert isinstance(method.call_args_list[0].args[0], SubEventTest)
 
 
 def test_handle_event(method, event_action_request):
-    Handler.add_handler(EventTest, method)
-    Handler.handle(*event_action_request)
+    WebhookHandler.add_handler(EventTest, method)
+    WebhookHandler.handle(*event_action_request)
     method.assert_called_once()
     assert isinstance(method.call_args_list[0].args[0], SubEventTest)
 
 
 def test_handle_event_and_sub_event(method, event_action_request):
-    Handler.add_handler(EventTest, method)
-    Handler.add_handler(SubEventTest, method)
-    Handler.handle(*event_action_request)
+    WebhookHandler.add_handler(EventTest, method)
+    WebhookHandler.add_handler(SubEventTest, method)
+    WebhookHandler.handle(*event_action_request)
     assert method.call_count == 2
     assert all(isinstance(args, SubEventTest) for args in method.call_args_list[0].args)
 
 
 def test_root():
-    assert Handler.root("test")() == "test App up and running!"
+    assert WebhookHandler.root("test")() == "test App up and running!"
 
 
 def test_event_handler_method_validation():
@@ -68,7 +69,7 @@ def test_event_handler_method_validation():
         return None
 
     with pytest.raises(SignatureError) as err:
-        Handler._validate_signature(method)
+        WebhookHandler._validate_signature(method)
 
     expected_message = (
         "Method test_event_handler_method_validation.<locals>.method() "

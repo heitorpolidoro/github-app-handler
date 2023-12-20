@@ -11,7 +11,7 @@ class ReleaseEvent(Event):
     event_identifier = {"event": "release"}
 
     def __init__(self, headers, release, repository, sender, **kwargs):
-        super().__init__(headers, kwargs)
+        super().__init__(headers, **kwargs)
         self.release: GitRelease = LazyCompletableGithubObject.get_lazy_instance(
             GitRelease, attributes=release
         )
