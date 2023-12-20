@@ -32,6 +32,7 @@ jobs:
       uses: getappmap/install-action@v1
       with:
         project-type: pip
+        build-file: requirements.test.txt
     - name: Commit changes
       uses: EndBug/add-and-commit@v9
       with:
