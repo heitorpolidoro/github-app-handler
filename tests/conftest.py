@@ -19,7 +19,7 @@ def event_action_request():
         "X-Github-Hook-Id": "1",
         "X-Github-Delivery": "a1b2c3d4",
         "X-Github-Hook-Installation-Target-Type": "type",
-        "X-Github-Hook-Installation-Target-Id": "3",
+        "X-Github-Hook-Installation-Target-Id": "2",
     }
     body = {}
     for txt in [
@@ -35,7 +35,7 @@ def event_action_request():
     for obj in ["installation", "repository", "sender", "issue", "changes"]:
         body[obj] = {}
 
-    body["installation"]["id"] = "4"
+    body["installation"]["id"] = "3"
     yield handlers, body
 
 

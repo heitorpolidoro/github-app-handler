@@ -1,24 +1,24 @@
-from githubapp.events import *
 # import pytest
 #
 # from githubapp.Event import Event
 # from tests.factory import event_factory
 #
+from githubapp.events import *
 from githubapp.events import Event
 from tests.conftest import event_action_request
-from tests.mocks import SubEventTest, EventTest
+from tests.mocks import EventTest, SubEventTest
 
 
 # noinspection PyUnresolvedReferences
 def test_init(event_action_request):
     event = SubEventTest(*event_action_request)
     assert event.event == "event"
-    assert event.hook_id == "1"
+    assert event.hook_id == 1
     assert event.delivery == "a1b2c3d4"
     assert event.hook_installation_target_type == "type"
-    assert event.hook_installation_target_id == "3"
+    assert event.hook_installation_target_id == 2
     assert event.action == "action"
-    assert event.installation["id"] == "4"
+    assert event.installation["id"] == 3
 
 
 def test_normalize_dicts():
@@ -62,6 +62,7 @@ def test_all_events(event_action_request):
             event = Event.get_event(headers, body)
             assert event == sub_event_class
             event(headers, **body)
+
 
 # class EventTest(Event):
 #     name = "event"

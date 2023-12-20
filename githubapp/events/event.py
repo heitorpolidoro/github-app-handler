@@ -25,22 +25,33 @@ class Event:
     #     action = None
     # app_id = None
     # installation_id = None
-    installation_id = None
+
+    delivery = None
+    event = None
+    hook_id = None
     hook_installation_target_id = None
+    hook_installation_target_type = None
+    installation_id = None
     event_identifier = None
+
+    _raw_body = None
+    _raw_headers = None
 
     #
     def __init__(self, headers, body):
-        self.delivery = headers["X-Github-Delivery"]
-        self.event = headers["X-Github-Event"]
-        self.hook_id = headers["X-Github-Hook-Id"]
-        self.hook_installation_target_id = headers[
-            "X-Github-Hook-Installation-Target-Id"
-        ]
-        self.hook_installation_target_type = headers[
+        Event.delivery = headers["X-Github-Delivery"]
+        Event.event = headers["X-Github-Event"]
+        Event.hook_id = int(headers["X-Github-Hook-Id"])
+        Event.hook_installation_target_id = int(
+            headers["X-Github-Hook-Installation-Target-Id"]
+        )
+        Event.hook_installation_target_type = headers[
             "X-Github-Hook-Installation-Target-Type"
         ]
-        self.__dict__.update(**body)
+        Event.installation_id = int(body["installation"]["id"])
+
+        Event._raw_headers = headers
+        Event._raw_body = body
 
     @staticmethod
     def normalize_dicts(*dicts) -> dict[str, str]:
