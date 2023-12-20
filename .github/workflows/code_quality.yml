@@ -38,7 +38,7 @@ jobs:
         git config user.email github-actions@github.com
         git add --all .
         git commit --message "ci: Add AppMap language agent and appmap.yml"
-        git push
+        git push origin HEAD:appmap-ci
     # End AppMap CI language agent installation
     - name: Lint with flake8
       run: |
