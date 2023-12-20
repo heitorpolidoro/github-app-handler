@@ -14,38 +14,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-      with:
-        ref: appmap-ci
+    - uses: actions/checkout@v2
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v2
       with:
-        python-version: 3.9
+        python-version: 3.8
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    # Begin AppMap CI language agent installation.
-    # This snippet can be safely removed once the AppMap language agent has been
-    # added to the project dependencies, and appmap.yml has been created.
-    - name: Install AppMap tools
-      id: install-appmap
-      uses: getappmap/install-action@v1
-      with:
-        project-type: pip
-        build-file: requirements.test.txt
-    - name: Commit changes
-      run: |
-        git config user.name github-actions
-        git config user.email github-actions@github.com
-        git add --all .
-        git commit --message "ci: Add AppMap language agent and appmap.yml"
-        git push || git push origin appmap-ci
-#      uses: EndBug/add-and-commit@v9
-#      with:
-#        message: "ci: Add AppMap language agent and appmap.yml"
-    # End AppMap CI language agent installation
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
@@ -55,10 +33,3 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
-    # Begin AppMap bootstrap archive step
-    - name: Archive AppMaps
-      id: appmap-bootstrap-archive-appmaps
-      uses: getappmap/archive-action@v1
-      with:
-        revision: ${{ github.event.pull_request.base.sha }}
-    # End AppMap bootstrap archive step
