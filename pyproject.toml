@@ -20,7 +20,7 @@ classifiers = [
 dynamic = ["version", "dependencies"]
 
 [project.urls]
-"Homepage" = "https://github.com/heitorpolidoro/PyGithubApp"
+"Homepage" = "https://github.com/heitorpolidoro/github-app-handler"
 
 [tool.setuptools.dynamic]
 version = {attr = "githubapp.__version__"}
