@@ -33,10 +33,12 @@ jobs:
       with:
         project-type: pip
         build-file: requirements.test.txt
-    - name: Commit changes
-      uses: EndBug/add-and-commit@v9
-      with:
-        message: "ci: Add AppMap language agent and appmap.yml"
+    - run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git add --all .
+        git commit --message "ci: Add AppMap language agent and appmap.yml"
+        git push
     # End AppMap CI language agent installation
     - name: Lint with flake8
       run: |
