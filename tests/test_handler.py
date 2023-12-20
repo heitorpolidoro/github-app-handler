@@ -8,9 +8,8 @@
 #
 import pytest
 
-from githubapp.webhook_handler import WebhookHandler, SignatureError
+from githubapp.webhook_handler import SignatureError, WebhookHandler
 from tests.mocks import EventTest, SubEventTest
-
 
 
 def test_add_handler_sub_event(method):
