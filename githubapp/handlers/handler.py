@@ -36,7 +36,7 @@ class Handler:
         # )
         body.pop("action", None)
         for handler in Handler.handlers.get(event_class, []):
-            handler(event_class(headers, body))
+            handler(event_class(headers, **body))
 
     @staticmethod
     def root(name):

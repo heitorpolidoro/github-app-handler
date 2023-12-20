@@ -13,12 +13,12 @@ from tests.mocks import SubEventTest, EventTest
 def test_init(event_action_request):
     event = SubEventTest(*event_action_request)
     assert event.event == "event"
-    assert event.hook_id == "1"
+    assert event.hook_id == 1
     assert event.delivery == "a1b2c3d4"
     assert event.hook_installation_target_type == "type"
-    assert event.hook_installation_target_id == "3"
+    assert event.hook_installation_target_id == 2
     assert event.action == "action"
-    assert event.installation["id"] == "4"
+    assert event.installation["id"] == 3
 
 
 def test_normalize_dicts():
