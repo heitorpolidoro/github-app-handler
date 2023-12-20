@@ -1,18 +1,28 @@
+# This workflow uses the Snorkell.ai service to generate documentation and automatically create a new pull request with the generated documentation.
+
 # This workflow will improvise current file with AI genereated documentation and Create new PR
 
+# The 'name' field below specifies the name of the workflow
 name: Snorkell.ai - Revolutionizing Documentation on GitHub
 
+# The 'on' field below specifies the events that trigger the workflow. This workflow is triggered by a push to the master branch or a manual workflow dispatch.
 on:
   push:
-    branches: ["master"]
+    branches:
+      - master
   workflow_dispatch:
 
+# The 'jobs' field below specifies the jobs that the workflow runs. This workflow has one job called 'Documentation'.
 jobs:
   Documentation:
+    # The 'runs-on' field below specifies the type of runner that the job will run on. This job runs on the latest version of Ubuntu.
     runs-on: ubuntu-latest
+    # The 'steps' field below specifies the steps that the job will run. There is one step that uses the Snorkell DocGen Client.
     steps:
     - name: Snorkell DocGen Client
+      # The 'uses' field below specifies the action that the step will use. This step uses the Snorkell DocGen Client action.
       uses: SingularityX-ai/snorkell-documentation-client@v1.0.0
+            # The 'with' field below specifies the inputs to the action. The inputs are the client ID and API key for the Snorkell service.
       with:
         client_id: ${{ secrets.SNORKELL_CLIENT_ID }}
         api_key: ${{ secrets.SNORKELL_API_KEY }}
