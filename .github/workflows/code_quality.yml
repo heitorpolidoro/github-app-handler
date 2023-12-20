@@ -37,14 +37,12 @@ jobs:
         build-file: requirements.test.txt
     - name: Commit changes
       run: |
-        git branch --all
-        git checkout appmap-ci
-        git pull
         git config user.name github-actions
         git config user.email github-actions@github.com
         git add --all .
         git commit --message "ci: Add AppMap language agent and appmap.yml"
-        git push origin HEAD:appmap-ci#      uses: EndBug/add-and-commit@v9
+        git push || git push origin appmap-ci
+#      uses: EndBug/add-and-commit@v9
 #      with:
 #        message: "ci: Add AppMap language agent and appmap.yml"
     # End AppMap CI language agent installation
