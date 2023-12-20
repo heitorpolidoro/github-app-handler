@@ -1,10 +1,19 @@
 import inspect
 from collections import defaultdict
 from functools import wraps
-from typing import Callable, Any
+from typing import Any, Callable
 
 from githubapp.events import Event
-from githubapp.handlers import SignatureError
+
+
+class SignatureError(Exception):
+    """Exception when the method has a wrong signature"""
+
+    def __init__(self, method, signature):
+        self.message = (
+            f"Method {method.__qualname__}({signature}) signature error. "
+            f"The method must accept only one argument of the Event type"
+        )
 
 
 def webhook_handler(event: type[Event]):
@@ -45,6 +54,7 @@ class WebhookHandler:
     def root(name):
         def root_wrapper():
             return f"{name} App up and running!"
+
         return wraps(root_wrapper)(root_wrapper)
 
     @staticmethod
