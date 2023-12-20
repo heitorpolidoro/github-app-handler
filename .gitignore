@@ -161,3 +161,10 @@ cython_debug/
 /.idea/
 /.python-version
 /private-key.pem
+
+
+# AppMap artifacts
+/.appmap
+
+# Node modules
+/node_modules
