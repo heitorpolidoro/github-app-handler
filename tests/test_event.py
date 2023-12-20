@@ -1,12 +1,12 @@
-from githubapp.events import *
 # import pytest
 #
 # from githubapp.Event import Event
 # from tests.factory import event_factory
 #
+from githubapp.events import *
 from githubapp.events import Event
 from tests.conftest import event_action_request
-from tests.mocks import SubEventTest, EventTest
+from tests.mocks import EventTest, SubEventTest
 
 
 # noinspection PyUnresolvedReferences
@@ -62,6 +62,7 @@ def test_all_events(event_action_request):
             event = Event.get_event(headers, body)
             assert event == sub_event_class
             event(headers, **body)
+
 
 # class EventTest(Event):
 #     name = "event"

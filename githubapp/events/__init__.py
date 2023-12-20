@@ -1,4 +1,9 @@
+from .create import CreateBranchEvent, CreateEvent, CreateTagEvent
 from .event import Event
-from .create import CreateEvent, CreateBranchEvent, CreateTagEvent
-from .issue_comment import IssueCommentEvent, IssueCommentCreatedEvent, IssueCommentEditedEvent, IssueCommentDeletedEvent
+from .issue_comment import (
+    IssueCommentCreatedEvent,
+    IssueCommentDeletedEvent,
+    IssueCommentEditedEvent,
+    IssueCommentEvent,
+)
 from .release import ReleaseCreatedEvent, ReleaseReleasedEvent

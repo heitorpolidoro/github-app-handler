@@ -8,8 +8,7 @@
 #
 import pytest
 
-from githubapp.handlers import SignatureError
-from githubapp.handlers import Handler
+from githubapp.handlers import Handler, SignatureError
 from tests.mocks import EventTest, SubEventTest
 
 

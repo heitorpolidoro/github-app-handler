@@ -1,4 +1,5 @@
-from flask import Flask as OriginalFlask, request
+from flask import Flask as OriginalFlask
+from flask import request
 
 from githubapp.handlers import Handler
 

@@ -1,7 +1,7 @@
 import inspect
 from collections import defaultdict
 from functools import wraps
-from typing import Callable, Any
+from typing import Any, Callable
 
 from githubapp.events import Event
 from githubapp.handlers import SignatureError
@@ -42,6 +42,7 @@ class Handler:
     def root(name):
         def root_wrapper():
             return f"{name} App up and running!"
+
         return wraps(root_wrapper)(root_wrapper)
 
     @staticmethod
