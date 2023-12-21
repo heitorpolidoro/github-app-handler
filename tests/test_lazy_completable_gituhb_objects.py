@@ -11,6 +11,8 @@ from githubapp.LazyCompletableGithubObject import LazyCompletableGithubObject
 class LazyClass(CompletableGithubObject):
     def __init__(self, *args, **kwargs):
         self._attr1 = None
+        self._url = Attribute
+        self._url.value = "url"
         super().__init__(*args, **kwargs)
 
     def _initAttributes(self) -> None:
