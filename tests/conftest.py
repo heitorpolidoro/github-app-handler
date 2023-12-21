@@ -8,6 +8,19 @@ from githubapp import webhook_handler
 
 @pytest.fixture(autouse=True)
 def setup_and_teardown():
+    """
+    This function sets up and tears down the environment.
+
+    Yields:
+        None
+
+    Raises:
+        No exceptions are raised.
+
+    Example:
+        setup_and_teardown()
+    """
+
     yield
     webhook_handler.handlers = defaultdict(list)
 
@@ -27,6 +40,22 @@ def event_action_request():
 
 @pytest.fixture
 def method():
+    """
+    This function yields a Mock object that wraps the 'dummy' function.
+
+    Returns:
+        Mock: A Mock object that wraps the 'dummy' function.
+
+    Raises:
+        This function does not raise any exceptions.
+
+    Example:
+        Example usage of the 'method' function:
+        ```
+        result = method()
+        ```
+    """
+
     def dummy(event):
         return event
 
@@ -35,6 +64,18 @@ def method():
 
 @pytest.fixture(autouse=True)
 def validate_signature():
+    """
+    Validate the signature.
+
+    This function validates the signature using the _validate_signature method from webhook_handler module.
+
+    Raises:
+        None
+
+    Example:
+        validate_signature()
+    """
+
     with patch(
             "githubapp.webhook_handler._validate_signature",
             return_value=True,
