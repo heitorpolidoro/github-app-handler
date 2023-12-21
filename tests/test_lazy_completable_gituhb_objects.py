@@ -10,6 +10,20 @@ from githubapp.LazyCompletableGithubObject import LazyCompletableGithubObject
 
 class LazyClass(CompletableGithubObject):
     def __init__(self, *args, **kwargs):
+        """
+        Initialize the object.
+
+        Args:
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+
+        Raises:
+            None
+
+        Example:
+            obj = ClassName()
+        """
+
         self._url = Attribute
         self._url.value = "url"
         super().__init__(*args, **kwargs)
@@ -37,6 +51,20 @@ def test_lazy():
 
 
 def test_lazy_requester():
+    """
+    Test the lazy requester function.
+
+    This function tests the lazy requester by patching multiple objects and asserting the behavior of the lazy instance.
+
+    Raises:
+        AssertionError: If the assertions fail.
+
+    Example:
+        ```
+        test_lazy_requester()
+        ```
+    """
+
     # noinspection PyPep8Naming
     class RequesterTest:
         @staticmethod
