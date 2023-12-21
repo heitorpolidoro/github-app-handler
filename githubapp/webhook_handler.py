@@ -52,8 +52,8 @@ def add_handler(event: type[Event], method: Callable):
         handlers[event].append(method)
 
 
-
 handlers = defaultdict(list)
+
 
 def handle(headers: dict[str, Any], body: dict[str, Any]):
     """Handle a webhook request.
@@ -69,6 +69,7 @@ def handle(headers: dict[str, Any], body: dict[str, Any]):
     body.pop("action", None)
     for handler in handlers.get(event_class, []):
         handler(event_class(headers, **body))
+
 
 def root(name):
     """Decorator to register a method as the root handler.
