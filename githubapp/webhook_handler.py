@@ -3,7 +3,7 @@ from collections import defaultdict
 from functools import wraps
 from typing import Any, Callable
 
-from githubapp.events import Event
+from githubapp.events import Event, EventDataParser
 
 
 class SignatureError(Exception):
@@ -65,10 +65,21 @@ def handle(headers: dict[str, Any], body: dict[str, Any]):
         body: The request body.
     """
 
+    event_data_parser = EventDataParser(
+        delivery=headers['X-GitHub-Delivery'],
+        event=headers['X-GitHub-Event'],
+        hook_id=headers['X-GitHub-Hook-Id'],
+        hook_installation_target_id=headers['X-GitHub-Hook-Installation-Target-Id'],
+        hook_installation_target_type=headers['X-GitHub-Hook-Installation-Target-Type'],
+        installation_id=body.get('installation', {}).get('id'),
+        raw_headers=headers,
+        raw_body=body
+    )
+
     event_class = Event.get_event(headers, body)
     body.pop("action", None)
     for handler in handlers.get(event_class, []):
-        handler(event_class(headers, **body))
+        handler(event_class(event_data_parser))
 
 def root(name):
     """Decorator to register a method as the root handler.
