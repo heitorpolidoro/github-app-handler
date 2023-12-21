@@ -16,11 +16,11 @@ class LazyCompletableGithubObject(CompletableGithubObject):
     """
 
     def __init__(
-            self,
-            requester: "Requester" = None,
-            headers: dict[str, Union[str, int]] = None,
-            attributes: dict[str, Any] = None,
-            completed: bool = False,
+        self,
+        requester: "Requester" = None,
+        headers: dict[str, Union[str, int]] = None,
+        attributes: dict[str, Any] = None,
+        completed: bool = False,
     ):
         self._lazy_initialized = False
         # noinspection PyTypeChecker
@@ -63,10 +63,10 @@ class LazyCompletableGithubObject(CompletableGithubObject):
         """If the value is None, makes a request to update the object."""
         value = super().__getattribute__(item)
         if (
-                value is None
-                and not item.startswith("_lazy")
-                and getattr(self, "_lazy_initialized", False)
-                and self._lazy_requester is None
+            value is None
+            and not item.startswith("_lazy")
+            and getattr(self, "_lazy_initialized", False)
+            and self._lazy_requester is None
         ):
             headers, data = self.lazy_requester.requestJsonAndCheck("GET", self.url)
             new_self = self.__class__(
