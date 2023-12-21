@@ -52,8 +52,8 @@ def add_handler(event: type[Event], method: Callable):
         handlers[event].append(method)
 
 
-
 handlers = defaultdict(list)
+
 
 def handle(headers: dict[str, Any], body: dict[str, Any]):
     """Handle a webhook request.
@@ -66,20 +66,21 @@ def handle(headers: dict[str, Any], body: dict[str, Any]):
     """
 
     event_data_parser = EventDataParser(
-        delivery=headers['X-GitHub-Delivery'],
-        event=headers['X-GitHub-Event'],
-        hook_id=headers['X-GitHub-Hook-Id'],
-        hook_installation_target_id=headers['X-GitHub-Hook-Installation-Target-Id'],
-        hook_installation_target_type=headers['X-GitHub-Hook-Installation-Target-Type'],
-        installation_id=body.get('installation', {}).get('id'),
+        delivery=headers["X-GitHub-Delivery"],
+        event=headers["X-GitHub-Event"],
+        hook_id=headers["X-GitHub-Hook-Id"],
+        hook_installation_target_id=headers["X-GitHub-Hook-Installation-Target-Id"],
+        hook_installation_target_type=headers["X-GitHub-Hook-Installation-Target-Type"],
+        installation_id=body.get("installation", {}).get("id"),
         raw_headers=headers,
-        raw_body=body
+        raw_body=body,
     )
 
     event_class = Event.get_event(headers, body)
     body.pop("action", None)
     for handler in handlers.get(event_class, []):
         handler(event_class(event_data_parser))
+
 
 def root(name):
     """Decorator to register a method as the root handler.
