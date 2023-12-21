@@ -33,18 +33,27 @@ class LazyClass(CompletableGithubObject):
 
 def test_lazy_attribute_access_initializes_requester():
     # Test that accessing an attribute on a LazyCompletableGithubObject triggers lazy initialization
-    with mock.patch('githubapp.LazyCompletableGithubObject.Requester.requestJsonAndCheck') as mock_requestJsonAndCheck:
-        mock_requestJsonAndCheck.side_effect = lambda *args, **kwargs: ({}, {'attr1': 'value1'})
-        instance = LazyCompletableGithubObject.get_lazy_instance(LazyClass, attributes={})
+    with mock.patch(
+        "githubapp.LazyCompletableGithubObject.Requester.requestJsonAndCheck"
+    ) as mock_requestJsonAndCheck:
+        mock_requestJsonAndCheck.side_effect = lambda *args, **kwargs: (
+            {},
+            {"attr1": "value1"},
+        )
+        instance = LazyCompletableGithubObject.get_lazy_instance(
+            LazyClass, attributes={}
+        )
         # Lazy initialization should fetch the correct value
-        assert instance.attr1 == 'value1'
+        assert instance.attr1 == "value1"
         # Requester should be initialized after access
         assert instance._requester._initialized
-        mock_requestJsonAndCheck.assert_called_once_with('GET', instance.url())
+        mock_requestJsonAndCheck.assert_called_once_with("GET", instance.url())
     # Ensure a LazyCompletableGithubObject instance is initialized lazily
     instance = LazyCompletableGithubObject.get_lazy_instance(LazyClass, attributes={})
     assert isinstance(instance, LazyClass)
-    assert not instance._requester._initialized  # Confirm requester is not initialized on instantiation
+    assert (
+        not instance._requester._initialized
+    )  # Confirm requester is not initialized on instantiation
     # The assert not hasattr(instance, '_attr1') is removed as _attr1 is an attribute of LazyClass, to be tested with attribute access
     instance = LazyCompletableGithubObject.get_lazy_instance(LazyClass, attributes={})
     assert isinstance(instance, LazyClass)
@@ -52,15 +61,23 @@ def test_lazy_attribute_access_initializes_requester():
 
 def test_no_reinitialization_after_lazy_loading():
     # Test that after lazy initialization, the requester is not reinitialized on subsequent attribute access
-    with mock.patch('githubapp.LazyCompletableGithubObject.LazyRequester') as MockLazyRequester:
-        MockLazyRequester.return_value.requestJsonAndCheck.side_effect = [({'header':'value'}, {'attr1': 'value1'}), Exception('Requester should not be re-initialized')]
-        instance = LazyCompletableGithubObject.get_lazy_instance(LazyClass, attributes={})
+    with mock.patch(
+        "githubapp.LazyCompletableGithubObject.LazyRequester"
+    ) as MockLazyRequester:
+        MockLazyRequester.return_value.requestJsonAndCheck.side_effect = [
+            ({"header": "value"}, {"attr1": "value1"}),
+            Exception("Requester should not be re-initialized"),
+        ]
+        instance = LazyCompletableGithubObject.get_lazy_instance(
+            LazyClass, attributes={}
+        )
         # First attribute access triggers initialization
         _ = instance.attr1
         assert MockLazyRequester.return_value.requestJsonAndCheck.call_count == 1
         # Subsequent access should not reinitialize
         _ = instance.attr1
         assert MockLazyRequester.return_value.requestJsonAndCheck.call_count == 1
+
     # noinspection PyPep8Naming
     class MockRequester:
         @staticmethod
