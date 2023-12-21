@@ -1,7 +1,5 @@
 import inspect
 
-
-
 # import pytest
 #
 # from githubapp.Event import Event
