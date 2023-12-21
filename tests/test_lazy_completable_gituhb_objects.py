@@ -10,7 +10,6 @@ from githubapp.LazyCompletableGithubObject import LazyCompletableGithubObject
 
 class LazyClass(CompletableGithubObject):
     def __init__(self, *args, **kwargs):
-        self._attr1 = None
         self._url = Attribute
         self._url.value = "url"
         super().__init__(*args, **kwargs)
@@ -38,8 +37,6 @@ def test_lazy():
 
 
 def test_lazy_requester():
-    instance = LazyCompletableGithubObject.get_lazy_instance(LazyClass, attributes={})
-
     # noinspection PyPep8Naming
     class RequesterTest:
         @staticmethod
@@ -51,9 +48,10 @@ def test_lazy_requester():
         mock.patch("githubapp.LazyCompletableGithubObject.AppAuth") as app_auth,
         mock.patch("githubapp.LazyCompletableGithubObject.Token"),
         mock.patch(
-            "githubapp.LazyCompletableGithubObject.Requester",
-            return_value=RequesterTest,
+            "githubapp.LazyCompletableGithubObject.Requester._Requester__check",
+            return_value=({}, {"attr1": "value1"}),
         ),
+        mock.patch("githubapp.LazyCompletableGithubObject.Requester.requestJson"),
         mock.patch(
             "githubapp.LazyCompletableGithubObject.Event.hook_installation_target_id",
             new_callable=PropertyMock,
@@ -61,6 +59,9 @@ def test_lazy_requester():
         ),
         mock.patch.dict(os.environ, {"PRIVATE_KEY": "private-key"}, clear=True),
     ):
+        instance = LazyCompletableGithubObject.get_lazy_instance(
+            LazyClass, attributes={}
+        )
         assert instance._attr1.value is None
         assert instance.attr1 == "value1"
         assert instance._attr1.value == "value1"
