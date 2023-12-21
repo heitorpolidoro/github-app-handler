@@ -77,7 +77,7 @@ def validate_signature():
     """
 
     with patch(
-            "githubapp.webhook_handler._validate_signature",
-            return_value=True,
+        "githubapp.webhook_handler._validate_signature",
+        return_value=True,
     ):
         yield

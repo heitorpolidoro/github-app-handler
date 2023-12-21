@@ -34,23 +34,23 @@ class SignatureError(Exception):
 
 
 def webhook_handler(event: type[Event]):
-    """    Decorator to register a method as a webhook handler.
+    """Decorator to register a method as a webhook handler.
 
-        The method must accept only one argument of the Event type.
+    The method must accept only one argument of the Event type.
 
-        Args:
-            event: The event type to handle.
+    Args:
+        event: The event type to handle.
 
-        Returns:
-            A decorator that registers the method as a webhook handler.
+    Returns:
+        A decorator that registers the method as a webhook handler.
 
-        Raises:
-            SomeException: An exception that may be raised.
+    Raises:
+        SomeException: An exception that may be raised.
 
-        Example:
-            @webhook_handler(SomeEvent)
-            def handle_event(event):
-                # Handle the event
+    Example:
+        @webhook_handler(SomeEvent)
+        def handle_event(event):
+            # Handle the event
     """
 
     def decorator(method):
@@ -100,23 +100,23 @@ def add_handler(event: type[Event], method: Callable):
         handlers[event].append(method)
 
 
-
 handlers = defaultdict(list)
 
+
 def handle(headers: dict[str, Any], body: dict[str, Any]):
-    """    Handle a webhook request.
+    """Handle a webhook request.
 
-        The request headers and body are passed to the appropriate handler methods.
+    The request headers and body are passed to the appropriate handler methods.
 
-        Args:
-            headers: The request headers.
-            body: The request body.
+    Args:
+        headers: The request headers.
+        body: The request body.
 
-        Raises:
-            KeyError: If the 'action' key is present in the request body.
+    Raises:
+        KeyError: If the 'action' key is present in the request body.
 
-        Example:
-            handle({'Content-Type': 'application/json'}, {'event_type': 'user_created', 'user_id': 123})
+    Example:
+        handle({'Content-Type': 'application/json'}, {'event_type': 'user_created', 'user_id': 123})
     """
 
     event_class = Event.get_event(headers, body)
@@ -124,24 +124,25 @@ def handle(headers: dict[str, Any], body: dict[str, Any]):
     for handler in handlers.get(event_class, []):
         handler(event_class(headers, **body))
 
+
 def root(name):
-    """    Decorator to register a method as the root handler.
+    """Decorator to register a method as the root handler.
 
-        The root handler is called when no other handler is found for the request.
+    The root handler is called when no other handler is found for the request.
 
-        Args:
-            name (str): The name of the root handler.
+    Args:
+        name (str): The name of the root handler.
 
-        Returns:
-            function: A decorator that registers the method as the root handler.
+    Returns:
+        function: A decorator that registers the method as the root handler.
 
-        Raises:
-            Any exceptions raised by the decorated function.
+    Raises:
+        Any exceptions raised by the decorated function.
 
-        Example:
-            @root('my_root_handler')
-            def my_handler():
-                return 'Handler executed'
+    Example:
+        @root('my_root_handler')
+        def my_handler():
+            return 'Handler executed'
     """
 
     def root_wrapper():
@@ -163,11 +164,11 @@ def root(name):
 
 
 def _validate_signature(method: Callable[[Any], Any]):
-    """    Exception raised for errors in method signature.
+    """Exception raised for errors in method signature.
 
-        Attributes:
-            method -- The method with the wrong signature
-            signature -- The incorrect signature
+    Attributes:
+        method -- The method with the wrong signature
+        signature -- The incorrect signature
     """
 
     parameters = inspect.signature(method).parameters
