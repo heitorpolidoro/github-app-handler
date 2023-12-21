@@ -57,6 +57,11 @@ class Event:
 
     @classmethod
     def match(cls, *dicts):
+        """
+        Check if the attributes and values in the event_identifier dictionary are present and match those in the union_dict dictionary.
+
+        This method normalizes the dictionaries passed as arguments, combines them into a union dictionary, and checks if the attributes and values in the event_identifier dictionary are present and match those in the union dictionary. If all attributes and values match, the method returns True, otherwise, it returns False.
+        """
         union_dict = Event.normalize_dicts(*dicts)
         for attr, value in cls.event_identifier.items():
             if not (attr in union_dict and value == union_dict[attr]):
