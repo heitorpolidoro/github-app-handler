@@ -16,6 +16,19 @@ from tests.mocks import EventTest, SubEventTest
 
 
 def test_add_handler_sub_event(method):
+    """
+    Test the addition of a handler for a sub event.
+
+    Args:
+        method: The method to be added as a handler.
+
+    Raises:
+        AssertionError: If the number of handlers is not as expected or if the added handler is not associated with the correct sub event.
+
+    Example:
+        test_add_handler_sub_event(mock_method)
+    """
+
     with patch(
         "githubapp.webhook_handler._validate_signature",
         return_value=True,
@@ -27,6 +40,19 @@ def test_add_handler_sub_event(method):
 
 
 def test_add_handler_event(method):
+    """
+    Add a handler for the specified method to the webhook handler.
+
+    Args:
+        method: The method to add as a handler.
+
+    Raises:
+        AssertionError: If the number of handlers is not 1, if EventTest is still in the handlers, or if the method is not added for SubEventTest.
+
+    Example:
+        test_add_handler_event(method)
+    """
+
     webhook_handler.add_handler(EventTest, method)
 
     assert len(webhook_handler.handlers) == 1
@@ -35,6 +61,19 @@ def test_add_handler_event(method):
 
 
 def test_add_handler_event_and_sub_event(method):
+    """
+    Test adding event and sub-event handlers to the webhook handler.
+
+    Args:
+        method: The method to be added as a handler for the events.
+
+    Raises:
+        AssertionError: If the number of handlers is not as expected or if the event/sub-event is not added correctly.
+
+    Example:
+        test_add_handler_event_and_sub_event(method)
+    """
+
     webhook_handler.add_handler(EventTest, method)
     webhook_handler.add_handler(SubEventTest, method)
 
@@ -44,6 +83,21 @@ def test_add_handler_event_and_sub_event(method):
 
 
 def test_handle_sub_event(method, event_action_request):
+    """
+    Test the handle_sub_event function.
+
+    Args:
+        method: The method to be tested.
+        event_action_request: The event action request.
+
+    Raises:
+        AssertionError: If the method call count is not equal to 1.
+        AssertionError: If the argument passed to the method is not an instance of SubEventTest.
+
+    Example:
+        test_handle_sub_event(method, event_action_request)
+    """
+
     webhook_handler.add_handler(SubEventTest, method)
     handle(*event_action_request)
     method.assert_called_once()
@@ -51,6 +105,20 @@ def test_handle_sub_event(method, event_action_request):
 
 
 def test_handle_event(method, event_action_request):
+    """
+    Test the handle_event function.
+
+    Args:
+        method: The method to be tested.
+        event_action_request: The event action request.
+
+    Raises:
+        AssertionError: If the method call does not match the expected behavior.
+
+    Example:
+        test_handle_event(mock_method, event_action_request)
+    """
+
     webhook_handler.add_handler(EventTest, method)
     handle(*event_action_request)
     method.assert_called_once()
@@ -58,6 +126,20 @@ def test_handle_event(method, event_action_request):
 
 
 def test_handle_event_and_sub_event(method, event_action_request):
+    """
+    Test the handle_event_and_sub_event function.
+
+    Args:
+    - method: The method to be tested.
+    - event_action_request: The event action request to be tested.
+
+    Raises:
+    - AssertionError: If the method call count is not equal to 2 or if any argument in the method call args list is not an instance of SubEventTest.
+
+    Example:
+    test_handle_event_and_sub_event(method, event_action_request)
+    """
+
     webhook_handler.add_handler(EventTest, method)
     webhook_handler.add_handler(SubEventTest, method)
     handle(*event_action_request)
@@ -66,11 +148,60 @@ def test_handle_event_and_sub_event(method, event_action_request):
 
 
 def test_root():
+    """
+    Test the root function of the webhook_handler.
+
+    This function tests the root function of the webhook_handler by asserting that the result
+    of calling the root function with the argument "test" is equal to "test App up and running!".
+
+    Raises:
+        AssertionError: If the result of calling the root function with the argument "test" is not equal to "test App up and running!".
+
+    Example:
+        test_root()
+    """
+
     assert webhook_handler.root("test")() == "test App up and running!"
 
 
 def test_event_handler_method_validation():
+    """
+    Test event handler method validation.
+
+    This function tests the validation of an event handler method by checking if it raises a SignatureError
+    when the method signature does not match the expected format.
+
+    Raises:
+        SignatureError: If the method signature does not match the expected format.
+
+    Example:
+        ```python
+        def method():
+            return None
+
+        with pytest.raises(webhook_handler.SignatureError) as err:
+            _validate_signature(method)
+
+        expected_message = (
+            "Method test_event_handler_method_validation.<locals>.method() "
+            "signature error. The method must accept only one argument of the Event type"
+        )
+        assert str(err.value.message) == expected_message
+        ```
+    """
+
     def method():
+        """
+        This function does not take any arguments and returns None.
+
+        Raises:
+            No specific exceptions are raised.
+
+        Example:
+            The function can be called as follows:
+            result = method()
+        """
+
         return None
 
     with pytest.raises(webhook_handler.SignatureError) as err:
