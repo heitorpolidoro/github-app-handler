@@ -18,9 +18,36 @@ class LazyRequester(Requester):
     """
 
     def __init__(self):
+        """
+        Initializes the object.
+
+        Raises:
+            None
+
+        Example:
+            obj = ClassName()
+        """
+
         self._initialized = False
 
     def __getattr__(self, item):
+        """
+        Retrieve the value of the specified attribute.
+
+        Args:
+            item (str): The name of the attribute to retrieve.
+
+        Returns:
+            Any: The value of the specified attribute.
+
+        Raises:
+            AttributeError: If the specified attribute does not exist.
+
+        Example:
+            # Assuming obj is an instance of the class containing this method
+            value = obj.some_attribute
+        """
+
         if not self._initialized:
             self._initialized = True
             self.initialize()
@@ -39,6 +66,11 @@ class LazyRequester(Requester):
         Raises:
             OSError: If the private key file 'private-key.pem' is not found or cannot be read.
             ValueError: If the private key is not found in the environment variables.
+
+        Example:
+            # Initialize the requester
+            requester = Requester()
+            requester.initialize()
 
         """
 
@@ -80,6 +112,22 @@ class LazyCompletableGithubObject(CompletableGithubObject):
         attributes: dict[str, Any] = None,
         completed: bool = False,
     ):
+        """
+        Initialize the object.
+
+        Args:
+        requester (Requester, optional): The requester object. Defaults to None.
+        headers (dict[str, Union[str, int]], optional): The headers dictionary. Defaults to None.
+        attributes (dict[str, Any], optional): The attributes dictionary. Defaults to None.
+        completed (bool, optional): Flag indicating if the object is completed. Defaults to False.
+
+        Raises:
+        No specific exceptions are raised.
+
+        Example:
+        obj = ClassName(requester=requester_obj, headers={"key": "value"}, attributes={"attr1": "value1"}, completed=True)
+        """
+
         # self._lazy_initialized = False
         # noinspection PyTypeChecker
         CompletableGithubObject.__init__(
@@ -100,6 +148,25 @@ class LazyCompletableGithubObject(CompletableGithubObject):
     #     return self._lazy_requester
 
     def __getattribute__(self, item):
+        """
+        If the value is None, makes a request to update the object.
+
+        Args:
+        - item: The attribute being accessed.
+
+        Returns:
+        - The value of the attribute.
+
+        Raises:
+        - Any exceptions that may occur during the attribute access.
+
+        Example:
+        ```
+        obj = YourClass()
+        result = obj.lazy_requester
+        ```
+        """
+
         #     """If the value is None, makes a request to update the object."""
         value = super().__getattribute__(item)
         if value is None and item != "_requester" and not self._requester._initialized:
