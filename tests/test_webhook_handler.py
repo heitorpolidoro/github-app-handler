@@ -1,5 +1,5 @@
 from githubapp import webhook_handler
-from tests.mocks import SubEventTest, EventTest
+from tests.mocks import EventTest, SubEventTest
 
 
 def test_call_handler_sub_event(method, event_action_request):
@@ -7,5 +7,3 @@ def test_call_handler_sub_event(method, event_action_request):
 
     assert len(webhook_handler.handlers) == 1
     assert webhook_handler.handlers.get(SubEventTest) == [method]
-
-

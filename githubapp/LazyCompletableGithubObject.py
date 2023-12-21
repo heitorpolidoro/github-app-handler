@@ -8,6 +8,7 @@ from github.Requester import Requester
 
 from githubapp.events import Event
 
+
 class LazyRequester(Requester):
     def __init__(self):
         self._initialized = False
@@ -17,7 +18,9 @@ class LazyRequester(Requester):
             self._initialized = True
             self.initialize()
             return getattr(self, item)
-        raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{item}'")
+        raise AttributeError(
+            f"'{self.__class__.__name__}' object has no attribute '{item}'"
+        )
 
     # noinspection PyMethodMayBeStatic
     def initialize(self):
@@ -51,11 +54,11 @@ class LazyCompletableGithubObject(CompletableGithubObject):
     """
 
     def __init__(
-            self,
-            requester: "Requester" = None,
-            headers: dict[str, Union[str, int]] = None,
-            attributes: dict[str, Any] = None,
-            completed: bool = False,
+        self,
+        requester: "Requester" = None,
+        headers: dict[str, Union[str, int]] = None,
+        attributes: dict[str, Any] = None,
+        completed: bool = False,
     ):
         # self._lazy_initialized = False
         # noinspection PyTypeChecker
@@ -70,7 +73,6 @@ class LazyCompletableGithubObject(CompletableGithubObject):
         # self._lazy_requester = None
         self._requester = LazyRequester()
 
-
     # @property
     # def lazy_requester(self):
     #     if self._lazy_requester is None:
@@ -80,15 +82,14 @@ class LazyCompletableGithubObject(CompletableGithubObject):
     def __getattribute__(self, item):
         #     """If the value is None, makes a request to update the object."""
         value = super().__getattribute__(item)
-        if (
-                value is None
-                and item != "_requester"
-                and not self._requester._initialized
-        ):
+        if value is None and item != "_requester" and not self._requester._initialized:
             headers, data = self._requester.requestJsonAndCheck("GET", self.url)
-            self.__class__.__init__(self, self._requester, headers, data, completed=False)
+            self.__class__.__init__(
+                self, self._requester, headers, data, completed=False
+            )
             value = super().__getattribute__(item)
         return value
+
     #     if item == "_requester" and value is None:
     #         self._requester = self.lazy_requester
     #     return value

@@ -37,7 +37,6 @@ def test_lazy():
 
 
 def test_lazy_requester():
-
     # noinspection PyPep8Naming
     class RequesterTest:
         @staticmethod
@@ -60,7 +59,9 @@ def test_lazy_requester():
         ),
         mock.patch.dict(os.environ, {"PRIVATE_KEY": "private-key"}, clear=True),
     ):
-        instance = LazyCompletableGithubObject.get_lazy_instance(LazyClass, attributes={})
+        instance = LazyCompletableGithubObject.get_lazy_instance(
+            LazyClass, attributes={}
+        )
         assert instance._attr1.value is None
         assert instance.attr1 == "value1"
         assert instance._attr1.value == "value1"
