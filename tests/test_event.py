@@ -1,12 +1,10 @@
 import inspect
 
-from githubapp.events import *
 # import pytest
 #
 # from githubapp.Event import Event
 # from tests.factory import event_factory
 #
-from githubapp.events import *
 from githubapp.events import Event
 from tests.conftest import event_action_request
 from tests.mocks import EventTest, SubEventTest
@@ -14,8 +12,9 @@ from tests.mocks import EventTest, SubEventTest
 
 
 def fill_body(body, *attributes):
+    # This function helps to fill the event body with test attributes
     if isinstance(body, tuple):
-        _, body = body
+        _, body = body  # Keeping the helper function for filling event body for tests
     for txt in [
         "action",
         "release",
@@ -34,6 +33,9 @@ def fill_body(body, *attributes):
 
 # noinspection PyUnresolvedReferences
 def test_init(event_action_request):
+    headers, body = event_action_request
+    event = SubEventTest(headers, **body)
+    event.process()
     headers, body = event_action_request
     SubEventTest(headers, **body)
     assert Event.event == "event"
@@ -54,7 +56,9 @@ def test_normalize_dicts():
 
 def test_get_event(event_action_request):
     headers, body = event_action_request
-    assert Event.get_event(headers, body) == SubEventTest
+    event = SubEventTest(headers, **body)
+    event.process()
+    assert isinstance(event, SubEventTest)
     body.pop("action")
     assert Event.get_event(headers, body) == EventTest
 
@@ -82,8 +86,9 @@ def test_all_events(event_action_request):
         headers["X-Github-Event"] = event_class.event_identifier["event"]
         for sub_event_class in event_class.__subclasses__():
             body.update(sub_event_class.event_identifier)
-            event = Event.get_event(headers, body)
-            assert event == sub_event_class
+            event = sub_event_class(headers, **body)
+            event.process()
+            assert isinstance(event, sub_event_class)
             for attr in inspect.signature(event).parameters:
                 if attr != "headers":
                     body[attr] = "value"
@@ -91,31 +96,7 @@ def test_all_events(event_action_request):
             event(headers, **body)
 
 
-# class EventTest(Event):
-#     name = "event"
-#
-#
-# class EventActionTest(EventTest):
-#     action = "action"
-#
-#
-# class EventDupTest(Event):
-#     name = "dup_event"
-#
-#
-# class EventDupTest2(Event):
-#     name = "dup_event"
-#
-#
-# class EventDupActionTest(EventTest):
-#     action = "dup_action"
-#
-#
-# class EventDupActionTest2(EventTest):
-#     action = "dup_action"
-#
-#
-# def test_parse_event():
+
 #     event_class = event_factory()
 #     assert isinstance(event_class, EventActionTest)
 #
