@@ -27,6 +27,23 @@ def event_action_request():
 
 @pytest.fixture
 def method():
+    """
+    This function returns a nested function called dummy.
+
+    Returns:
+    function: The nested function dummy.
+
+    Example:
+    ```
+    def inner_function(event):
+        return event
+
+    outer_function = method()
+    result = outer_function('example')
+    print(result)  # Output: 'example'
+    ```
+    """
+
     def dummy(event):
         return event
 
