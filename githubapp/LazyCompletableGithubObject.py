@@ -16,11 +16,11 @@ class LazyRequester(Requester):
     When any attribute of Requester is accessed, initialize the requester.
 
     """
+
     def __init__(self):
         self._initialized = False
 
     def __getattr__(self, item):
-
         if not self._initialized:
             self._initialized = True
             self.initialize()
@@ -80,7 +80,6 @@ class LazyCompletableGithubObject(CompletableGithubObject):
         attributes: dict[str, Any] = None,
         completed: bool = False,
     ):
-
         # self._lazy_initialized = False
         # noinspection PyTypeChecker
         CompletableGithubObject.__init__(
@@ -101,7 +100,6 @@ class LazyCompletableGithubObject(CompletableGithubObject):
     #     return self._lazy_requester
 
     def __getattribute__(self, item):
-
         #     """If the value is None, makes a request to update the object."""
         value = super().__getattribute__(item)
         if value is None and item != "_requester" and not self._requester._initialized:
