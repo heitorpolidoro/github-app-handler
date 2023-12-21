@@ -22,6 +22,22 @@ class LazyCompletableGithubObject(CompletableGithubObject):
             attributes: dict[str, Any] = None,
             completed: bool = False,
     ):
+        """
+        Initialize the object.
+
+        Args:
+            requester (Requester, optional): The requester. Defaults to None.
+            headers (dict[str, Union[str, int]], optional): The headers. Defaults to None.
+            attributes (dict[str, Any], optional): The attributes. Defaults to None.
+            completed (bool, optional): Indicates if the object is completed. Defaults to False.
+
+        Raises:
+            No specific exceptions are raised.
+
+        Example:
+            obj = ClassName(requester=requester_obj, headers={"key": "value"}, attributes={"attr_key": "attr_value"}, completed=True)
+        """
+
         self._lazy_initialized = False
         # noinspection PyTypeChecker
         CompletableGithubObject.__init__(
@@ -60,7 +76,22 @@ class LazyCompletableGithubObject(CompletableGithubObject):
         return self._lazy_requester
 
     def __getattribute__(self, item):
-        """If the value is None, makes a request to update the object."""
+        """
+        If the value is None, makes a request to update the object.
+
+        Args:
+            item (str): The attribute to retrieve.
+
+        Returns:
+            Any: The value of the attribute.
+
+        Raises:
+            <ExceptionType>: Description of the exception raised.
+
+        Example:
+            # Example usage of __getattribute__
+            value = obj.__getattribute__('attribute_name')
+        """
         value = super().__getattribute__(item)
         if (
                 value is None
