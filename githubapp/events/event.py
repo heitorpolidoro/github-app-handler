@@ -1,7 +1,6 @@
 import re
 
 from .dict_normalizer import DictNormalizer
-
 from .event_getter import EventGetter
 from .event_matcher import EventMatcher
 
@@ -22,7 +21,6 @@ class Event:
     installation_id = None
     event_identifier = None
 
-    
     dict_normalizer = DictNormalizer()
     event_getter = EventGetter()
     event_matcher = EventMatcher()
@@ -32,4 +30,5 @@ class Event:
 
     def __init__(self, data_parser):
         self.data_parser = data_parser
+
     #
