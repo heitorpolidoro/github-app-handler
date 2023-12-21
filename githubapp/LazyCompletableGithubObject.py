@@ -8,28 +8,6 @@ from github.Requester import Requester
 
 from githubapp.events import Event
 
-def get_requester():
-    if not (private_key := os.getenv("PRIVATE_KEY")):
-        with open("private-key.pem", "rb") as key_file:  # pragma no cover
-            private_key = key_file.read().decode()
-    app_auth = AppAuth(Event.hook_installation_target_id, private_key)
-    token = (
-        GithubIntegration(auth=app_auth)
-        .get_access_token(Event.installation_id)
-        .token
-    )
-    Event.app_auth = app_auth
-    return Requester(
-        auth=Token(token),
-        base_url=Consts.DEFAULT_BASE_URL,
-        timeout=Consts.DEFAULT_TIMEOUT,
-        user_agent=Consts.DEFAULT_USER_AGENT,
-        per_page=Consts.DEFAULT_PER_PAGE,
-        verify=True,
-        retry=GithubRetry(),
-        pool_size=None,
-    )
-
 class LazyRequester(Requester):
     def __init__(self):
         self._initialized = False
@@ -37,8 +15,34 @@ class LazyRequester(Requester):
     def __getattr__(self, item):
         if not self._initialized:
             self._initialized = True
-            self._requester = get_requester()
-        return getattr(self._requester, item)
+            self.initialize()
+            return getattr(self, item)
+        raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{item}'")
+
+    # noinspection PyMethodMayBeStatic
+    def initialize(self):
+        if not (private_key := os.getenv("PRIVATE_KEY")):
+            with open("private-key.pem", "rb") as key_file:  # pragma no cover
+                private_key = key_file.read().decode()
+        app_auth = AppAuth(Event.hook_installation_target_id, private_key)
+        token = (
+            GithubIntegration(auth=app_auth)
+            .get_access_token(Event.installation_id)
+            .token
+        )
+        Event.app_auth = app_auth
+        Requester.__init__(
+            self,
+            auth=Token(token),
+            base_url=Consts.DEFAULT_BASE_URL,
+            timeout=Consts.DEFAULT_TIMEOUT,
+            user_agent=Consts.DEFAULT_USER_AGENT,
+            per_page=Consts.DEFAULT_PER_PAGE,
+            verify=True,
+            retry=GithubRetry(),
+            pool_size=None,
+        )
+
 
 class LazyCompletableGithubObject(CompletableGithubObject):
     """
@@ -67,11 +71,11 @@ class LazyCompletableGithubObject(CompletableGithubObject):
         self._requester = LazyRequester()
 
 
-    @property
-    def lazy_requester(self):
-        if self._lazy_requester is None:
-            self._lazy_requester = get_requester()
-        return self._lazy_requester
+    # @property
+    # def lazy_requester(self):
+    #     if self._lazy_requester is None:
+    #         self._lazy_requester = get_requester()
+    #     return self._lazy_requester
 
     def __getattribute__(self, item):
         #     """If the value is None, makes a request to update the object."""
