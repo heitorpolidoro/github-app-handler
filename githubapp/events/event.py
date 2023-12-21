@@ -1,30 +1,13 @@
-# import logging
-#
-# from github import Github
-# from github.Auth import AppInstallationAuth
-#
-#
 import re
 
 
 class Event:
-    #     """Event base class
-    #
-    #     This class represents a generic GitHub webhook event. It provides common
-    #     attributes and methods for parsing event data from the request headers and body.
-    #
-    #     Attributes:
-    #         name (str): The name of the event (e.g. 'issue').
-    #         action (str): The action that triggered the event (e.g. 'opened').
-    #
-    #     Methods:
-    #         parse_event(headers, body): Parses the event from the request.
-    #     """
-    #
-    #     name = None
-    #     action = None
-    # app_id = None
-    # installation_id = None
+    """Event base class
+
+    This class represents a generic GitHub webhook event.
+    It provides common
+    attributes and methods for parsing event data from the request headers and body.
+    """
 
     delivery = None
     event = None
@@ -80,78 +63,3 @@ class Event:
             if not (attr in union_dict and value == union_dict[attr]):
                 return False
         return True
-
-        # self.hook_id = int(headers["X-Github-Hook-Id"])
-        # self.github_event = headers["X-Github-Event"]
-        # self.delivery = headers["X-Github-Delivery"]
-        # self.hook_installation_target_type = headers[
-        #     "X-Github-Hook-Installation-Target-Type"
-        # ]
-        # self.hook_installation_target_id = int(
-        #     headers["X-Github-Hook-Installation-Target-Id"]
-        # )
-        # Event.app_id = self.hook_installation_target_id
-        # Event.installation_id = int(body["installation"]["id"])
-        #
-        # self._headers = headers
-        # self._body = body
-
-
-#
-#     @classmethod
-#     def get_event(cls, headers, body):
-#         event = headers["X-Github-Event"]
-#         action = body.pop("action", None)
-#         event_class = next(filter(lambda x: x.name == event, cls.__subclasses__()))
-#         action_class = next(
-#             filter(lambda x: x.action == action, event_class.__subclasses__()), None
-#         )
-#         return action_class(headers=headers, **body)
-#
-#     def __eq__(self, other):
-#         return self.__dict__ == other.__dict__
-#
-#     def __repr__(self):
-#         return f"{self.__class__.__name__}({self.__dict__})"
-#     # @classmethod
-#     # def parse_event(cls, headers, body):
-#     #     """Returns an Event classe for the event in webhook"""
-#     #     action = body.pop("action", None)
-#     #     event_class = cls.get_webhook_class(event, action, body)
-#     #     if event_class:
-#     #         return event_class(headers=headers, **body)
-#     #
-#     # @classmethod
-#     # def get_webhook_class(cls, event, action, body=None):
-#     #     """Returns the webhook class for the event and action in webhook"""
-#     #     body = body or {}
-#     #     clazz = None
-#     #     event_classes = list(filter(lambda x: x.name == event, cls.__subclasses__()))
-#     #     if len(event_classes) > 1:
-#     #         raise ValueError(f"Multiple webhook classes for '{event}'")
-#     #     if len(event_classes) == 1:
-#     #         event_class = event_classes[0]
-#     #         if action is None:
-#     #             clazz = event_class
-#     #         else:
-#     #             action_classes = list(
-#     #                 filter(lambda x: x.action == action, event_class.__subclasses__())
-#     #             )
-#     #             if len(action_classes) > 1:
-#     #                 raise ValueError(f"Multiple webhook classes for '{event}.{action}'")
-#     #             if len(action_classes) == 1:
-#     #                 clazz = action_classes[0]
-#     #
-#     #     if clazz:
-#     #         if sub_type := getattr(clazz, "sub_type", None):
-#     #             sub_type_value = body.get(sub_type)
-#     #             for sub_type_class in clazz.__subclasses__():
-#     #                 if getattr(sub_type_class, sub_type) == sub_type_value:
-#     #                     clazz = sub_type_class
-#     #                     break
-#     #         return clazz
-#     #     event_name = event
-#     #     if action:
-#     #         event_name += f".{action}"
-#     #
-#     #     logging.warning(f"No webhook class for '{event_name}'")
