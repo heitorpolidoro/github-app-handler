@@ -1,6 +1,6 @@
 import inspect
 
-from pytest_mock import mocker
+
 
 # import pytest
 #
