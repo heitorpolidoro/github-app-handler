@@ -9,6 +9,7 @@ from githubapp.events import *
 from githubapp.events import *
 from githubapp.events import Event
 from tests.conftest import event_action_request
+from pytest_mock import mocker
 from tests.mocks import EventTest, SubEventTest
 
 
@@ -178,3 +179,13 @@ def test_all_events(event_action_request):
 #             },
 #         )
 #     assert str(err.value) == "Multiple webhook classes for 'event.dup_action'"
+
+
+def test_method_fixture(method, mocker):
+    mock_event = mocker.Mock()
+    assert method(mock_event) == mock_event
+
+def test_pytest_mock_usage(mocker):
+    # Usage demonstration of mocker fixture yet to be implemented
+    # Add your mock and assertions here
+    pass
