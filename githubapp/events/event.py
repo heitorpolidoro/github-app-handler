@@ -1,6 +1,7 @@
 import re
-from .event_data_parser import EventDataParser
+
 from .dict_normalizer import DictNormalizer
+from .event_data_parser import EventDataParser
 from .event_getter import EventGetter
 from .event_matcher import EventMatcher
 
@@ -30,10 +31,3 @@ class Event:
     _raw_headers = None
 
     #
-
-
-
-
-
-
-
