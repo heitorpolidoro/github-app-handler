@@ -2,11 +2,10 @@ import re
 
 
 class Event:
-    """Event base class
+    """
+    Base class for representing a generic GitHub webhook event.
 
-    This class represents a generic GitHub webhook event.
-    It provides common
-    attributes and methods for parsing event data from the request headers and body.
+    This class provides common attributes and methods for parsing event data from the request headers and body. The attributes include delivery, event, hook_id, hook_installation_target_id, hook_installation_target_type, installation_id, and event_identifier. The methods include __init__, normalize_dicts, get_event, and match.
     """
 
     delivery = None
