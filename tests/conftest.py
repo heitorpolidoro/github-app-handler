@@ -1,15 +1,15 @@
 from collections import defaultdict
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 import pytest
 
-from githubapp.webhook_handler import WebhookHandler
+from githubapp import webhook_handler
 
 
 @pytest.fixture(autouse=True)
 def setup_and_teardown():
     yield
-    WebhookHandler.handlers = defaultdict(list)
+    webhook_handler.handlers = defaultdict(list)
 
 
 @pytest.fixture
@@ -30,4 +30,13 @@ def method():
     def dummy(event):
         return event
 
-    return dummy
+    yield Mock(wraps=dummy)
+
+
+@pytest.fixture(autouse=True)
+def validate_signature():
+    with patch(
+            "githubapp.webhook_handler._validate_signature",
+            return_value=True,
+    ):
+        yield

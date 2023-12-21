@@ -9,7 +9,7 @@ from githubapp.events import Event
 class SignatureError(Exception):
     """Exception when the method has a wrong signature"""
 
-    def __init__(self, method, signature):
+    def __init__(self, method: Callable[[Any], Any], signature):
         self.message = (
             f"Method {method.__qualname__}({signature}) signature error. "
             f"The method must accept only one argument of the Event type"
@@ -29,90 +29,80 @@ def webhook_handler(event: type[Event]):
     """
 
     def decorator(method):
-        WebhookHandler.add_handler(event, method)
+        add_handler(event, method)
         return method
 
     return decorator
 
 
-class WebhookHandler:
-    """Class to handle webhook requests.
+def add_handler(event: type[Event], method: Callable):
+    """Add a handler for a specific event type.
 
-    The WebhookHandler class provides a method to register webhook handlers and a method to handle webhook requests.
+    The handler must accept only one argument of the Event type.
 
-    Attributes:
-        handlers: A dictionary of event types to lists of handlers.
+    Args:
+        event: The event type to handle.
+        method: The handler method.
+    """
+    if subclasses := event.__subclasses__():
+        for sub_event in subclasses:
+            add_handler(sub_event, method)
+    else:
+        _validate_signature(method)
+        handlers[event].append(method)
+
+
+
+handlers = defaultdict(list)
+
+def handle(headers: dict[str, Any], body: dict[str, Any]):
+    """Handle a webhook request.
+
+    The request headers and body are passed to the appropriate handler methods.
+
+    Args:
+        headers: The request headers.
+        body: The request body.
     """
 
-    handlers = defaultdict(list)
+    event_class = Event.get_event(headers, body)
+    body.pop("action", None)
+    for handler in handlers.get(event_class, []):
+        handler(event_class(headers, **body))
 
-    @staticmethod
-    def add_handler(event: type[Event], method: Callable):
-        """Add a handler for a specific event type.
+def root(name):
+    """Decorator to register a method as the root handler.
 
-        The handler must accept only one argument of the Event type.
+    The root handler is called when no other handler is found for the request.
 
-        Args:
-            event: The event type to handle.
-            method: The handler method.
-        """
-        if subclasses := event.__subclasses__():
-            for sub_event in subclasses:
-                WebhookHandler.add_handler(sub_event, method)
-        else:
-            WebhookHandler._validate_signature(method)
-            WebhookHandler.handlers[event].append(method)
+    Args:
+        name: The name of the root handler.
 
-    @staticmethod
-    def handle(headers: dict[str, Any], body: dict[str, Any]):
-        """Handle a webhook request.
+    Returns:
+        A decorator that registers the method as the root handler.
+    """
 
-        The request headers and body are passed to the appropriate handler methods.
+    def root_wrapper():
+        return f"{name} App up and running!"
 
-        Args:
-            headers: The request headers.
-            body: The request body.
-        """
+    return wraps(root_wrapper)(root_wrapper)
 
-        event_class = Event.get_event(headers, body)
-        body.pop("action", None)
-        for handler in WebhookHandler.handlers.get(event_class, []):
-            handler(event_class(headers, **body))
 
-    @staticmethod
-    def root(name):
-        """Decorator to register a method as the root handler.
+def _validate_signature(method: Callable[[Any], Any]):
+    """Validate the signature of a webhook handler method.
 
-        The root handler is called when no other handler is found for the request.
+    The method must accept only one argument of the Event type.
 
-        Args:
-            name: The name of the root handler.
+    Args:
+        method: The method to validate.
 
-        Returns:
-            A decorator that registers the method as the root handler.
-        """
+    Raises:
+        SignatureError: If the method has a wrong signature.
+    """
 
-        def root_wrapper():
-            return f"{name} App up and running!"
-
-        return wraps(root_wrapper)(root_wrapper)
-
-    @staticmethod
-    def _validate_signature(method):
-        """Validate the signature of a webhook handler method.
-
-        The method must accept only one argument of the Event type.
-
-        Args:
-            method: The method to validate.
-
-        Raises:
-            SignatureError: If the method has a wrong signature.
-        """
-
-        parameters = inspect.signature(method).parameters
-        try:
-            assert len(parameters) == 1
-        except AssertionError:
-            signature = ""
-            raise SignatureError(method, signature)
+    parameters = inspect.signature(method).parameters
+    try:
+        assert len(parameters) == 1
+    except AssertionError:
+        signature = ""
+        raise SignatureError(method, signature)
