@@ -10,7 +10,6 @@ from tests.conftest import event_action_request
 from tests.mocks import EventTest, SubEventTest
 
 
-
 def fill_body(body, *attributes):
     # This function helps to fill the event body with test attributes
     if isinstance(body, tuple):
@@ -94,7 +93,6 @@ def test_all_events(event_action_request):
                     body[attr] = "value"
 
             event(headers, **body)
-
 
 
 #     event_class = event_factory()
