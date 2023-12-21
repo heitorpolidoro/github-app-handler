@@ -30,4 +30,4 @@ def method():
     def dummy(event):
         return event
 
-    yield Mock(wraps=dummy)
+    return dummy
