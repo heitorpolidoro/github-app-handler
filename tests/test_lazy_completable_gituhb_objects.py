@@ -10,6 +10,21 @@ from githubapp.LazyCompletableGithubObject import LazyCompletableGithubObject
 
 class LazyClass(CompletableGithubObject):
     def __init__(self, *args, **kwargs):
+        """
+        Initialize the class instance.
+
+        Args:
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+
+        Raises:
+            None
+
+        Example:
+            Example usage of initializing the class instance:
+            >>> instance = ClassName()
+        """
+
         self._attr1 = None
         self._url = Attribute
         self._url.value = "url"
