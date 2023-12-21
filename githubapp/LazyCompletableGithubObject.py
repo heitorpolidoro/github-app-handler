@@ -10,48 +10,17 @@ from githubapp.events import Event
 
 
 class LazyRequester(Requester):
+    """
+    This class is a lazy version of Requester, which means that it will not make any requests to the API
+    until the object is accessed.
+    When any attribute of Requester is accessed, initialize the requester.
+
+    """
+
     def __init__(self):
-        """
-        Initialize the object.
-
-        Args:
-            self: The object itself.
-
-        Raises:
-            None
-
-        Returns:
-            None
-
-        Example:
-            obj = ClassName()
-        """
-
         self._initialized = False
 
     def __getattr__(self, item):
-        """
-        Return the value of the named attribute of an object.
-
-        Args:
-            item (str): The name of the attribute to retrieve.
-
-        Returns:
-            Any: The value of the named attribute.
-
-        Raises:
-            AttributeError: If the named attribute does not exist.
-
-        Example:
-            # Create an instance of the class
-            obj = MyClass()
-            # Access a non-existent attribute
-            try:
-                value = obj.non_existent_attribute
-            except AttributeError as e:
-                print(e)
-        """
-
         if not self._initialized:
             self._initialized = True
             self.initialize()
@@ -70,13 +39,6 @@ class LazyRequester(Requester):
         Raises:
             OSError: If the private key file 'private-key.pem' is not found or cannot be read.
             ValueError: If the private key is not found in the environment variables.
-
-        Example:
-            To initialize the requester with authentication and default settings:
-            ```
-            requester = Requester()
-            requester.initialize()
-            ```
 
         """
 
@@ -105,8 +67,10 @@ class LazyRequester(Requester):
 
 class LazyCompletableGithubObject(CompletableGithubObject):
     """
-    A lazy CompletableGithubObject that will only initialize when it is accessed.
-    In the initialization will create a github.Requester.Requester
+    This class is a lazy version of CompletableGithubObject, which means that it will not make any requests to the API
+    until the object is accessed.
+    When initialized, set a LazyRequester as the requester.
+    When any value is None, initialize the requester and update self with the data from the API.
     """
 
     def __init__(
@@ -116,22 +80,6 @@ class LazyCompletableGithubObject(CompletableGithubObject):
         attributes: dict[str, Any] = None,
         completed: bool = False,
     ):
-        """
-        Initialize the object.
-
-        Args:
-            requester (Requester, optional): The requester object. Defaults to None.
-            headers (dict[str, Union[str, int]], optional): The headers. Defaults to None.
-            attributes (dict[str, Any], optional): The attributes. Defaults to None.
-            completed (bool, optional): Indicates if the object is completed. Defaults to False.
-
-        Raises:
-            No specific exceptions are raised.
-
-        Example:
-            obj = ClassName(requester=Requester(), headers={"key": "value"}, attributes={"attr1": "value"}, completed=True)
-        """
-
         # self._lazy_initialized = False
         # noinspection PyTypeChecker
         CompletableGithubObject.__init__(
@@ -152,23 +100,6 @@ class LazyCompletableGithubObject(CompletableGithubObject):
     #     return self._lazy_requester
 
     def __getattribute__(self, item):
-        """
-        If the value is None, makes a request to update the object.
-
-        Args:
-            item (str): The attribute being accessed.
-
-        Returns:
-            Any: The value of the attribute.
-
-        Raises:
-            <Exception Type>: <Description of the exception raised>
-
-        Example:
-            # Usage example of __getattribute__
-            value = obj.__getattribute__('attribute_name')
-        """
-
         #     """If the value is None, makes a request to update the object."""
         value = super().__getattribute__(item)
         if value is None and item != "_requester" and not self._requester._initialized:
