@@ -1,4 +1,3 @@
-from .event import Event
 from .create import CreateBranchEvent, CreateEvent, CreateTagEvent
 from .issue_comment import (
     IssueCommentCreatedEvent,
@@ -7,3 +6,4 @@ from .issue_comment import (
     IssueCommentEvent,
 )
 from .release import ReleaseCreatedEvent, ReleaseReleasedEvent
+from .status import StatusEvent

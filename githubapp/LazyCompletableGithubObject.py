@@ -6,7 +6,7 @@ from github.Auth import AppAuth, Token
 from github.GithubObject import CompletableGithubObject
 from github.Requester import Requester
 
-from githubapp.events import Event
+from githubapp.events.event import Event
 
 
 class LazyRequester(Requester):
