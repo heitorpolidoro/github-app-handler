@@ -85,10 +85,20 @@ def test_all_events(event_action_request):
         if event_class.__name__.endswith("Test"):
             continue
         headers["X-Github-Event"] = event_class.event_identifier["event"]
-        for sub_event_class in event_class.__subclasses__():
-            body.update(sub_event_class.event_identifier)
+        if subclasses := event_class.__subclasses__():
+            for sub_event_class in subclasses:
+                body.update(sub_event_class.event_identifier)
+                event = Event.get_event(headers, body)
+                assert event == sub_event_class
+                for attr in inspect.signature(event).parameters:
+                    if attr != "headers":
+                        body[attr] = "value"
+
+                event(headers, **body)
+        else:
+            body.update(event_class.event_identifier)
             event = Event.get_event(headers, body)
-            assert event == sub_event_class
+            assert event == event_class
             for attr in inspect.signature(event).parameters:
                 if attr != "headers":
                     body[attr] = "value"

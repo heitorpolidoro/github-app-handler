@@ -3,6 +3,7 @@ from typing import Any, Union
 from unittest import mock
 from unittest.mock import PropertyMock
 
+import pytest
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 from githubapp.LazyCompletableGithubObject import LazyCompletableGithubObject
@@ -74,3 +75,28 @@ def test_lazy_requester():
         assert instance._attr1.value == "value1"
 
     app_auth.assert_called_once_with(123, "private-key")
+
+
+def test_lazy_requester_attribute_error():
+    with (
+        mock.patch("githubapp.LazyCompletableGithubObject.GithubIntegration"),
+        mock.patch("githubapp.LazyCompletableGithubObject.AppAuth"),
+        mock.patch("githubapp.LazyCompletableGithubObject.Token"),
+        mock.patch(
+            "githubapp.LazyCompletableGithubObject.Requester._Requester__check",
+            return_value=({}, {"attr1": "value1"}),
+        ),
+        mock.patch("githubapp.LazyCompletableGithubObject.Requester.requestJson"),
+        mock.patch(
+            "githubapp.LazyCompletableGithubObject.Event.hook_installation_target_id",
+            new_callable=PropertyMock,
+            return_value=123,
+        ),
+        mock.patch.dict(os.environ, {"PRIVATE_KEY": "private-key"}, clear=True),
+    ):
+        instance = LazyCompletableGithubObject.get_lazy_instance(
+            LazyClass, attributes={}
+        )
+        with pytest.raises(AttributeError):
+            # noinspection PyStatementEffect
+            instance._requester.attr

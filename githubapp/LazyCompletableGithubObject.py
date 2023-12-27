@@ -90,34 +90,6 @@ class LazyCompletableGithubObject(CompletableGithubObject):
         )
         self._requester = LazyRequester()
 
-    def __getattribute__(self, item):
-        #     """If the value is None, makes a request to update the object."""
-        value = super().__getattribute__(item)
-        if value is None and item != "_requester" and not self._requester._initialized:
-            headers, data = self._requester.requestJsonAndCheck("GET", self.url)
-            self.__class__.__init__(
-                self, self._requester, headers, data, completed=False
-            )
-            value = super().__getattribute__(item)
-        return value
-
-    #     if item == "_requester" and value is None:
-    #         self._requester = self.lazy_requester
-    #     return value
-    #     if (
-    #             value is None
-    #             and not item.startswith("_lazy")
-    #             and getattr(self, "_lazy_initialized", False)
-    #             and self._lazy_requester is None
-    #     ):
-    #         headers, data = self.lazy_requester.requestJsonAndCheck("GET", self.url)
-    #         new_self = self.__class__(
-    #             self.lazy_requester, headers, data, completed=True
-    #         )
-    #         self.__dict__.update(new_self.__dict__)
-    #         value = super().__getattribute__(item)
-    #     return value
-
     @staticmethod
     def get_lazy_instance(clazz, attributes):
         """Makes the clazz a subclass of LazyCompletableGithubObject"""
