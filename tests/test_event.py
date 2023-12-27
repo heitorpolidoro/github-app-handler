@@ -14,6 +14,9 @@ def fill_body(body, *attributes):
         body (dict): The body to be filled.
         *attributes: Variable length argument list of attributes to be added to the body.
 
+    Raises:
+        (TypeError): If the body is not a dictionary.
+
     Example:
         >>> body = {}
         >>> fill_body(body, "action", "release", "ref")
@@ -82,6 +85,23 @@ def test_match():
 
 
 def test_all_events(event_action_request):
+    """
+    Test all events based on the given event action request.
+
+    Args:
+    event_action_request (tuple): A tuple containing headers and body for the event action request.
+
+    Raises:
+    (if applicable)
+
+    Returns:
+    (if applicable)
+
+    Example:
+    event_action_request = ({"header1": "value1", "header2": "value2"}, {"body1": "value1", "body2": "value2"})
+    test_all_events(event_action_request)
+    """
+
     headers, body = event_action_request
     for event_class in Event.__subclasses__():
         if event_class.__name__.endswith("Test"):
