@@ -93,7 +93,7 @@ def test_all_events(event_action_request):
 
 
 def instantiate_class(body, headers, clazz):
-    """ Instantiate and validate an event or sub event class"""
+    """Instantiate and validate an event or sub event class"""
     body.update(clazz.event_identifier)
     event = Event.get_event(headers, body)
     assert event == clazz
