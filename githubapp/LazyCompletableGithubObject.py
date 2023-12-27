@@ -41,7 +41,6 @@ class LazyRequester(Requester):
             ValueError: If the private key is not found in the environment variables.
 
         """
-
         if not (private_key := os.getenv("PRIVATE_KEY")):
             with open("private-key.pem", "rb") as key_file:  # pragma no cover
                 private_key = key_file.read().decode()

@@ -16,7 +16,6 @@ def test_call_handler_sub_event(method, event_action_request):
     Example:
         test_call_handler_sub_event(method, event_action_request)
     """
-
     assert webhook_handler.webhook_handler(SubEventTest)(method) == method
 
     assert len(webhook_handler.handlers) == 1

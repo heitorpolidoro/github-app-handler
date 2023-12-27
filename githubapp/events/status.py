@@ -56,7 +56,6 @@ class StatusEvent(Event):
             Any exceptions that may occur during initialization.
 
         """
-
         super().__init__(headers, **kwargs)
         self.branches: list[Branch] = [
             LazyCompletableGithubObject.get_lazy_instance(Repository, attributes=branch)

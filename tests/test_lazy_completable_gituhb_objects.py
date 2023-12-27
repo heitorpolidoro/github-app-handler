@@ -23,7 +23,6 @@ class LazyClass(CompletableGithubObject):
         Example:
             obj = ClassName()
         """
-
         self._url = Attribute
         self._url.value = "url"
         super().__init__(*args, **kwargs)
