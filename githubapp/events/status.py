@@ -32,6 +32,49 @@ class StatusEvent(Event):
         updated_at,
         **kwargs,
     ):
+        """
+        Initialize a new instance of the class.
+
+        Args:
+            headers: The headers for the instance.
+            branches: The list of branches.
+            commit: The Git commit instance.
+            context: The context of the instance.
+            created_at: The creation date of the instance.
+            description: The description of the instance.
+            id: The ID of the instance.
+            name: The name of the instance.
+            repository: The repository instance.
+            sender: The sender of the instance.
+            sha: The SHA of the instance.
+            state: The state of the instance. (TODO Enum)
+            target_url: The target URL of the instance.
+            updated_at: The update date of the instance.
+            **kwargs: Additional keyword arguments.
+
+        Raises:
+            Any exceptions that may occur during initialization.
+
+        Example:
+            instance = ClassName(
+                headers,
+                branches,
+                commit,
+                context,
+                created_at,
+                description,
+                id,
+                name,
+                repository,
+                sender,
+                sha,
+                state,
+                target_url,
+                updated_at,
+                **kwargs
+            )
+        """
+
         super().__init__(headers, **kwargs)
         self.branches: list[Branch] = [
             LazyCompletableGithubObject.get_lazy_instance(Repository, attributes=branch)
