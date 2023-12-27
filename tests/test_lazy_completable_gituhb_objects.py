@@ -51,26 +51,6 @@ def test_lazy():
 
 
 def test_lazy_requester():
-    """
-    Test the lazy requester function.
-
-    This function tests the lazy requester by patching multiple objects and asserting the behavior of the lazy instance.
-
-    Raises:
-        AssertionError: If the assertions fail.
-
-    Example:
-        ```
-        test_lazy_requester()
-        ```
-    """
-
-    # noinspection PyPep8Naming
-    class RequesterTest:
-        @staticmethod
-        def requestJsonAndCheck(*_args):
-            return {}, {"attr1": "value1"}
-
     with (
         mock.patch("githubapp.LazyCompletableGithubObject.GithubIntegration"),
         mock.patch("githubapp.LazyCompletableGithubObject.AppAuth") as app_auth,
