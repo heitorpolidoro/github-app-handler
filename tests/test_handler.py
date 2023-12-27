@@ -62,6 +62,27 @@ def test_root():
 
 
 def test_event_handler_method_validation():
+    """
+    Test the validation of event handler method.
+
+    This function tests the validation of an event handler method by checking if it raises a SignatureError
+    when the method signature does not match the expected signature.
+
+    Raises:
+        SignatureError: If the method signature does not match the expected signature.
+
+    Example:
+        >>> def method():
+        ...     return None
+        >>> with pytest.raises(webhook_handler.SignatureError) as err:
+        ...     _validate_signature(method)
+        >>> expected_message = (
+        ...     "Method test_event_handler_method_validation.<locals>.method() "
+        ...     "signature error. The method must accept only one argument of the Event type"
+        ... )
+        >>> assert str(err.value.message) == expected_message
+    """
+
     def method():
         return None
 
