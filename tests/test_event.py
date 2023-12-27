@@ -14,9 +14,6 @@ def fill_body(body, *attributes):
         body (dict): The body to be filled.
         *attributes: Variable length argument list of attributes to be added to the body.
 
-    Raises:
-        (if any)
-
     Example:
         >>> body = {}
         >>> fill_body(body, "action", "release", "ref")

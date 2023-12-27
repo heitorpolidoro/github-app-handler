@@ -11,17 +11,9 @@ class SignatureError(Exception):
 
     def __init__(self, method: Callable[[Any], Any], signature):
         """
-        Initialize the class with the given method and signature.
-
         Args:
         method (Callable): The method to be validated.
         signature: The signature of the method.
-
-        Raises:
-        None
-
-        Example:
-        None
         """
 
         self.message = (
@@ -116,8 +108,6 @@ def _validate_signature(method: Callable[[Any], Any]):
     """
 
     parameters = inspect.signature(method).parameters
-    try:
-        assert len(parameters) == 1
-    except AssertionError:
-        signature = ""
+    if len(parameters) != 1:
+        signature = ", ".join(parameters.keys())
         raise SignatureError(method, signature)

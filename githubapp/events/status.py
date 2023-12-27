@@ -47,7 +47,7 @@ class StatusEvent(Event):
             repository: The repository instance.
             sender: The sender of the instance.
             sha: The SHA of the instance.
-            state: The state of the instance. (TODO Enum)
+            state: The state of the instance.
             target_url: The target URL of the instance.
             updated_at: The update date of the instance.
             **kwargs: Additional keyword arguments.
@@ -55,24 +55,6 @@ class StatusEvent(Event):
         Raises:
             Any exceptions that may occur during initialization.
 
-        Example:
-            instance = ClassName(
-                headers,
-                branches,
-                commit,
-                context,
-                created_at,
-                description,
-                id,
-                name,
-                repository,
-                sender,
-                sha,
-                state,
-                target_url,
-                updated_at,
-                **kwargs
-            )
         """
 
         super().__init__(headers, **kwargs)
