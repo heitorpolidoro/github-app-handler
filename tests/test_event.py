@@ -96,5 +96,3 @@ def test_all_events(event_action_request):
                     body[attr] = "value"
 
             event(headers, **body)
-
-

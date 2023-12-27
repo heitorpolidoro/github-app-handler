@@ -91,7 +91,6 @@ class LazyCompletableGithubObject(CompletableGithubObject):
         )
         self._requester = LazyRequester()
 
-
     def __getattribute__(self, item):
         #     """If the value is None, makes a request to update the object."""
         value = super().__getattribute__(item)

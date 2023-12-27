@@ -73,5 +73,3 @@ def test_event_handler_method_validation():
         "signature error. The method must accept only one argument of the Event type"
     )
     assert str(err.value.message) == expected_message
-
-
