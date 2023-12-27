@@ -1,5 +1,5 @@
 from githubapp import webhook_handler
-from tests.mocks import EventTest, SubEventTest
+from tests.mocks import SubEventTest
 
 
 def test_call_handler_sub_event(method, event_action_request):
