@@ -1,6 +1,5 @@
 import inspect
 
-from githubapp.events import *
 from githubapp.events.event import Event
 from tests.conftest import event_action_request
 from tests.mocks import EventTest, SubEventTest
@@ -42,7 +41,7 @@ def fill_body(body, *attributes):
 def test_init(event_action_request):
     headers, body = event_action_request
     SubEventTest(headers, **body)
-    assert Event.event == "event"
+    assert Event.github_event == "event"
     assert Event.hook_id == 1
     assert Event.delivery == "a1b2c3d4"
     assert Event.hook_installation_target_type == "type"
