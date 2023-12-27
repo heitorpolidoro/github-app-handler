@@ -35,6 +35,19 @@ def method():
 
 @pytest.fixture(autouse=True)
 def validate_signature():
+    """
+    Validate the signature.
+
+    This function validates the signature using the _validate_signature method from
+    githubapp.webhook_handler module.
+
+    Raises:
+        <Exception Type>: <Description of when this exception is raised>
+
+    Example:
+        <Provide an example of how to use this function>
+    """
+
     with patch(
         "githubapp.webhook_handler._validate_signature",
         return_value=True,
