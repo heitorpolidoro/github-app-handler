@@ -6,7 +6,7 @@
 # from githubapp.Event import Event
 # from githubapp.webhook_handler.handlers.handler import Handler
 #
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 
 import pytest
 
