@@ -2,7 +2,6 @@ import inspect
 
 from githubapp.events import *
 from githubapp.events.event import Event
-
 from tests.conftest import event_action_request
 from tests.mocks import EventTest, SubEventTest
 
