@@ -17,7 +17,7 @@ class LazyRequester(Requester):
 
     """
 
-    def __init__(self):
+    def __init__(self):  # skipcq:  PYL-W0231
         self._initialized = False
 
     def __getattr__(self, item):
