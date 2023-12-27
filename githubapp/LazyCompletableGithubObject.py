@@ -18,6 +18,22 @@ class LazyRequester(Requester):
     """
 
     def __init__(self):
+        """
+        Initializes the object.
+
+        Args:
+            self: The object itself.
+
+        Raises:
+            None
+
+        Returns:
+            None
+
+        Example:
+            obj = ClassName()
+        """
+
         self._initialized = False
 
     def __getattr__(self, item):
@@ -80,6 +96,22 @@ class LazyCompletableGithubObject(CompletableGithubObject):
         attributes: dict[str, Any] = None,
         completed: bool = False,
     ):
+        """
+        Initialize the object.
+
+        Args:
+            requester (Requester, optional): The requester object. Defaults to None.
+            headers (dict[str, Union[str, int]], optional): The headers dictionary. Defaults to None.
+            attributes (dict[str, Any], optional): The attributes dictionary. Defaults to None.
+            completed (bool, optional): Flag indicating if the object is completed. Defaults to False.
+
+        Raises:
+            None
+
+        Example:
+            obj = ClassName(requester=requester_obj, headers={"key": "value"}, attributes={"attr_key": "attr_value"}, completed=True)
+        """
+
         # self._lazy_initialized = False
         # noinspection PyTypeChecker
         CompletableGithubObject.__init__(
@@ -92,6 +124,23 @@ class LazyCompletableGithubObject(CompletableGithubObject):
         self._requester = LazyRequester()
 
     def __getattribute__(self, item):
+        """
+        If the value is None, makes a request to update the object.
+
+        Args:
+            item (str): The attribute to retrieve.
+
+        Returns:
+            Any: The value of the attribute.
+
+        Raises:
+            <Exception Type>: Description of the exception raised.
+
+        Example:
+            # Usage example of __getattribute__
+            value = obj.__getattribute__('attribute_name')
+        """
+
         #     """If the value is None, makes a request to update the object."""
         value = super().__getattribute__(item)
         if value is None and item != "_requester" and not self._requester._initialized:
