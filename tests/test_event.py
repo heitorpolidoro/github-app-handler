@@ -20,7 +20,6 @@ def fill_body(body, *attributes):
         >>> print(body)
         {'action': 'action', 'release': 'release', 'ref': 'ref'}
     """
-
     if isinstance(body, tuple):
         _, body = body
     for txt in [
