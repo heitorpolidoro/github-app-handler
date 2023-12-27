@@ -1,5 +1,3 @@
-from unittest.mock import patch
-
 import pytest
 
 from githubapp import webhook_handler
@@ -8,11 +6,7 @@ from tests.mocks import EventTest, SubEventTest
 
 
 def test_add_handler_sub_event(method):
-    with patch(
-        "githubapp.webhook_handler._validate_signature",
-        return_value=True,
-    ):
-        webhook_handler.add_handler(SubEventTest, method)
+    webhook_handler.add_handler(SubEventTest, method)
 
     assert len(webhook_handler.handlers) == 1
     assert webhook_handler.handlers.get(SubEventTest) == [method]
@@ -66,6 +60,7 @@ def test_event_handler_method_validation():
         return None
 
     with pytest.raises(webhook_handler.SignatureError) as err:
+        # noinspection PyTypeChecker
         _validate_signature(method)
 
     expected_message = (
