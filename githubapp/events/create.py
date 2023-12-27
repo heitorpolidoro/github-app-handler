@@ -38,9 +38,11 @@ class CreateEvent(Event):
 
 class CreateBranchEvent(CreateEvent):
     """This class represents a branch creation event."""
+
     event_identifier = {"ref_type": "branch"}
 
 
 class CreateTagEvent(CreateEvent):
     """This class represents a tag creation event."""
+
     event_identifier = {"ref_type": "tag"}

@@ -7,3 +7,4 @@ from .issue_comment import (
     IssueCommentEvent,
 )
 from .release import ReleaseCreatedEvent, ReleaseReleasedEvent
+from .status import StatusEvent
