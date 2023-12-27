@@ -10,6 +10,12 @@ class SignatureError(Exception):
     """Exception when the method has a wrong signature"""
 
     def __init__(self, method: Callable[[Any], Any], signature):
+        """
+        Args:
+        method (Callable): The method to be validated.
+        signature: The signature of the method.
+        """
+
         self.message = (
             f"Method {method.__qualname__}({signature}) signature error. "
             f"The method must accept only one argument of the Event type"
@@ -102,8 +108,6 @@ def _validate_signature(method: Callable[[Any], Any]):
     """
 
     parameters = inspect.signature(method).parameters
-    try:
-        assert len(parameters) == 1
-    except AssertionError:
-        signature = ""
+    if len(parameters) != 1:
+        signature = ", ".join(parameters.keys())
         raise SignatureError(method, signature)
