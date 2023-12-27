@@ -3,7 +3,7 @@ from github.IssueComment import IssueComment
 from github.NamedUser import NamedUser
 from github.Repository import Repository
 
-from githubapp.events import Event
+from githubapp.events.event import Event
 from githubapp.LazyCompletableGithubObject import LazyCompletableGithubObject
 
 

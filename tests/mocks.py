@@ -1,4 +1,4 @@
-from githubapp.events import Event
+from githubapp.events.event import Event
 
 
 class EventTest(Event):

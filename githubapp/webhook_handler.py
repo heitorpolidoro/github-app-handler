@@ -3,7 +3,7 @@ from collections import defaultdict
 from functools import wraps
 from typing import Any, Callable
 
-from githubapp.events import Event
+from githubapp.events.event import Event
 
 
 class SignatureError(Exception):

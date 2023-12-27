@@ -1,5 +1,4 @@
 from .create import CreateBranchEvent, CreateEvent, CreateTagEvent
-from .event import Event
 from .issue_comment import (
     IssueCommentCreatedEvent,
     IssueCommentDeletedEvent,
