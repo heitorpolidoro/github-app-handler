@@ -7,6 +7,23 @@ from tests.mocks import EventTest, SubEventTest
 
 
 def fill_body(body, *attributes):
+    """
+    Fill the body with specified attributes.
+
+    Args:
+        body (dict): The body to be filled.
+        *attributes: Variable length argument list of attributes to be added to the body.
+
+    Raises:
+        (if any)
+
+    Example:
+        >>> body = {}
+        >>> fill_body(body, "action", "release", "ref")
+        >>> print(body)
+        {'action': 'action', 'release': 'release', 'ref': 'ref'}
+    """
+
     if isinstance(body, tuple):
         _, body = body
     for txt in [
