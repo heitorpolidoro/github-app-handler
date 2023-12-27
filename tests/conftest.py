@@ -8,14 +8,14 @@ from githubapp import webhook_handler
 
 @pytest.fixture(autouse=True)
 def setup_and_teardown():
-    """ setup and teardown for tests """
+    """setup and teardown for tests"""
     yield
     webhook_handler.handlers = defaultdict(list)
 
 
 @pytest.fixture
 def event_action_request():
-    """ Commons headers and body for tests """
+    """Commons headers and body for tests"""
     headers = {
         "X-Github-Event": "event",
         "X-Github-Hook-Id": "1",
@@ -29,9 +29,10 @@ def event_action_request():
 
 @pytest.fixture
 def method():
-    """ returns a mock for the dummy method for tests """
+    """returns a mock for the dummy method for tests"""
+
     def dummy(event):
-        """ A dummy method for tests """
+        """A dummy method for tests"""
         return event
 
     yield Mock(wraps=dummy)
@@ -39,7 +40,7 @@ def method():
 
 @pytest.fixture(autouse=True)
 def validate_signature():
-    """ mock the _validate_signature method to allways return true"""
+    """mock the _validate_signature method to allways return true"""
     with patch(
         "githubapp.webhook_handler._validate_signature",
         return_value=True,
