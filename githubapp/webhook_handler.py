@@ -15,7 +15,6 @@ class SignatureError(Exception):
         method (Callable): The method to be validated.
         signature: The signature of the method.
         """
-
         self.message = (
             f"Method {method.__qualname__}({signature}) signature error. "
             f"The method must accept only one argument of the Event type"
@@ -70,7 +69,6 @@ def handle(headers: dict[str, Any], body: dict[str, Any]):
         headers: The request headers.
         body: The request body.
     """
-
     event_class = Event.get_event(headers, body)
     body.pop("action", None)
     for handler in handlers.get(event_class, []):
@@ -106,7 +104,6 @@ def _validate_signature(method: Callable[[Any], Any]):
     Raises:
         SignatureError: If the method has a wrong signature.
     """
-
     parameters = inspect.signature(method).parameters
     if len(parameters) != 1:
         signature = ", ".join(parameters.keys())
