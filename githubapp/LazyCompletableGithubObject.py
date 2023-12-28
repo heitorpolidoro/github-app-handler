@@ -72,7 +72,16 @@ class LazyCompletableGithubObject(CompletableGithubObject):
     When any value is None, initialize the requester and update self with the data from the API.
     """
 
-    def __init__(
+    """
+    Initializes the LazyCompletableGithubObject with the specified requester, headers, attributes, and completion status.
+    
+    Args:
+        requester (Requester): The requester object to be used for API requests.
+        headers (dict[str, Union[str, int]]): The headers to be included in the API requests.
+        attributes (dict[str, Any]): Additional attributes for the LazyCompletableGithubObject.
+        completed (bool): The completion status of the LazyCompletableGithubObject.
+    """
+        def __init__(
         self,
         requester: "Requester" = None,
         headers: dict[str, Union[str, int]] = None,
@@ -89,6 +98,7 @@ class LazyCompletableGithubObject(CompletableGithubObject):
             completed=completed,
         )
         self._requester = LazyRequester()
+    
 
     @staticmethod
     def get_lazy_instance(clazz, attributes):
