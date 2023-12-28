@@ -1,6 +1,5 @@
 import inspect
 
-from githubapp.events import *
 from githubapp.events.event import Event
 from tests.conftest import event_action_request
 from tests.mocks import EventTest, SubEventTest
@@ -42,7 +41,7 @@ def fill_body(body, *attributes):
 def test_init(event_action_request):
     headers, body = event_action_request
     SubEventTest(headers, **body)
-    assert Event.event == "event"
+    assert Event.github_event == "event"
     assert Event.hook_id == 1
     assert Event.delivery == "a1b2c3d4"
     assert Event.hook_installation_target_type == "type"
@@ -86,12 +85,19 @@ def test_all_events(event_action_request):
         if event_class.__name__.endswith("Test"):
             continue
         headers["X-Github-Event"] = event_class.event_identifier["event"]
-        for sub_event_class in event_class.__subclasses__():
-            body.update(sub_event_class.event_identifier)
-            event = Event.get_event(headers, body)
-            assert event == sub_event_class
-            for attr in inspect.signature(event).parameters:
-                if attr != "headers":
-                    body[attr] = "value"
+        if subclasses := event_class.__subclasses__():
+            for sub_event_class in subclasses:
+                instantiate_class(body, headers, sub_event_class)
+        else:
+            instantiate_class(body, headers, event_class)
 
-            event(headers, **body)
+
+def instantiate_class(body, headers, clazz):
+    """Instantiate and validate an event or sub event class"""
+    body.update(clazz.event_identifier)
+    event = Event.get_event(headers, body)
+    assert event == clazz
+    for attr in inspect.signature(event).parameters:
+        if attr != "headers":
+            body[attr] = "value"
+    event(headers, **body)

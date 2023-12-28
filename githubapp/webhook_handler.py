@@ -34,6 +34,7 @@ def webhook_handler(event: type[Event]):
     """
 
     def decorator(method):
+        """Register the method as a handler for the event"""
         add_handler(event, method)
         return method
 
@@ -88,6 +89,7 @@ def root(name):
     """
 
     def root_wrapper():
+        """A wrapper function to return a default home screen for all Apps"""
         return f"{name} App up and running!"
 
     return wraps(root_wrapper)(root_wrapper)

@@ -1,5 +1,3 @@
-from unittest.mock import patch
-
 import pytest
 
 from githubapp import webhook_handler
@@ -8,11 +6,7 @@ from tests.mocks import EventTest, SubEventTest
 
 
 def test_add_handler_sub_event(method):
-    with patch(
-        "githubapp.webhook_handler._validate_signature",
-        return_value=True,
-    ):
-        webhook_handler.add_handler(SubEventTest, method)
+    webhook_handler.add_handler(SubEventTest, method)
 
     assert len(webhook_handler.handlers) == 1
     assert webhook_handler.handlers.get(SubEventTest) == [method]
@@ -62,14 +56,21 @@ def test_root():
 
 
 def test_event_handler_method_validation():
-    def method():
+    def method_right(event):
+        return event
+
+    def method_wrong():
         return None
 
+        # noinspection PyTypeChecker
+
+    _validate_signature(method_right)
     with pytest.raises(webhook_handler.SignatureError) as err:
-        _validate_signature(method)
+        # noinspection PyTypeChecker
+        _validate_signature(method_wrong)
 
     expected_message = (
-        "Method test_event_handler_method_validation.<locals>.method() "
+        "Method test_event_handler_method_validation.<locals>.method_wrong() "
         "signature error. The method must accept only one argument of the Event type"
     )
     assert str(err.value.message) == expected_message

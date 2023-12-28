@@ -10,7 +10,7 @@ class Event:
     """
 
     delivery = None
-    event = None
+    github_event = None
     hook_id = None
     hook_installation_target_id = None
     hook_installation_target_type = None
@@ -23,7 +23,7 @@ class Event:
     #
     def __init__(self, headers, **kwargs):
         Event.delivery = headers["X-Github-Delivery"]
-        Event.event = headers["X-Github-Event"]
+        Event.github_event = headers["X-Github-Event"]
         Event.hook_id = int(headers["X-Github-Hook-Id"])
         Event.hook_installation_target_id = int(
             headers["X-Github-Hook-Installation-Target-Id"]
@@ -38,6 +38,14 @@ class Event:
 
     @staticmethod
     def normalize_dicts(*dicts) -> dict[str, str]:
+        """Normalize the event data to a common format
+
+        Args:
+            *dicts: A list of dicts containing the event data
+
+        Returns:
+            dict: A dict containing the normalized event data
+        """
         union_dict = {}
         for d in dicts:
             for attr, value in d.items():
@@ -49,7 +57,16 @@ class Event:
         return union_dict
 
     @classmethod
-    def get_event(cls, headers, body):
+    def get_event(cls, headers, body) -> type["Event"]:
+        """Get the event class based on the event type
+
+        Args:
+            headers (dict): The request headers
+            body (dict): The request body
+
+        Returns:
+            Event: The event class
+        """
         event_class = cls
         for event in cls.__subclasses__():
             if event.match(headers, body):
@@ -58,6 +75,14 @@ class Event:
 
     @classmethod
     def match(cls, *dicts):
+        """Check if the event matches the event_identifier
+
+        Args:
+            *dicts: A list of dicts containing the event data
+
+        Returns:
+            bool: True if the event matches the event_identifier, False otherwise
+        """
         union_dict = Event.normalize_dicts(*dicts)
         for attr, value in cls.event_identifier.items():
             if not (attr in union_dict and value == union_dict[attr]):
