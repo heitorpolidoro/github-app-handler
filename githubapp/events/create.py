@@ -28,10 +28,10 @@ class CreateEvent(Event):
         self.pusher_type: str = pusher_type
         self.ref: str = ref
         self.ref_type: str = ref_type
-        self.repository: Repository = LazyCompletableGithubObject.get_lazy_instance(
+        self.repository = LazyCompletableGithubObject.get_lazy_instance(
             Repository, attributes=repository
         )
-        self.sender: NamedUser = LazyCompletableGithubObject.get_lazy_instance(
+        self.sender = LazyCompletableGithubObject.get_lazy_instance(
             NamedUser, attributes=sender
         )
 

@@ -61,7 +61,7 @@ class StatusEvent(Event):
             LazyCompletableGithubObject.get_lazy_instance(Branch, attributes=branch)
             for branch in branches
         ]
-        self.commit: Commit = LazyCompletableGithubObject.get_lazy_instance(
+        self.commit = LazyCompletableGithubObject.get_lazy_instance(
             Commit, attributes=commit
         )
         self.context: str = context
@@ -69,10 +69,10 @@ class StatusEvent(Event):
         self.description: Optional[str] = description
         self.id: int = id
         self.name: str = name
-        self.repository: Repository = LazyCompletableGithubObject.get_lazy_instance(
+        self.repository = LazyCompletableGithubObject.get_lazy_instance(
             Repository, attributes=repository
         )
-        self.sender: NamedUser = LazyCompletableGithubObject.get_lazy_instance(
+        self.sender = LazyCompletableGithubObject.get_lazy_instance(
             NamedUser, attributes=sender
         )
         self.sha: str = sha

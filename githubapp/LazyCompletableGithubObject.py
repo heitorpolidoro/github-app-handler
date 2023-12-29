@@ -15,7 +15,7 @@ Example:
 """
 import os
 from datetime import timedelta
-from typing import Any, Union
+from typing import Any, TypeVar, Union
 
 from dateutil.parser import parse
 from github import Consts, GithubIntegration, GithubRetry
@@ -24,6 +24,8 @@ from github.GithubObject import CompletableGithubObject
 from github.Requester import Requester
 
 from githubapp.events.event import Event
+
+T = TypeVar("T")
 
 
 class LazyRequester(Requester):
@@ -35,10 +37,10 @@ class LazyRequester(Requester):
     """
 
     # noinspection PyMissingConstructor
-    def __init__(self):  # skipcq:  PYL-W0231
+    def __init__(self) -> None:
         self._initialized = False
 
-    def __getattr__(self, item):
+    def __getattr__(self, item: str) -> Any:
         if not self._initialized:
             self._initialized = True
             self.initialize()
@@ -48,7 +50,7 @@ class LazyRequester(Requester):
         )
 
     # noinspection PyMethodMayBeStatic
-    def initialize(self):
+    def initialize(self) -> None:
         """
         Initialize the requester with authentication and default settings.
 
@@ -109,7 +111,7 @@ class LazyCompletableGithubObject(CompletableGithubObject):
         headers: dict[str, Union[str, int]] = None,
         attributes: dict[str, Any] = None,
         completed: bool = False,
-    ):
+    ) -> None:
         # self._lazy_initialized = False
         # noinspection PyTypeChecker
         CompletableGithubObject.__init__(
@@ -122,7 +124,7 @@ class LazyCompletableGithubObject(CompletableGithubObject):
         self._requester = LazyRequester()
 
     @staticmethod
-    def get_lazy_instance(clazz, attributes):
+    def get_lazy_instance(clazz: type[T], attributes: dict[str, Any]) -> T:
         """Makes the clazz a subclass of LazyCompletableGithubObject"""
         return type(clazz.__name__, (LazyCompletableGithubObject, clazz), {})(
             attributes=attributes
