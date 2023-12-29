@@ -8,7 +8,7 @@ import pytest
 from dateutil.parser import parse
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
-from githubapp.LazyCompletableGithubObject import LazyCompletableGithubObject
+from githubapp.LazyCompletableGithubObject import LazyCompletableGithubObject, LazyRequester
 
 
 class LazyClass(CompletableGithubObject):
@@ -37,15 +37,21 @@ class LazyClass(CompletableGithubObject):
             self._attr1 = self._makeStringAttribute(attributes["attr1"])
         self._url = self._makeStringAttribute("url")
 
+def test_lazy_completable_github_object_constructor():
+    instance = LazyCompletableGithubObject()
+    assert isinstance(instance._requester, LazyRequester)
+
     @property
     def attr1(self) -> Union[str, None]:
         self._completeIfNotSet(self._attr1)
         return self._attr1.value
 
 
-def test_lazy():
-    instance = LazyCompletableGithubObject.get_lazy_instance(LazyClass, attributes={})
-    assert isinstance(instance, LazyClass)
+def test_get_lazy_instance_subclassing_and_attributes():
+    attributes = {'attr1': 'test_value'}
+    instance = LazyCompletableGithubObject.get_lazy_instance(LazyClass, attributes=attributes)
+    assert isinstance(instance, LazyClass) and isinstance(instance, LazyCompletableGithubObject)
+    assert instance.attr1 == attributes['attr1']
 
 
 def test_lazy_requester_private_key():
