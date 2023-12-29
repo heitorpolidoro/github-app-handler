@@ -28,9 +28,9 @@ from githubapp.events.event import Event
 
 class LazyRequester(Requester):
     """
-    This class is a lazy version of Requester, which means that it will not make any requests to the API
-    until the object is accessed.
-    When any attribute of Requester is accessed, initialize the requester.
+    """
+    This class is a lazy version of the Requester class. It does not make any requests to the API until the object is accessed. When any attribute of Requester is accessed, the requester is initialized.
+    """
 
     """
 
