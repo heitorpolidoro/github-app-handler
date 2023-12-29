@@ -1,3 +1,18 @@
+"""
+LazyCompletableGithubObject
+
+This module provides lazy implementations of Github objects that make API
+requests only when attributes are accessed.
+
+The LazyRequester class lazily initializes a Requester instance to avoid
+making unnecessary requests. Objects that inherit from
+LazyCompletableGithubObject will have attributes populated lazily.
+
+Example:
+
+    lazy_obj = LazyCompletableGithubObject.get_lazy_instance(Repo, id=123)
+    print(lazy_obj.name) # Makes API request here to get name
+"""
 import os
 from datetime import timedelta
 from typing import Any, Union
@@ -19,6 +34,7 @@ class LazyRequester(Requester):
 
     """
 
+    # noinspection PyMissingConstructor
     def __init__(self):  # skipcq:  PYL-W0231
         self._initialized = False
 
