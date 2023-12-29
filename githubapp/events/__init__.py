@@ -7,3 +7,16 @@ from .issue_comment import (
 )
 from .release import ReleaseCreatedEvent, ReleaseReleasedEvent
 from .status import StatusEvent
+
+__all__ = [
+    "CreateBranchEvent",
+    "CreateEvent",
+    "CreateTagEvent",
+    "IssueCommentCreatedEvent",
+    "IssueCommentDeletedEvent",
+    "IssueCommentEditedEvent",
+    "IssueCommentEvent",
+    "ReleaseCreatedEvent",
+    "ReleaseReleasedEvent",
+    "StatusEvent",
+]
