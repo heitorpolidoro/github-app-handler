@@ -76,6 +76,6 @@ class StatusEvent(Event):
             NamedUser, attributes=sender
         )
         self.sha: str = sha
-        self.state: str = state  # TODO Enum
+        self.state: str = state
         self.target_url: Optional[str] = target_url
         self.updated_at: str = updated_at
