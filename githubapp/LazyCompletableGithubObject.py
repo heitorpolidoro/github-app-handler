@@ -1,8 +1,10 @@
 import os
+from datetime import timedelta
 from typing import Any, Union
 
+from dateutil.parser import parse
 from github import Consts, GithubIntegration, GithubRetry
-from github.Auth import AppAuth, Token
+from github.Auth import AppAuth, AppUserAuth, Token
 from github.GithubObject import CompletableGithubObject
 from github.Requester import Requester
 
@@ -41,19 +43,32 @@ class LazyRequester(Requester):
             ValueError: If the private key is not found in the environment variables.
 
         """
-        if not (private_key := os.getenv("PRIVATE_KEY")):
-            with open("private-key.pem", "rb") as key_file:  # pragma no cover
-                private_key = key_file.read().decode()
-        app_auth = AppAuth(Event.hook_installation_target_id, private_key)
-        token = (
-            GithubIntegration(auth=app_auth)
-            .get_access_token(Event.installation_id)
-            .token
-        )
-        Event.app_auth = app_auth
+        if os.environ.get("CLIENT_ID"):
+            date = parse(os.environ.get("DATE"))
+
+            auth = AppUserAuth(
+                client_id=os.environ.get("CLIENT_ID"),
+                client_secret=os.environ.get("CLIENT_SECRET"),
+                token=os.environ.get("TOKEN"),
+                expires_at=date + timedelta(seconds=28800),
+                refresh_token=os.environ.get("REFRESH_TOKEN"),
+                refresh_expires_at=date + timedelta(seconds=15811200),
+            )
+
+        else:
+            if not (private_key := os.getenv("PRIVATE_KEY")):
+                with open("private-key.pem", "rb") as key_file:  # pragma no cover
+                    private_key = key_file.read().decode()
+            app_auth = AppAuth(Event.hook_installation_target_id, private_key)
+            token = (
+                GithubIntegration(auth=app_auth)
+                .get_access_token(Event.installation_id)
+                .token
+            )
+            auth = Token(token)
         Requester.__init__(
             self,
-            auth=Token(token),
+            auth=auth,
             base_url=Consts.DEFAULT_BASE_URL,
             timeout=Consts.DEFAULT_TIMEOUT,
             user_agent=Consts.DEFAULT_USER_AGENT,
@@ -93,8 +108,6 @@ class LazyCompletableGithubObject(CompletableGithubObject):
     @staticmethod
     def get_lazy_instance(clazz, attributes):
         """Makes the clazz a subclass of LazyCompletableGithubObject"""
-        if LazyCompletableGithubObject not in clazz.__bases__:
-            clazz.__bases__ = tuple(
-                [LazyCompletableGithubObject] + list(clazz.__bases__)
-            )
-        return clazz(attributes=attributes)
+        return type(clazz.__name__, (LazyCompletableGithubObject, clazz), {})(
+            attributes=attributes
+        )
