@@ -14,7 +14,7 @@ class IssueCommentEvent(Event):
 
     def __init__(self, headers, comment, issue, repository, sender, **kwargs):
         super().__init__(headers, **kwargs)
-        self.issue: Issue = LazyCompletableGithubObject.get_lazy_instance(
+        self.issue = LazyCompletableGithubObject.get_lazy_instance(
             Issue, attributes=issue
         )
         self.issue_comment: IssueComment = (
@@ -22,10 +22,10 @@ class IssueCommentEvent(Event):
                 IssueComment, attributes=comment
             )
         )
-        self.repository: Repository = LazyCompletableGithubObject.get_lazy_instance(
+        self.repository = LazyCompletableGithubObject.get_lazy_instance(
             Repository, attributes=repository
         )
-        self.sender: NamedUser = LazyCompletableGithubObject.get_lazy_instance(
+        self.sender = LazyCompletableGithubObject.get_lazy_instance(
             NamedUser, attributes=sender
         )
 
