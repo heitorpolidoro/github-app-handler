@@ -4,7 +4,7 @@ from typing import Any, Union
 
 from dateutil.parser import parse
 from github import Consts, GithubIntegration, GithubRetry
-from github.Auth import AppAuth, Token, AppUserAuth
+from github.Auth import AppAuth, AppUserAuth, Token
 from github.GithubObject import CompletableGithubObject
 from github.Requester import Requester
 
@@ -52,7 +52,7 @@ class LazyRequester(Requester):
                 token=os.environ.get("TOKEN"),
                 expires_at=date + timedelta(seconds=28800),
                 refresh_token=os.environ.get("REFRESH_TOKEN"),
-                refresh_expires_at=date + timedelta(seconds=15811200)
+                refresh_expires_at=date + timedelta(seconds=15811200),
             )
 
         else:

@@ -5,8 +5,8 @@ from github.Commit import Commit
 from github.NamedUser import NamedUser
 from github.Repository import Repository
 
-from githubapp.LazyCompletableGithubObject import LazyCompletableGithubObject
 from githubapp.events.event import Event
+from githubapp.LazyCompletableGithubObject import LazyCompletableGithubObject
 
 
 class StatusEvent(Event):
