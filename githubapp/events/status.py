@@ -1,12 +1,12 @@
 from typing import Optional
 
 from github.Branch import Branch
-from github.GitCommit import GitCommit
+from github.Commit import Commit
 from github.NamedUser import NamedUser
 from github.Repository import Repository
 
-from githubapp.events.event import Event
 from githubapp.LazyCompletableGithubObject import LazyCompletableGithubObject
+from githubapp.events.event import Event
 
 
 class StatusEvent(Event):
@@ -58,11 +58,11 @@ class StatusEvent(Event):
         """
         super().__init__(headers, **kwargs)
         self.branches: list[Branch] = [
-            LazyCompletableGithubObject.get_lazy_instance(Repository, attributes=branch)
+            LazyCompletableGithubObject.get_lazy_instance(Branch, attributes=branch)
             for branch in branches
         ]
-        self.commit: GitCommit = LazyCompletableGithubObject.get_lazy_instance(
-            GitCommit, attributes=commit
+        self.commit: Commit = LazyCompletableGithubObject.get_lazy_instance(
+            Commit, attributes=commit
         )
         self.context: str = context
         self.created_at: str = created_at

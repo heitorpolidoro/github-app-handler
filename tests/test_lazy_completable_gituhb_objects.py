@@ -24,25 +24,21 @@ class LazyClass(CompletableGithubObject):
         Example:
             obj = ClassName()
         """
-        self._url = Attribute
-        self._url.value = "url"
         super().__init__(*args, **kwargs)
 
     def _initAttributes(self) -> None:
         self._attr1: Attribute[str] = NotSet
+        self._url: Attribute[str] = NotSet
 
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "attr1" in attributes:  # pragma no branch
             self._attr1 = self._makeStringAttribute(attributes["attr1"])
+        self._url = self._makeStringAttribute("url")
 
     @property
     def attr1(self) -> Union[str, None]:
         self._completeIfNotSet(self._attr1)
         return self._attr1.value
-
-    @staticmethod
-    def url():
-        return "url"
 
 
 def test_lazy():
