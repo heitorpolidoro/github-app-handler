@@ -15,7 +15,7 @@ Example:
 """
 import os
 from datetime import timedelta
-from typing import Any, Union, TypeVar
+from typing import Any, TypeVar, Union
 
 from dateutil.parser import parse
 from github import Consts, GithubIntegration, GithubRetry
