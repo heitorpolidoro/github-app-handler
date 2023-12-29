@@ -13,13 +13,13 @@ class ReleaseEvent(Event):
 
     def __init__(self, headers, release, repository, sender, **kwargs):
         super().__init__(headers, **kwargs)
-        self.release: GitRelease = LazyCompletableGithubObject.get_lazy_instance(
+        self.release = LazyCompletableGithubObject.get_lazy_instance(
             GitRelease, attributes=release
         )
-        self.repository: Repository = LazyCompletableGithubObject.get_lazy_instance(
+        self.repository = LazyCompletableGithubObject.get_lazy_instance(
             Repository, attributes=repository
         )
-        self.sender: NamedUser = LazyCompletableGithubObject.get_lazy_instance(
+        self.sender = LazyCompletableGithubObject.get_lazy_instance(
             NamedUser, attributes=sender
         )
 
