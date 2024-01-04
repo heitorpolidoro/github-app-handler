@@ -15,6 +15,7 @@ Example:
 """
 import os
 from typing import Any, TypeVar, Union
+
 from github import Consts, GithubIntegration, GithubRetry
 from github.Auth import AppAuth, AppUserAuth, Token
 from github.GithubObject import CompletableGithubObject

@@ -1,4 +1,5 @@
 from typing import Optional
+
 from github.NamedUser import NamedUser
 from github.Repository import Repository
 

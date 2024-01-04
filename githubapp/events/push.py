@@ -1,4 +1,5 @@
 from typing import Optional
+
 from github.Commit import Commit
 from github.GitCommit import GitCommit
 from github.NamedUser import NamedUser
