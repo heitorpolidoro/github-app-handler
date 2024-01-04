@@ -17,10 +17,8 @@ class IssueCommentEvent(Event):
         self.issue = LazyCompletableGithubObject.get_lazy_instance(
             Issue, attributes=issue
         )
-        self.issue_comment = (
-            LazyCompletableGithubObject.get_lazy_instance(
-                IssueComment, attributes=comment
-            )
+        self.issue_comment = LazyCompletableGithubObject.get_lazy_instance(
+            IssueComment, attributes=comment
         )
         self.repository = LazyCompletableGithubObject.get_lazy_instance(
             Repository, attributes=repository

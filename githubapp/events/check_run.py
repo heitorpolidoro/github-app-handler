@@ -2,8 +2,8 @@ from github.CheckRun import CheckRun
 from github.NamedUser import NamedUser
 from github.Repository import Repository
 
-from githubapp.LazyCompletableGithubObject import LazyCompletableGithubObject
 from githubapp.events.event import Event
+from githubapp.LazyCompletableGithubObject import LazyCompletableGithubObject
 
 
 class CheckRunEvent(Event):
@@ -12,12 +12,12 @@ class CheckRunEvent(Event):
     event_identifier = {"event": "check_run"}
 
     def __init__(
-            self,
-            headers,
-            check_run,
-            repository,
-            sender,
-            **kwargs,
+        self,
+        headers,
+        check_run,
+        repository,
+        sender,
+        **kwargs,
     ):
         super().__init__(headers, **kwargs)
         self.check_run = LazyCompletableGithubObject.get_lazy_instance(
@@ -35,4 +35,3 @@ class CheckRunCompletedEvent(CheckRunEvent):
     """This class represents an issue event."""
 
     event_identifier = {"action": "completed"}
-
