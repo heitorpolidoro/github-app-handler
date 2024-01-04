@@ -1,11 +1,9 @@
 import os
-from datetime import timedelta
 from typing import Any, Union
 from unittest import mock
 from unittest.mock import PropertyMock
 
 import pytest
-from dateutil.parser import parse
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 from githubapp.LazyCompletableGithubObject import LazyCompletableGithubObject
@@ -81,7 +79,6 @@ def test_lazy_requester_app_user_auth():
     os.environ["TOKEN"] = "token"
     os.environ["REFRESH_TOKEN"] = "refresh_token"
     os.environ["DATE"] = "2023-12-31"
-    date = parse(os.environ["DATE"])
     with (
         mock.patch("githubapp.LazyCompletableGithubObject.AppUserAuth") as app_use_auth,
         mock.patch(
@@ -101,9 +98,6 @@ def test_lazy_requester_app_user_auth():
         client_id="client_id",
         client_secret="client_secret",
         token="token",
-        expires_at=date + timedelta(seconds=28800),
-        refresh_token="refresh_token",
-        refresh_expires_at=date + timedelta(seconds=15811200),
     )
 
 
