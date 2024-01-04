@@ -57,7 +57,7 @@ class StatusEvent(Event):
 
         """
         super().__init__(headers, **kwargs)
-        self.branches: list[Branch] = [
+        self.branches = [
             LazyCompletableGithubObject.get_lazy_instance(Branch, attributes=branch)
             for branch in branches
         ]

@@ -17,7 +17,7 @@ class IssueCommentEvent(Event):
         self.issue = LazyCompletableGithubObject.get_lazy_instance(
             Issue, attributes=issue
         )
-        self.issue_comment: IssueComment = (
+        self.issue_comment = (
             LazyCompletableGithubObject.get_lazy_instance(
                 IssueComment, attributes=comment
             )
@@ -47,6 +47,6 @@ class IssueCommentEditedEvent(IssueCommentEvent):
 
     event_identifier = {"action": "edited"}
 
-    def __init__(self, headers, changes, *args, **kwargs):
-        super().__init__(headers, *args, **kwargs)
+    def __init__(self, headers, changes, **kwargs):
+        super().__init__(headers, **kwargs)
         self.changes = changes

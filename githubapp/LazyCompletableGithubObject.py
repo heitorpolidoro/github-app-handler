@@ -20,6 +20,7 @@ from typing import Any, TypeVar, Union
 from dateutil.parser import parse
 from github import Consts, GithubIntegration, GithubRetry
 from github.Auth import AppAuth, AppUserAuth, Token
+from github.GitCommit import GitCommit
 from github.GithubObject import CompletableGithubObject
 from github.Requester import Requester
 
@@ -62,15 +63,15 @@ class LazyRequester(Requester):
 
         """
         if os.environ.get("CLIENT_ID"):
-            date = parse(os.environ.get("DATE"))
-
+            # date = parse(os.environ.get("DATE"))
+            #
             auth = AppUserAuth(
                 client_id=os.environ.get("CLIENT_ID"),
                 client_secret=os.environ.get("CLIENT_SECRET"),
                 token=os.environ.get("TOKEN"),
-                expires_at=date + timedelta(seconds=28800),
-                refresh_token=os.environ.get("REFRESH_TOKEN"),
-                refresh_expires_at=date + timedelta(seconds=15811200),
+            #     expires_at=date + timedelta(seconds=28800),
+            #     refresh_token=os.environ.get("REFRESH_TOKEN"),
+            #     refresh_expires_at=date + timedelta(seconds=15811200),
             )
 
         else:
@@ -112,7 +113,11 @@ class LazyCompletableGithubObject(CompletableGithubObject):
         attributes: dict[str, Any] = None,
         completed: bool = False,
     ) -> None:
-        # self._lazy_initialized = False
+        # if attributes.get("url", "").startswith("https://github"):
+        #     attributes["url"] = attributes["url"].replace("https://github.com", "https://api.github.com/repos")
+        #     attributes["url"] = attributes["url"].replace("/commit/", "/commits/")
+        # if isinstance(self, GitCommit):
+        #     attributes["sha"] = attributes["id"]
         # noinspection PyTypeChecker
         CompletableGithubObject.__init__(
             self,

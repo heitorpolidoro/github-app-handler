@@ -4,6 +4,25 @@ from githubapp.events.event import Event
 from tests.conftest import event_action_request
 from tests.mocks import EventTest, SubEventTest
 
+OBJECTS = {
+    "repository": {},
+    "sender": {},
+    "issue": {},
+    "comment": {},
+    "release": {},
+    "commit": {},
+    "head_commit": {"id": 123},
+    "pusher": {},
+    "changes": {
+        "old_issue": {},
+        "old_repository": {},
+    },
+    "commits": [{"id": 123}],
+}
+LISTS = [
+    "branches",
+]
+
 
 def fill_body(body, *attributes):
     """
@@ -94,10 +113,21 @@ def test_all_events(event_action_request):
 
 def instantiate_class(body, headers, clazz):
     """Instantiate and validate an event or sub event class"""
+    body = body.copy()
     body.update(clazz.event_identifier)
     event = Event.get_event(headers, body)
     assert event == clazz
-    for attr in inspect.signature(event).parameters:
-        if attr != "headers":
-            body[attr] = "value"
+    while clazz:
+        for attr in inspect.signature(clazz).parameters:
+            if attr != "headers":
+                if attr in OBJECTS:
+                    body[attr] = OBJECTS[attr]
+                elif attr in LISTS:
+                    body[attr] = [{}]
+                else:
+                    body[attr] = "value"
+        if issubclass(clazz.__base__, Event):
+            clazz = clazz.__base__
+        else:
+            clazz = None
     event(headers, **body)
