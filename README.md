@@ -6,6 +6,9 @@ A handler helper to create GitHub App easily
 ![GitHub commits since latest release (by SemVer including pre-releases)](https://img.shields.io/github/commits-since/heitorpolidoro/github-app-handler/latest)
 ![GitHub last commit](https://img.shields.io/github/last-commit/heitorpolidoro/github-app-handler)
 <br>
+[![Code Quality](https://github.com/heitorpolidoro/github-app-handler/actions/workflows/code_quality.yml/badge.svg)](https://github.com/heitorpolidoro/github-app-handler/actions/workflows/code_quality.yml)
+[![Upload Python Package](https://github.com/heitorpolidoro/github-app-handler/actions/workflows/pypi-publish.yml/badge.svg)](https://github.com/heitorpolidoro/github-app-handler/actions/workflows/pypi-publish.yml)
+<br>
 [![GitHub issues](https://img.shields.io/github/issues/heitorpolidoro/github-app-handler)](https://github.com/heitorpolidoro/github-app-handler/issues)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/heitorpolidoro/github-app-handler)
 
