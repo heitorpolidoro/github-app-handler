@@ -14,13 +14,9 @@ Example:
     print(lazy_obj.name) # Makes API request here to get name
 """
 import os
-from datetime import timedelta
 from typing import Any, TypeVar, Union
-
-from dateutil.parser import parse
 from github import Consts, GithubIntegration, GithubRetry
 from github.Auth import AppAuth, AppUserAuth, Token
-from github.GitCommit import GitCommit
 from github.GithubObject import CompletableGithubObject
 from github.Requester import Requester
 
@@ -62,15 +58,10 @@ class LazyRequester(Requester):
 
         """
         if os.environ.get("CLIENT_ID"):
-            # date = parse(os.environ.get("DATE"))
-            #
             auth = AppUserAuth(
                 client_id=os.environ.get("CLIENT_ID"),
                 client_secret=os.environ.get("CLIENT_SECRET"),
                 token=os.environ.get("TOKEN"),
-                #     expires_at=date + timedelta(seconds=28800),
-                #     refresh_token=os.environ.get("REFRESH_TOKEN"),
-                #     refresh_expires_at=date + timedelta(seconds=15811200),
             )
 
         else:

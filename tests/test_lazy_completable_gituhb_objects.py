@@ -1,11 +1,9 @@
 import os
-from datetime import timedelta
 from typing import Any, Union
 from unittest import mock
 from unittest.mock import PropertyMock
 
 import pytest
-from dateutil.parser import parse
 from github.GithubObject import Attribute, CompletableGithubObject, NotSet
 
 from githubapp.LazyCompletableGithubObject import LazyCompletableGithubObject

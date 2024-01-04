@@ -1,10 +1,5 @@
 from typing import Optional
-
-from github.Branch import Branch
-from github.GitCommit import GitCommit
 from github.NamedUser import NamedUser
-from github.PullRequest import PullRequest
-from github.PullRequestReview import PullRequestReview
 from github.Repository import Repository
 
 from githubapp.events.event import Event

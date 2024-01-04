@@ -58,7 +58,6 @@ class IssueOpenedEvent(IssuesEvent):
             if changes
             else None
         )
-        # changes /\
 
 
 class IssueEditedEvent(IssuesEvent):
