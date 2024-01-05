@@ -14,7 +14,7 @@ Example:
     print(lazy_obj.name) # Makes API request here to get name
 """
 import os
-from typing import Any, TypeVar, Union, Optional
+from typing import Any, Optional, TypeVar, Union
 
 from github import Consts, GithubIntegration, GithubRetry
 from github.Auth import AppAuth, AppUserAuth, Token

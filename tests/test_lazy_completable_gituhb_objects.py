@@ -56,8 +56,11 @@ def test_lazy_null_attributes():
         is None
     )
 
+
 def test_lazy_fix_url():
-    instance = LazyCompletableGithubObject.get_lazy_instance(LazyClass, attributes={"url": "https://github.com/potato"})
+    instance = LazyCompletableGithubObject.get_lazy_instance(
+        LazyClass, attributes={"url": "https://github.com/potato"}
+    )
     assert instance.url == "https://api.github.com/repos/potato"
 
 
