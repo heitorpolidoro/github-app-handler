@@ -14,7 +14,7 @@ Example:
     print(lazy_obj.name) # Makes API request here to get name
 """
 import os
-from typing import Any, TypeVar, Union
+from typing import Any, TypeVar, Union, Optional
 
 from github import Consts, GithubIntegration, GithubRetry
 from github.Auth import AppAuth, AppUserAuth, Token
@@ -122,7 +122,7 @@ class LazyCompletableGithubObject(CompletableGithubObject):
         self._requester = LazyRequester()
 
     @staticmethod
-    def get_lazy_instance(clazz: type[T], attributes: dict[str, Any]) -> T:
+    def get_lazy_instance(clazz: type[T], attributes: Optional[dict[str, Any]]) -> T:
         if attributes is None:
             return None
         """Makes the clazz a subclass of LazyCompletableGithubObject"""
