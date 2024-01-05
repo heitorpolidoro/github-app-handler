@@ -22,7 +22,7 @@ class CheckSuiteEvent(Event):
         repository,
         sender,
         **kwargs,
-    ):
+    ) -> None:
         super().__init__(headers, **kwargs)
         self.check_suite = LazyCompletableGithubObject.get_lazy_instance(
             CheckSuite, attributes=check_suite
