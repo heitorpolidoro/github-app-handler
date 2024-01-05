@@ -125,9 +125,9 @@ class LazyCompletableGithubObject(CompletableGithubObject):
     def get_lazy_instance(
         clazz: type[T], attributes: Optional[dict[str, Any]]
     ) -> Optional[T]:
+        """Makes the clazz a subclass of LazyCompletableGithubObject"""
         if attributes is None:
             return None
-        """Makes the clazz a subclass of LazyCompletableGithubObject"""
         return type(clazz.__name__, (LazyCompletableGithubObject, clazz), {})(
             attributes=attributes
         )
