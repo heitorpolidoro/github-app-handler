@@ -18,6 +18,10 @@ OBJECTS = {
         "old_repository": {},
     },
     "commits": [{"id": 123}],
+    "check_run": {},
+    "check_suite": {},
+    "pull_request": {},
+    "review": {},
 }
 LISTS = [
     "branches",

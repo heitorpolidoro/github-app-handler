@@ -14,7 +14,7 @@ Example:
     print(lazy_obj.name) # Makes API request here to get name
 """
 import os
-from typing import Any, TypeVar, Union
+from typing import Any, Optional, TypeVar, Union
 
 from github import Consts, GithubIntegration, GithubRetry
 from github.Auth import AppAuth, AppUserAuth, Token
@@ -104,8 +104,10 @@ class LazyCompletableGithubObject(CompletableGithubObject):
         attributes: dict[str, Any] = None,
         completed: bool = False,
     ) -> None:
-        # if attributes.get("url", "").startswith("https://github"):
-        #     attributes["url"] = attributes["url"].replace("https://github.com", "https://api.github.com/repos")
+        if attributes.get("url", "").startswith("https://github"):
+            attributes["url"] = attributes["url"].replace(
+                "https://github.com", "https://api.github.com/repos"
+            )
         #     attributes["url"] = attributes["url"].replace("/commit/", "/commits/")
         # if isinstance(self, GitCommit):
         #     attributes["sha"] = attributes["id"]
@@ -120,8 +122,12 @@ class LazyCompletableGithubObject(CompletableGithubObject):
         self._requester = LazyRequester()
 
     @staticmethod
-    def get_lazy_instance(clazz: type[T], attributes: dict[str, Any]) -> T:
+    def get_lazy_instance(
+        clazz: type[T], attributes: Optional[dict[str, Any]]
+    ) -> Optional[T]:
         """Makes the clazz a subclass of LazyCompletableGithubObject"""
+        if attributes is None:
+            return None
         return type(clazz.__name__, (LazyCompletableGithubObject, clazz), {})(
             attributes=attributes
         )

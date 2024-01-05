@@ -33,17 +33,35 @@ class LazyClass(CompletableGithubObject):
     def _useAttributes(self, attributes: dict[str, Any]) -> None:
         if "attr1" in attributes:  # pragma no branch
             self._attr1 = self._makeStringAttribute(attributes["attr1"])
-        self._url = self._makeStringAttribute("url")
+        self._url = self._makeStringAttribute(attributes.get("url", "url"))
 
     @property
     def attr1(self) -> Union[str, None]:
         self._completeIfNotSet(self._attr1)
         return self._attr1.value
 
+    @property
+    def url(self) -> Union[str, None]:
+        return self._url.value
+
 
 def test_lazy():
     instance = LazyCompletableGithubObject.get_lazy_instance(LazyClass, attributes={})
     assert isinstance(instance, LazyClass)
+
+
+def test_lazy_null_attributes():
+    assert (
+        LazyCompletableGithubObject.get_lazy_instance(LazyClass, attributes=None)
+        is None
+    )
+
+
+def test_lazy_fix_url():
+    instance = LazyCompletableGithubObject.get_lazy_instance(
+        LazyClass, attributes={"url": "https://github.com/potato"}
+    )
+    assert instance.url == "https://api.github.com/repos/potato"
 
 
 def test_lazy_requester_private_key():
