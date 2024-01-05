@@ -105,7 +105,9 @@ class LazyCompletableGithubObject(CompletableGithubObject):
         completed: bool = False,
     ) -> None:
         if attributes.get("url", "").startswith("https://github"):
-            attributes["url"] = attributes["url"].replace("https://github.com", "https://api.github.com/repos")
+            attributes["url"] = attributes["url"].replace(
+                "https://github.com", "https://api.github.com/repos"
+            )
         #     attributes["url"] = attributes["url"].replace("/commit/", "/commits/")
         # if isinstance(self, GitCommit):
         #     attributes["sha"] = attributes["id"]
