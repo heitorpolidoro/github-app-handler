@@ -8,6 +8,12 @@ The classes make it easy to access relevant data from the payload and provide a
 common interface for handling different event types in the application code.
 """
 from .check_run import CheckRunCompletedEvent, CheckRunEvent
+from .check_suite import (
+    CheckSuiteCompletedEvent,
+    CheckSuiteEvent,
+    CheckSuiteRequestedEvent,
+    CheckSuiteRerequestedEvent,
+)
 from .create import CreateBranchEvent, CreateEvent, CreateTagEvent
 from .issue_comment import (
     IssueCommentCreatedEvent,
@@ -25,12 +31,6 @@ from .pull_request_review import (
 from .push import PushEvent
 from .release import ReleaseCreatedEvent, ReleaseReleasedEvent
 from .status import StatusEvent
-from .check_suite import (
-    CheckSuiteEvent,
-    CheckSuiteRequestedEvent,
-    CheckSuiteRerequestedEvent,
-    CheckSuiteCompletedEvent,
-)
 
 __all__ = [
     "CheckRunCompletedEvent",
