@@ -122,7 +122,7 @@ class LazyCompletableGithubObject(CompletableGithubObject):
         self._requester = LazyRequester()
 
     @staticmethod
-    def get_lazy_instance(clazz: type[T], attributes: Optional[dict[str, Any]]) -> T:
+    def get_lazy_instance(clazz: type[T], attributes: Optional[dict[str, Any]]) -> Optional[T]:
         if attributes is None:
             return None
         """Makes the clazz a subclass of LazyCompletableGithubObject"""
