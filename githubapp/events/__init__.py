@@ -25,10 +25,20 @@ from .pull_request_review import (
 from .push import PushEvent
 from .release import ReleaseCreatedEvent, ReleaseReleasedEvent
 from .status import StatusEvent
+from .check_suite import (
+    CheckSuiteEvent,
+    CheckSuiteRequestedEvent,
+    CheckSuiteRerequestedEvent,
+    CheckSuiteCompletedEvent,
+)
 
 __all__ = [
     "CheckRunCompletedEvent",
     "CheckRunEvent",
+    "CheckSuiteEvent",
+    "CheckSuiteCompletedEvent",
+    "CheckSuiteRequestedEvent",
+    "CheckSuiteRerequestedEvent",
     "CreateBranchEvent",
     "CreateEvent",
     "CreateTagEvent",
