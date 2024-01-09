@@ -1,5 +1,5 @@
 import inspect
-from unittest.mock import patch, Mock
+from unittest.mock import Mock, patch
 
 from github import GithubIntegration
 from github.Auth import AppUserAuth, Token
@@ -170,9 +170,7 @@ def test_get_auth_app_auth_when_private_key_in_env(monkeypatch):
             return_value=githubintegration,
             autospec=GithubIntegration,
         ) as GithubIntegrationMock,
-        patch(
-            "githubapp.events.event.Token", autospec=Token
-        ) as TokenMock,
+        patch("githubapp.events.event.Token", autospec=Token) as TokenMock,
     ):
         assert isinstance(Event._get_auth(), Token)
         appauth.assert_called_once_with("hook_installation_target_id", "private_key")
