@@ -1,8 +1,8 @@
 import os
 import re
 
-from github import GithubIntegration, Github, Consts, GithubRetry
-from github.Auth import AppAuth, Token, AppUserAuth, Auth
+from github import Consts, Github, GithubIntegration, GithubRetry
+from github.Auth import AppAuth, AppUserAuth, Auth, Token
 from github.Requester import Requester
 
 

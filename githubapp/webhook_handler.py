@@ -113,7 +113,8 @@ def _validate_signature(method: Callable[[Any], Any]):
 
 
 def handle_with_flask(app) -> None:
-    from flask import request, Flask
+    from flask import Flask, request
+
     if not isinstance(app, Flask):
         raise TypeError("app must be a Flask instance")
 
