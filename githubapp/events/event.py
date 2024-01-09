@@ -1,4 +1,9 @@
+import os
 import re
+
+from github import GithubIntegration, Github, Consts, GithubRetry
+from github.Auth import AppAuth, Token, AppUserAuth, Auth
+from github.Requester import Requester
 
 
 class Event:
@@ -35,6 +40,39 @@ class Event:
 
         Event._raw_headers = headers
         Event._raw_body = kwargs
+        auth = Event._get_auth()
+        self.gh = Github(auth=auth)
+        self.requester = Requester(
+            auth=auth,
+            base_url=Consts.DEFAULT_BASE_URL,
+            timeout=Consts.DEFAULT_TIMEOUT,
+            user_agent=Consts.DEFAULT_USER_AGENT,
+            per_page=Consts.DEFAULT_PER_PAGE,
+            verify=True,
+            retry=GithubRetry(),
+            pool_size=None,
+        )
+
+    @staticmethod
+    def _get_auth() -> Auth:
+        if os.environ.get("CLIENT_ID"):
+            return AppUserAuth(
+                client_id=os.environ.get("CLIENT_ID"),
+                client_secret=os.environ.get("CLIENT_SECRET"),
+                token=os.environ.get("TOKEN"),
+            )
+
+        else:
+            if not (private_key := os.getenv("PRIVATE_KEY")):
+                with open("private-key.pem", "rb") as key_file:  # pragma no cover
+                    private_key = key_file.read().decode()
+            app_auth = AppAuth(Event.hook_installation_target_id, private_key)
+            token = (
+                GithubIntegration(auth=app_auth)
+                .get_access_token(Event.installation_id)
+                .token
+            )
+            return Token(token)
 
     @staticmethod
     def normalize_dicts(*dicts) -> dict[str, str]:

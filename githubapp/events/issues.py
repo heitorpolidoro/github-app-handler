@@ -20,8 +20,11 @@ class IssuesEvent(Event):
         **kwargs,
     ):
         super().__init__(headers, **kwargs)
-        self.issue = LazyCompletableGithubObject.get_lazy_instance(
-            Issue, attributes=issue
+        self.issue = Issue(
+            requester=self.requester,
+            headers=headers or {},
+            attributes=issue,
+            completed=True,
         )
         self.repository = LazyCompletableGithubObject.get_lazy_instance(
             Repository, attributes=repository

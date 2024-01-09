@@ -110,3 +110,28 @@ def _validate_signature(method: Callable[[Any], Any]):
     if len(parameters) != 1:
         signature = ", ".join(parameters.keys())
         raise SignatureError(method, signature)
+
+
+def handle_with_flask(app) -> None:
+    from flask import request, Flask
+    if not isinstance(app, Flask):
+        raise TypeError("app must be a Flask instance")
+
+    @app.route("/", methods=["GET"])
+    def flask_root() -> str:
+        """
+        This route displays the welcome screen of the application.
+        It uses the root function of the webhook_handler to generate the welcome screen.
+        """
+        return root(app.name)()
+
+    @app.route("/", methods=["POST"])
+    def flask_webhook() -> str:
+        """
+        This route is the endpoint that receives the GitHub webhook call.
+        It handles the headers and body of the request, and passes them to the webhook_handler for processing.
+        """
+        headers = dict(request.headers)
+        body = request.json
+        handle(headers, body)
+        return "OK"
