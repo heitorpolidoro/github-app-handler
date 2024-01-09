@@ -55,6 +55,14 @@ class Event:
 
     @staticmethod
     def _get_auth() -> Auth:
+        """
+        This method is used to get the authentication object for the GitHub API.
+        It checks if the environment variables CLIENT_ID, CLIENT_SECRET, and TOKEN are set.
+        If they are set, it uses the AppUserAuth object with the CLIENT_ID, CLIENT_SECRET, and TOKEN.
+        Otherwise, it uses the AppAuth object with the private key.
+
+        :return: The Auth to be used to authenticate in Github()
+        """
         if os.environ.get("CLIENT_ID"):
             return AppUserAuth(
                 client_id=os.environ.get("CLIENT_ID"),
