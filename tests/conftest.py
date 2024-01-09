@@ -2,8 +2,31 @@ from collections import defaultdict
 from unittest.mock import Mock, patch
 
 import pytest
+from github.Auth import Auth
 
 from githubapp import webhook_handler
+
+
+@pytest.fixture(autouse=True)
+def gh():
+    """mock the requests library for tests"""
+    with patch("githubapp.events.event.Github"):
+        yield
+
+
+@pytest.fixture(autouse=True)
+def requester():
+    """mock the requests library for tests"""
+    with patch("githubapp.events.event.Requester"):
+        yield
+
+
+@pytest.fixture
+def mock_auth():
+    with patch(
+        "githubapp.events.event.Event._get_auth", return_value=Mock(autospec=Auth)
+    ) as mock:
+        yield mock
 
 
 @pytest.fixture(autouse=True)

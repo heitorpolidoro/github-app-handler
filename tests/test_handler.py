@@ -5,6 +5,11 @@ from githubapp.webhook_handler import _validate_signature, handle
 from tests.mocks import EventTest, SubEventTest
 
 
+@pytest.fixture(autouse=True)
+def auto_mock_auth(mock_auth):
+    yield
+
+
 def test_add_handler_sub_event(method):
     webhook_handler.add_handler(SubEventTest, method)
 
