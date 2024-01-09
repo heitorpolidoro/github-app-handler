@@ -113,6 +113,14 @@ def _validate_signature(method: Callable[[Any], Any]):
 
 
 def handle_with_flask(app) -> None:
+    """
+    This function registers the webhook_handler with a Flask application.
+
+    Args:
+        app: The Flask application to register the webhook_handler with.
+
+    :param app: Flask applications
+    """
     from flask import Flask, request
 
     if not isinstance(app, Flask):
