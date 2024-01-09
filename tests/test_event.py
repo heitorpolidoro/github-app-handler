@@ -1,4 +1,8 @@
 import inspect
+from unittest.mock import patch, Mock
+
+from github import GithubIntegration
+from github.Auth import AppUserAuth, Token
 
 from githubapp.events.event import Event
 from tests.conftest import event_action_request
@@ -61,7 +65,7 @@ def fill_body(body, *attributes):
 
 
 # noinspection PyUnresolvedReferences
-def test_init(event_action_request):
+def test_init(event_action_request, mock_auth):
     headers, body = event_action_request
     SubEventTest(headers, **body)
     assert Event.github_event == "event"
@@ -102,7 +106,7 @@ def test_match():
     assert LocalEventTest.match({}, d3) is False
 
 
-def test_all_events(event_action_request):
+def test_all_events(event_action_request, mock_auth):
     headers, body = event_action_request
     for event_class in Event.__subclasses__():
         if event_class.__name__.endswith("Test"):
@@ -135,3 +139,43 @@ def instantiate_class(body, headers, clazz):
         else:
             clazz = None
     event(headers, **body)
+
+
+def test_get_auth_app_user_auth(monkeypatch):
+    monkeypatch.setenv("CLIENT_ID", "client_id")
+    monkeypatch.setenv("CLIENT_SECRET", "client_secret")
+    monkeypatch.setenv("TOKEN", "token")
+    with patch(
+        "githubapp.events.event.AppUserAuth", autospec=AppUserAuth
+    ) as appuserauth:
+        assert isinstance(Event._get_auth(), AppUserAuth)
+        appuserauth.assert_called_once_with(
+            client_id="client_id", client_secret="client_secret", token="token"
+        )
+
+
+def test_get_auth_app_auth_when_private_key_in_env(monkeypatch):
+    monkeypatch.setenv("PRIVATE_KEY", "private_key")
+    Event.hook_installation_target_id = "hook_installation_target_id"
+    Event.installation_id = "installation_id"
+
+    get_access_token = Mock(return_value=Mock(token="token"))
+    githubintegration = Mock(
+        autospec=GithubIntegration, get_access_token=get_access_token
+    )
+    with (
+        patch("githubapp.events.event.AppAuth") as appauth,
+        patch(
+            "githubapp.events.event.GithubIntegration",
+            return_value=githubintegration,
+            autospec=GithubIntegration,
+        ) as GithubIntegrationMock,
+        patch(
+            "githubapp.events.event.Token", autospec=Token
+        ) as TokenMock,
+    ):
+        assert isinstance(Event._get_auth(), Token)
+        appauth.assert_called_once_with("hook_installation_target_id", "private_key")
+        GithubIntegrationMock.assert_called_once_with(auth=appauth.return_value)
+        get_access_token.assert_called_once_with("installation_id")
+        TokenMock.assert_called_once_with("token")
