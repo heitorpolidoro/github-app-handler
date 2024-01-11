@@ -3,11 +3,8 @@ Module for handling GitHub check_run webhook events.
 https://docs.github.com/en/webhooks/webhook-events-and-payloads#check_run
 """
 from github.CheckRun import CheckRun
-from github.NamedUser import NamedUser
-from github.Repository import Repository
 
 from githubapp.events.event import Event
-from githubapp.LazyCompletableGithubObject import LazyCompletableGithubObject
 
 
 class CheckRunEvent(Event):
@@ -17,22 +14,11 @@ class CheckRunEvent(Event):
 
     def __init__(
         self,
-        headers,
         check_run,
-        repository,
-        sender,
         **kwargs,
     ):
-        super().__init__(headers, **kwargs)
-        self.check_run = LazyCompletableGithubObject.get_lazy_instance(
-            CheckRun, attributes=check_run
-        )
-        self.repository = LazyCompletableGithubObject.get_lazy_instance(
-            Repository, attributes=repository
-        )
-        self.sender = LazyCompletableGithubObject.get_lazy_instance(
-            NamedUser, attributes=sender
-        )
+        super().__init__(**kwargs)
+        self.check_run = self._parse_object(CheckRun, check_run)
 
 
 class CheckRunCompletedEvent(CheckRunEvent):

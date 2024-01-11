@@ -1,9 +1,10 @@
-import os
 import re
+from typing import TypeVar, Optional, Any
 
-from github import Consts, Github, GithubIntegration, GithubRetry
-from github.Auth import AppAuth, AppUserAuth, Auth, Token
-from github.Requester import Requester
+from github.NamedUser import NamedUser
+from github.Repository import Repository
+
+T = TypeVar("T")
 
 
 class Event:
@@ -26,7 +27,7 @@ class Event:
     _raw_headers = None
 
     #
-    def __init__(self, headers, **kwargs):
+    def __init__(self, *, gh, requester, headers, sender, repository=None, **kwargs):
         Event.delivery = headers["X-Github-Delivery"]
         Event.github_event = headers["X-Github-Event"]
         Event.hook_id = int(headers["X-Github-Hook-Id"])
@@ -36,49 +37,16 @@ class Event:
         Event.hook_installation_target_type = headers[
             "X-Github-Hook-Installation-Target-Type"
         ]
-        Event.installation_id = int(kwargs["installation"]["id"])
-
         Event._raw_headers = headers
         Event._raw_body = kwargs
-        auth = Event._get_auth()
-        self.gh = Github(auth=auth)
-        self.requester = Requester(
-            auth=auth,
-            base_url=Consts.DEFAULT_BASE_URL,
-            timeout=Consts.DEFAULT_TIMEOUT,
-            user_agent=Consts.DEFAULT_USER_AGENT,
-            per_page=Consts.DEFAULT_PER_PAGE,
-            verify=True,
-            retry=GithubRetry(),
-            pool_size=None,
+        self.gh = gh
+        self.requester = requester
+        self.repository = (
+            self._parse_object(Repository, repository)
+            if repository is not None
+            else None
         )
-
-    @staticmethod
-    def _get_auth() -> Auth:
-        """
-        This method is used to get the authentication object for the GitHub API.
-        It checks if the environment variables CLIENT_ID, CLIENT_SECRET, and TOKEN are set.
-        If they are set, it uses the AppUserAuth object with the CLIENT_ID, CLIENT_SECRET, and TOKEN.
-        Otherwise, it uses the AppAuth object with the private key.
-
-        :return: The Auth to be used to authenticate in Github()
-        """
-        if os.environ.get("CLIENT_ID"):
-            return AppUserAuth(
-                client_id=os.environ.get("CLIENT_ID"),
-                client_secret=os.environ.get("CLIENT_SECRET"),
-                token=os.environ.get("TOKEN"),
-            )
-        if not (private_key := os.getenv("PRIVATE_KEY")):
-            with open("private-key.pem", "rb") as key_file:  # pragma no cover
-                private_key = key_file.read().decode()
-        app_auth = AppAuth(Event.hook_installation_target_id, private_key)
-        token = (
-            GithubIntegration(auth=app_auth)
-            .get_access_token(Event.installation_id)
-            .token
-        )
-        return Token(token)
+        self.sender = self._parse_object(NamedUser, sender)
 
     @staticmethod
     def normalize_dicts(*dicts) -> dict[str, str]:
@@ -112,23 +80,39 @@ class Event:
             Event: The event class
         """
         event_class = cls
+        union_dict = Event.normalize_dicts(headers, body)
+
         for event in cls.__subclasses__():
-            if event.match(headers, body):
+            if event.match(union_dict):
                 return event.get_event(headers, body)
         return event_class
 
     @classmethod
-    def match(cls, *dicts):
+    def match(cls, data):
         """Check if the event matches the event_identifier
 
         Args:
-            *dicts: A list of dicts containing the event data
+            data: A dict containing all the event data
 
         Returns:
             bool: True if the event matches the event_identifier, False otherwise
         """
-        union_dict = Event.normalize_dicts(*dicts)
         for attr, value in cls.event_identifier.items():
-            if not (attr in union_dict and value == union_dict[attr]):
+            if not (attr in data and value == data[attr]):
                 return False
         return True
+
+    @staticmethod
+    def fix_attributes(attributes):
+        if attributes.get("url", "").startswith("https://github"):
+            attributes["url"] = attributes["url"].replace(
+                "https://github.com", "https://api.github.com/repos"
+            )
+
+    def _parse_object(self, clazz: type[T], value: Any) -> Optional[T]:
+        return clazz(
+            requester=self.requester,
+            headers={},
+            attributes=value,
+            completed=True,
+        )

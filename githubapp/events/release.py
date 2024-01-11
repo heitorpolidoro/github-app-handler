@@ -3,7 +3,6 @@ from github.NamedUser import NamedUser
 from github.Repository import Repository
 
 from githubapp.events.event import Event
-from githubapp.LazyCompletableGithubObject import LazyCompletableGithubObject
 
 
 class ReleaseEvent(Event):
@@ -11,17 +10,9 @@ class ReleaseEvent(Event):
 
     event_identifier = {"event": "release"}
 
-    def __init__(self, headers, release, repository, sender, **kwargs):
-        super().__init__(headers, **kwargs)
-        self.release = LazyCompletableGithubObject.get_lazy_instance(
-            GitRelease, attributes=release
-        )
-        self.repository = LazyCompletableGithubObject.get_lazy_instance(
-            Repository, attributes=repository
-        )
-        self.sender = LazyCompletableGithubObject.get_lazy_instance(
-            NamedUser, attributes=sender
-        )
+    def __init__(self, release, **kwargs):
+        super().__init__(**kwargs)
+        self.release = self._parse_object(GitRelease, release)
 
 
 class ReleaseReleasedEvent(ReleaseEvent):

@@ -1,5 +1,5 @@
 from unittest import TestCase
-from unittest.mock import MagicMock, call, patch
+from unittest.mock import MagicMock, call, patch, Mock
 
 import pytest
 from flask import Flask
@@ -48,7 +48,8 @@ class TestApp(TestCase):
     def setUp(self):
         app = Flask("Test")
         handle_with_flask(app)
-        self.app = app.test_client()
+        self.app = app
+        self.client = app.test_client()
 
     def test_root(self):
         """
@@ -57,9 +58,26 @@ class TestApp(TestCase):
         It sends a GET request to the root endpoint and checks that the response status code is 200 and the response
         text is "Pull Request Generator App up and running!".
         """
-        response = self.app.get("/")
+        response = self.client.get("/")
         assert response.status_code == 200
-        assert response.text == "Test App up and running!"
+        assert response.text == "<h1>Test App up and running!</h1>"
+
+    def test_root_not_default_index(self):
+        app = Flask("Test")
+        handle_with_flask(app, use_default_index=False)
+        app.route("/", methods=["GET"])(lambda: "index")
+        response = app.test_client().get("/")
+        assert response.status_code == 200
+        assert response.text == "index"
+
+    def test_auth_callback(self):
+        auth_callback = Mock()
+        app = Flask("Test")
+        handle_with_flask(app, auth_callback_handler=auth_callback)
+        with patch("githubapp.webhook_handler.Github"):
+            response = app.test_client().get("/auth-callback")
+        assert response.status_code == 200
+        auth_callback.assert_called_once()
 
     def test_webhook(self):
         """
@@ -78,5 +96,5 @@ class TestApp(TestCase):
                 "Content-Length": "33",
                 "X-Github-Event": "pull_request",
             }
-            self.app.post("/", headers=headers, json=request_json)
+            self.client.post("/", headers=headers, json=request_json)
             mock_handle.assert_called_once_with(headers, request_json)

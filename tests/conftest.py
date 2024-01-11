@@ -10,21 +10,21 @@ from githubapp import webhook_handler
 @pytest.fixture(autouse=True)
 def gh():
     """mock the requests library for tests"""
-    with patch("githubapp.events.event.Github"):
+    with patch("githubapp.webhook_handler.Github"):
         yield
 
 
 @pytest.fixture(autouse=True)
 def requester():
     """mock the requests library for tests"""
-    with patch("githubapp.events.event.Requester"):
+    with patch("githubapp.webhook_handler.Requester"):
         yield
 
 
 @pytest.fixture
 def mock_auth():
     with patch(
-        "githubapp.events.event.Event._get_auth", return_value=Mock(autospec=Auth)
+        "githubapp.webhook_handler._get_auth", return_value=Mock(autospec=Auth)
     ) as mock:
         yield mock
 
@@ -46,7 +46,12 @@ def event_action_request():
         "X-Github-Hook-Installation-Target-Type": "type",
         "X-Github-Hook-Installation-Target-Id": "2",
     }
-    body = {"installation": {"id": "3"}, "action": "action"}
+    body = {
+        "installation": {"id": "3"},
+        "action": "action",
+        "sender": {},
+        "repository": {},
+    }
     yield headers, body
 
 

@@ -4,7 +4,6 @@ from github.NamedUser import NamedUser
 from github.Repository import Repository
 
 from githubapp.events.event import Event
-from githubapp.LazyCompletableGithubObject import LazyCompletableGithubObject
 
 
 class IssueCommentEvent(Event):
@@ -12,20 +11,10 @@ class IssueCommentEvent(Event):
 
     event_identifier = {"event": "issue_comment"}
 
-    def __init__(self, headers, comment, issue, repository, sender, **kwargs):
-        super().__init__(headers, **kwargs)
-        self.issue = LazyCompletableGithubObject.get_lazy_instance(
-            Issue, attributes=issue
-        )
-        self.issue_comment = LazyCompletableGithubObject.get_lazy_instance(
-            IssueComment, attributes=comment
-        )
-        self.repository = LazyCompletableGithubObject.get_lazy_instance(
-            Repository, attributes=repository
-        )
-        self.sender = LazyCompletableGithubObject.get_lazy_instance(
-            NamedUser, attributes=sender
-        )
+    def __init__(self, issue, issue_comment, **kwargs):
+        super().__init__(**kwargs)
+        self.issue = self._parse_object(Issue, issue)
+        self.issue_comment = self._parse_object(IssueComment, issue_comment)
 
 
 class IssueCommentCreatedEvent(IssueCommentEvent):
@@ -45,6 +34,6 @@ class IssueCommentEditedEvent(IssueCommentEvent):
 
     event_identifier = {"action": "edited"}
 
-    def __init__(self, headers, changes, **kwargs):
-        super().__init__(headers, **kwargs)
+    def __init__(self, changes, **kwargs):
+        super().__init__(**kwargs)
         self.changes = changes
