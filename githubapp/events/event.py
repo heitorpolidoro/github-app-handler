@@ -104,14 +104,14 @@ class Event:
 
     @staticmethod
     def fix_attributes(attributes):
-        """ Fix the url value """
+        """Fix the url value"""
         if attributes.get("url", "").startswith("https://github"):
             attributes["url"] = attributes["url"].replace(
                 "https://github.com", "https://api.github.com/repos"
             )
 
     def _parse_object(self, clazz: type[T], value: Any) -> Optional[T]:
-        """ Return the PyGithub object """
+        """Return the PyGithub object"""
         return clazz(
             requester=self.requester,
             headers={},
