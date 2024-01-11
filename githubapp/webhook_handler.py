@@ -119,7 +119,7 @@ def handle(headers: dict[str, Any], body: dict[str, Any]):
         handler(event_class(gh=gh, requester=requester, headers=headers, **body))
 
 
-def root(name):
+def default_index(name):
     """Decorator to register a default root handler.
 
     Args:
@@ -177,7 +177,7 @@ def handle_with_flask(
         raise TypeError("app must be a Flask instance")
 
     if use_default_index:
-        app.route("/", methods=["GET"])(lambda: root(app.name)())
+        app.route("/", methods=["GET"])(default_index(app.name))
 
     @app.route(webhook_endpoint, methods=["POST"])
     def webhook() -> str:
@@ -199,6 +199,10 @@ def handle_with_flask(
         # use @, pass as parameters to this function ou as a class?
         @app.route("/auth-callback")
         def auth_callback():
+            """
+            This route is the endpoint that receives the GitHub auth_callback call.
+            Call the auth_callback_handler with the installation_id and access_token to be saved.
+            """
             args = request.args
             code = args.get("code")
             installation_id = args.get("installation_id")
