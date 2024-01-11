@@ -3,8 +3,6 @@ Module for handling GitHub check_suite webhook events.
 https://docs.github.com/en/webhooks/webhook-events-and-payloads#check_suite
 """
 from github.CheckSuite import CheckSuite
-from github.NamedUser import NamedUser
-from github.Repository import Repository
 
 from githubapp.events.event import Event
 

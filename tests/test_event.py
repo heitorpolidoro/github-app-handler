@@ -5,8 +5,8 @@ from github.Branch import Branch
 from github.CheckRun import CheckRun
 from github.CheckSuite import CheckSuite
 from github.Commit import Commit
-from github.GithubObject import CompletableGithubObject, GithubObject
 from github.GitRelease import GitRelease
+from github.GithubObject import GithubObject
 from github.Issue import Issue
 from github.IssueComment import IssueComment
 from github.NamedUser import NamedUser
@@ -17,7 +17,6 @@ from github.Repository import Repository
 from githubapp.events import (
     CheckRunCompletedEvent,
     CheckSuiteCompletedEvent,
-    CheckSuiteEvent,
     CheckSuiteRequestedEvent,
     CheckSuiteRerequestedEvent,
     CreateBranchEvent,

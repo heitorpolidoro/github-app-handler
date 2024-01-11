@@ -2,8 +2,6 @@ from typing import Optional
 
 from github.Branch import Branch
 from github.Commit import Commit
-from github.NamedUser import NamedUser
-from github.Repository import Repository
 
 from githubapp.events.event import Event
 

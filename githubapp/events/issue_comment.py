@@ -1,7 +1,5 @@
 from github.Issue import Issue
 from github.IssueComment import IssueComment
-from github.NamedUser import NamedUser
-from github.Repository import Repository
 
 from githubapp.events.event import Event
 
