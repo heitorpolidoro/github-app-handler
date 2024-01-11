@@ -1,10 +1,7 @@
-from typing import Optional
-
-from github.NamedUser import NamedUser
-from github.Repository import Repository
+from github.PullRequest import PullRequest
+from github.PullRequestReview import PullRequestReview
 
 from githubapp.events.event import Event
-from githubapp.LazyCompletableGithubObject import LazyCompletableGithubObject
 
 
 class PullRequestReviewEvent(Event):
@@ -14,26 +11,13 @@ class PullRequestReviewEvent(Event):
 
     def __init__(
         self,
-        headers,
         pull_request,
-        repository,
         review,
-        sender,
         **kwargs,
     ):
-        super().__init__(headers, **kwargs)
-        self.pull_request = LazyCompletableGithubObject.get_lazy_instance(
-            Repository, attributes=pull_request
-        )
-        self.repository = LazyCompletableGithubObject.get_lazy_instance(
-            Repository, attributes=repository
-        )
-        self.review = LazyCompletableGithubObject.get_lazy_instance(
-            Repository, attributes=review
-        )
-        self.sender = LazyCompletableGithubObject.get_lazy_instance(
-            NamedUser, attributes=sender
-        )
+        super().__init__(**kwargs)
+        self.pull_request = self._parse_object(PullRequest, pull_request)
+        self.review = self._parse_object(PullRequestReview, review)
 
 
 class PullRequestReviewDismissedEvent(PullRequestReviewEvent):
@@ -47,8 +31,8 @@ class PullRequestReviewEditedEvent(PullRequestReviewEvent):
 
     event_identifier = {"action": "edited"}
 
-    def __init__(self, headers, changes, *args, **kwargs):
-        super().__init__(headers, *args, **kwargs)
+    def __init__(self, changes, **kwargs):
+        super().__init__(**kwargs)
         self.changes = changes
 
 

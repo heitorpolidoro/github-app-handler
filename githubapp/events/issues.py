@@ -1,9 +1,7 @@
 from github.Issue import Issue
-from github.NamedUser import NamedUser
 from github.Repository import Repository
 
 from githubapp.events.event import Event
-from githubapp.LazyCompletableGithubObject import LazyCompletableGithubObject
 
 
 class IssuesEvent(Event):
@@ -13,25 +11,11 @@ class IssuesEvent(Event):
 
     def __init__(
         self,
-        headers,
         issue,
-        repository,
-        sender,
         **kwargs,
     ):
-        super().__init__(headers, **kwargs)
-        self.issue = Issue(
-            requester=self.requester,
-            headers=headers or {},
-            attributes=issue,
-            completed=True,
-        )
-        self.repository = LazyCompletableGithubObject.get_lazy_instance(
-            Repository, attributes=repository
-        )
-        self.sender = LazyCompletableGithubObject.get_lazy_instance(
-            NamedUser, attributes=sender
-        )
+        super().__init__(**kwargs)
+        self.issue = self._parse_object(Issue, issue)
 
 
 class IssueOpenedEvent(IssuesEvent):
@@ -41,23 +25,15 @@ class IssueOpenedEvent(IssuesEvent):
 
     def __init__(
         self,
-        headers,
         changes=None,
         **kwargs,
     ):
-        super().__init__(headers, **kwargs)
-        # changes \/
+        super().__init__(**kwargs)
         self.old_issue = (
-            LazyCompletableGithubObject.get_lazy_instance(
-                Issue, attributes=changes.get("old_issue")
-            )
-            if changes
-            else None
+            self._parse_object(Issue, changes.get("old_issue")) if changes else None
         )
         self.old_repository = (
-            LazyCompletableGithubObject.get_lazy_instance(
-                Repository, attributes=changes.get("old_repository")
-            )
+            self._parse_object(Repository, changes.get("old_repository"))
             if changes
             else None
         )
@@ -70,9 +46,8 @@ class IssueEditedEvent(IssuesEvent):
 
     def __init__(
         self,
-        headers,
         changes,
         **kwargs,
     ):
-        super().__init__(headers, **kwargs)
+        super().__init__(**kwargs)
         self.changes = changes

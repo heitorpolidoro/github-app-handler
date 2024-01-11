@@ -1,79 +1,53 @@
-import inspect
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 
-from github import GithubIntegration
-from github.Auth import AppUserAuth, Token
+import pytest
+from github.Branch import Branch
+from github.CheckRun import CheckRun
+from github.CheckSuite import CheckSuite
+from github.Commit import Commit
+from github.GithubObject import GithubObject
+from github.GitRelease import GitRelease
+from github.Issue import Issue
+from github.IssueComment import IssueComment
+from github.NamedUser import NamedUser
+from github.PullRequest import PullRequest
+from github.PullRequestReview import PullRequestReview
+from github.Repository import Repository
 
+from githubapp.events import (
+    CheckRunCompletedEvent,
+    CheckSuiteCompletedEvent,
+    CheckSuiteRequestedEvent,
+    CheckSuiteRerequestedEvent,
+    CreateBranchEvent,
+    CreateTagEvent,
+    IssueCommentCreatedEvent,
+    IssueCommentDeletedEvent,
+    IssueCommentEditedEvent,
+    IssueOpenedEvent,
+    PullRequestReviewDismissedEvent,
+    PullRequestReviewEditedEvent,
+    PullRequestReviewSubmittedEvent,
+    PushEvent,
+    ReleaseCreatedEvent,
+    ReleaseReleasedEvent,
+    StatusEvent,
+)
 from githubapp.events.event import Event
+from githubapp.events.issues import IssueEditedEvent
 from tests.conftest import event_action_request
 from tests.mocks import EventTest, SubEventTest
 
-OBJECTS = {
-    "repository": {},
-    "sender": {},
-    "issue": {},
-    "comment": {},
-    "release": {},
-    "commit": {},
-    "head_commit": {"id": 123},
-    "pusher": {},
-    "changes": {
-        "old_issue": {},
-        "old_repository": {},
-    },
-    "commits": [{"id": 123}],
-    "check_run": {},
-    "check_suite": {},
-    "pull_request": {},
-    "review": {},
-}
-LISTS = [
-    "branches",
-]
-
-
-def fill_body(body, *attributes):
-    """
-    Fill the body with specified attributes.
-
-    Args:
-        body (dict): The body to be filled.
-        *attributes: Variable length argument list of attributes to be added to the body.
-
-    Example:
-        >>> body = {}
-        >>> fill_body(body, "action", "release", "ref")
-        >>> print(body)
-        {'action': 'action', 'release': 'release', 'ref': 'ref'}
-    """
-    if isinstance(body, tuple):
-        _, body = body
-    for txt in [
-        "action",
-        "release",
-        "master_branch",
-        "pusher_type",
-        "ref",
-        "description",
-        "comment",
-    ]:
-        if txt in attributes:
-            body[txt] = txt
-    for obj in ["repository", "sender", "issue", "changes"]:
-        if obj in attributes:
-            body[obj] = {}
-
 
 # noinspection PyUnresolvedReferences
-def test_init(event_action_request, mock_auth):
+def test_init(event_action_request):
     headers, body = event_action_request
-    SubEventTest(headers, **body)
+    SubEventTest(gh=Mock(), requester=Mock(), headers=headers, **body)
     assert Event.github_event == "event"
     assert Event.hook_id == 1
     assert Event.delivery == "a1b2c3d4"
     assert Event.hook_installation_target_type == "type"
     assert Event.hook_installation_target_id == 2
-    assert Event.installation_id == 3
 
 
 def test_normalize_dicts():
@@ -100,80 +74,234 @@ def test_match():
         pass
 
     LocalEventTest.event_identifier = d2
-    assert LocalEventTest.match({}, d1) is True
-    assert LocalEventTest.match({}, d3) is False
+    assert LocalEventTest.match(d1) is True
+    assert LocalEventTest.match(d3) is False
     LocalEventTest.event_identifier = d1
-    assert LocalEventTest.match({}, d3) is False
+    assert LocalEventTest.match(d3) is False
 
 
-def test_all_events(event_action_request, mock_auth):
-    headers, body = event_action_request
+def test_lazy_fix_url():
+    attributes = {"url": "https://github.com/potato"}
+    Event.fix_attributes(attributes)
+    assert attributes["url"] == "https://api.github.com/repos/potato"
+
+
+def test_lazy_fix_url_when_is_correct():
+    attributes = {"url": "correct_url"}
+    Event.fix_attributes(attributes)
+    assert attributes["url"] == "correct_url"
+
+
+@pytest.fixture(autouse=True, scope="session")
+def all_events():
+    all_event_classes = []
     for event_class in Event.__subclasses__():
-        if event_class.__name__.endswith("Test"):
+        if event_class.__module__.startswith("tests"):
             continue
-        headers["X-Github-Event"] = event_class.event_identifier["event"]
-        if subclasses := event_class.__subclasses__():
-            for sub_event_class in subclasses:
-                instantiate_class(body, headers, sub_event_class)
+        if sub_classes := event_class.__subclasses__():
+            all_event_classes.extend(sub_classes)
         else:
-            instantiate_class(body, headers, event_class)
+            all_event_classes.append(event_class)
+    yield all_event_classes
+    assert all_event_classes == []
 
 
-def instantiate_class(body, headers, clazz):
-    """Instantiate and validate an event or sub event class"""
-    body = body.copy()
-    body.update(clazz.event_identifier)
-    event = Event.get_event(headers, body)
-    assert event == clazz
-    while clazz:
-        for attr in inspect.signature(clazz).parameters:
-            if attr != "headers":
-                if attr in OBJECTS:
-                    body[attr] = OBJECTS[attr]
-                elif attr in LISTS:
-                    body[attr] = [{}]
-                else:
-                    body[attr] = "value"
-        if issubclass(clazz.__base__, Event):
-            clazz = clazz.__base__
-        else:
-            clazz = None
-    event(headers, **body)
+TEST_INSTANTIATE_EVENTS_VALUES = {
+    CheckRunCompletedEvent: (
+        "check_run",
+        {"action": "completed"},
+        {"check_run": CheckRun},
+    ),
+    CheckSuiteCompletedEvent: (
+        "check_suite",
+        {"action": "completed"},
+        {"check_suite": CheckSuite},
+    ),
+    CheckSuiteRequestedEvent: (
+        "check_suite",
+        {"action": "requested"},
+        {"check_suite": CheckSuite},
+    ),
+    CheckSuiteRerequestedEvent: (
+        "check_suite",
+        {"action": "rerequested"},
+        {"check_suite": CheckSuite},
+    ),
+    CreateBranchEvent: (
+        "create",
+        {"ref_type": "branch"},
+        {
+            "description": str,
+            "master_branch": str,
+            "pusher_type": str,
+            "ref": str,
+        },
+    ),
+    CreateTagEvent: (
+        "create",
+        {"ref_type": "tag"},
+        {
+            "description": str,
+            "master_branch": str,
+            "pusher_type": str,
+            "ref": str,
+        },
+    ),
+    IssueCommentCreatedEvent: (
+        "issue_comment",
+        {"action": "created"},
+        {
+            "issue": Issue,
+            "issue_comment": IssueComment,
+        },
+    ),
+    IssueCommentDeletedEvent: (
+        "issue_comment",
+        {"action": "deleted"},
+        {
+            "issue": Issue,
+            "issue_comment": IssueComment,
+        },
+    ),
+    IssueCommentEditedEvent: (
+        "issue_comment",
+        {"action": "edited"},
+        {"issue": Issue, "issue_comment": IssueComment, "changes": dict},
+    ),
+    IssueOpenedEvent: (
+        "issues",
+        {"action": "opened"},
+        {"issue": Issue, "old_issue": Issue, "old_repository": Repository},
+    ),
+    IssueEditedEvent: (
+        "issues",
+        {"action": "edited"},
+        {"issue": Issue, "changes": dict},
+    ),
+    PullRequestReviewDismissedEvent: (
+        "pull_request_review",
+        {"action": "dismissed"},
+        {"pull_request": PullRequest, "review": PullRequestReview},
+    ),
+    PullRequestReviewEditedEvent: (
+        "pull_request_review",
+        {"action": "edited"},
+        {"pull_request": PullRequest, "review": PullRequestReview, "changes": dict},
+    ),
+    PullRequestReviewSubmittedEvent: (
+        "pull_request_review",
+        {"action": "submitted"},
+        {"pull_request": PullRequest, "review": PullRequestReview},
+    ),
+    PushEvent: (
+        "push",
+        {"action": "submitted"},
+        {
+            "after": str,
+            "base_ref": str,
+            "before": str,
+            "commits": [Commit],
+            "compare": str,
+            "created": bool,
+            "deleted": bool,
+            "forced": bool,
+            "head_commit": Commit,
+            "pusher": NamedUser,
+            "ref": str,
+        },
+    ),
+    ReleaseReleasedEvent: (
+        "release",
+        {"action": "released"},
+        {"release": GitRelease},
+    ),
+    ReleaseCreatedEvent: (
+        "release",
+        {"action": "created"},
+        {"release": GitRelease},
+    ),
+    StatusEvent: (
+        "status",
+        {},
+        {
+            "branches": [Branch],
+            "commit": Commit,
+            "context": str,
+            "created_at": str,
+            "description": str,
+            "id": int,
+            "name": str,
+            "sha": str,
+            "state": str,
+            "target_url": str,
+            "updated_at": str,
+        },
+    ),
+}
 
 
-def test_get_auth_app_user_auth(monkeypatch):
-    monkeypatch.setenv("CLIENT_ID", "client_id")
-    monkeypatch.setenv("CLIENT_SECRET", "client_secret")
-    monkeypatch.setenv("TOKEN", "token")
-    with patch(
-        "githubapp.events.event.AppUserAuth", autospec=AppUserAuth
-    ) as appuserauth:
-        assert isinstance(Event._get_auth(), AppUserAuth)
-        appuserauth.assert_called_once_with(
-            client_id="client_id", client_secret="client_secret", token="token"
-        )
-
-
-def test_get_auth_app_auth_when_private_key_in_env(monkeypatch):
-    monkeypatch.setenv("PRIVATE_KEY", "private_key")
-    Event.hook_installation_target_id = "hook_installation_target_id"
-    Event.installation_id = "installation_id"
-
-    get_access_token = Mock(return_value=Mock(token="token"))
-    githubintegration = Mock(
-        autospec=GithubIntegration, get_access_token=get_access_token
+@pytest.mark.parametrize(
+    "event_class",
+    [
+        CheckRunCompletedEvent,
+        CheckSuiteCompletedEvent,
+        CheckSuiteRequestedEvent,
+        CheckSuiteRerequestedEvent,
+        CreateBranchEvent,
+        CreateTagEvent,
+        IssueCommentCreatedEvent,
+        IssueCommentDeletedEvent,
+        IssueCommentEditedEvent,
+        IssueOpenedEvent,
+        IssueEditedEvent,
+        PullRequestReviewDismissedEvent,
+        PullRequestReviewEditedEvent,
+        PullRequestReviewSubmittedEvent,
+        PushEvent,
+        ReleaseReleasedEvent,
+        ReleaseCreatedEvent,
+        StatusEvent,
+    ],
+)
+def test_instantiate_events(event_class, event_action_request, all_events):
+    event, event_identifier, check_instance = TEST_INSTANTIATE_EVENTS_VALUES.get(
+        event_class
     )
-    with (
-        patch("githubapp.events.event.AppAuth") as appauth,
-        patch(
-            "githubapp.events.event.GithubIntegration",
-            return_value=githubintegration,
-            autospec=GithubIntegration,
-        ) as GithubIntegrationMock,
-        patch("githubapp.events.event.Token", autospec=Token) as TokenMock,
-    ):
-        assert isinstance(Event._get_auth(), Token)
-        appauth.assert_called_once_with("hook_installation_target_id", "private_key")
-        GithubIntegrationMock.assert_called_once_with(auth=appauth.return_value)
-        get_access_token.assert_called_once_with("installation_id")
-        TokenMock.assert_called_once_with("token")
+    check_instance.update({"sender": NamedUser, "repository": Repository})
+    headers, default_body = event_action_request
+    headers["X-Github-Event"] = event
+
+    body = default_body.copy()
+    body.pop("action")
+    body.update(event_identifier)
+    for attribute, attr_type in check_instance.items():
+        if isinstance(attr_type, list):
+            value = [{}]
+        elif issubclass(attr_type, GithubObject):
+            value = {}
+        else:
+            value = attr_type()
+        body[attribute] = value
+
+    # Exceptions
+    if event_class == IssueOpenedEvent:
+        body["changes"] = {
+            "old_issue": body.pop("old_issue"),
+            "old_repository": body.pop("old_repository"),
+        }
+    event_instance = Event.get_event(headers, body)(
+        gh=Mock(), requester=Mock(), headers=headers, **body
+    )
+    assert isinstance(event_instance, event_class)
+    assert isinstance(event_instance.repository, Repository)
+    assert isinstance(event_instance.sender, NamedUser)
+    for attribute, attr_type in check_instance.items():
+        if isinstance(attr_type, list):
+            value = getattr(event_instance, attribute)[0]
+            attr_type = attr_type[0]
+        else:
+            value = getattr(event_instance, attribute)
+        assert isinstance(
+            value, attr_type
+        ), f"{attribute} is {type(value)} not {attr_type}"
+    all_events.remove(event_class)

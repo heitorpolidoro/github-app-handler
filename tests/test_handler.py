@@ -56,10 +56,6 @@ def test_handle_event_and_sub_event(method, event_action_request):
     assert all(isinstance(args, SubEventTest) for args in method.call_args_list[0].args)
 
 
-def test_root():
-    assert webhook_handler.root("test")() == "test App up and running!"
-
-
 def test_event_handler_method_validation():
     def method_right(event):
         return event

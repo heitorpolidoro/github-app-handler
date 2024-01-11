@@ -2,11 +2,8 @@ from typing import Optional
 
 from github.Branch import Branch
 from github.Commit import Commit
-from github.NamedUser import NamedUser
-from github.Repository import Repository
 
 from githubapp.events.event import Event
-from githubapp.LazyCompletableGithubObject import LazyCompletableGithubObject
 
 
 class StatusEvent(Event):
@@ -16,7 +13,6 @@ class StatusEvent(Event):
 
     def __init__(
         self,
-        headers,
         branches,
         commit,
         context,
@@ -24,8 +20,6 @@ class StatusEvent(Event):
         description,
         id,
         name,
-        repository,
-        sender,
         sha,
         state,
         target_url,
@@ -56,25 +50,15 @@ class StatusEvent(Event):
             Any exceptions that may occur during initialization.
 
         """
-        super().__init__(headers, **kwargs)
-        self.branches = [
-            LazyCompletableGithubObject.get_lazy_instance(Branch, attributes=branch)
-            for branch in branches
-        ]
-        self.commit = LazyCompletableGithubObject.get_lazy_instance(
-            Commit, attributes=commit
-        )
+        super().__init__(**kwargs)
+        self.branches = [self._parse_object(Branch, branch) for branch in branches]
+        self.commit = self._parse_object(Commit, commit)
         self.context: str = context
         self.created_at: str = created_at
         self.description: Optional[str] = description
         self.id: int = id
         self.name: str = name
-        self.repository = LazyCompletableGithubObject.get_lazy_instance(
-            Repository, attributes=repository
-        )
-        self.sender = LazyCompletableGithubObject.get_lazy_instance(
-            NamedUser, attributes=sender
-        )
+
         self.sha: str = sha
         self.state: str = state
         self.target_url: Optional[str] = target_url
