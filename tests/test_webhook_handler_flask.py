@@ -62,7 +62,8 @@ class TestApp(TestCase):
         assert response.status_code == 200
         assert response.text == "<h1>Test App up and running!</h1>"
 
-    def test_root_not_default_index(self):
+    @staticmethod
+    def test_root_not_default_index():
         app = Flask("Test")
         handle_with_flask(app, use_default_index=False)
         app.route("/", methods=["GET"])(lambda: "index")
@@ -70,7 +71,8 @@ class TestApp(TestCase):
         assert response.status_code == 200
         assert response.text == "index"
 
-    def test_auth_callback(self):
+    @staticmethod
+    def test_auth_callback():
         auth_callback = Mock()
         app = Flask("Test")
         handle_with_flask(app, auth_callback_handler=auth_callback)

@@ -97,10 +97,7 @@ class Event:
         Returns:
             bool: True if the event matches the event_identifier, False otherwise
         """
-        for attr, value in cls.event_identifier.items():
-            if not (attr in data and value == data[attr]):
-                return False
-        return True
+        return all((attr in data and value == data[attr]) for attr, value in cls.event_identifier.items())
 
     @staticmethod
     def fix_attributes(attributes):
