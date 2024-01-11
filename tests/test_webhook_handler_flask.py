@@ -1,5 +1,5 @@
 from unittest import TestCase
-from unittest.mock import MagicMock, call, patch, Mock
+from unittest.mock import MagicMock, Mock, call, patch
 
 import pytest
 from flask import Flask

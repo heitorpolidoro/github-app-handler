@@ -4,8 +4,8 @@ from collections import defaultdict
 from functools import wraps
 from typing import Any, Callable
 
-from github import Github, GithubIntegration, Consts, GithubRetry
-from github.Auth import Auth, AppUserAuth, AppAuth, Token
+from github import Consts, Github, GithubIntegration, GithubRetry
+from github.Auth import AppAuth, AppUserAuth, Auth, Token
 from github.Requester import Requester
 
 from githubapp.events.event import Event

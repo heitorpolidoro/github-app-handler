@@ -1,5 +1,5 @@
 import re
-from typing import TypeVar, Optional, Any
+from typing import Any, Optional, TypeVar
 
 from github.NamedUser import NamedUser
 from github.Repository import Repository
