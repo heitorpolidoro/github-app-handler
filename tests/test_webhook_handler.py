@@ -86,6 +86,5 @@ def test_default_index_show_libraries_versions():
     assert (
         wrapper()
         == """<h1>name App up and running!</h1>
-name: 1.0
-pygithub: 2.0"""
+name: 1.0<br>pygithub: 2.0"""
     )

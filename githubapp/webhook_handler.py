@@ -155,7 +155,7 @@ def default_index(name, version=None, versions_to_show=None):
             resp = (
                 resp
                 + "\n"
-                + "\n".join(
+                + "<br>".join(
                     f"{name_}: {version_}"
                     for name_, version_ in versions_to_show_.items()
                 )
