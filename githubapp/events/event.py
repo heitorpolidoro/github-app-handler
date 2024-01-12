@@ -42,11 +42,7 @@ class Event:
         Event._raw_body = kwargs
         self.gh = gh
         self.requester = requester
-        self.repository = (
-            self._parse_object(Repository, repository)
-            if repository is not None
-            else None
-        )
+        self.repository = self._parse_object(Repository, repository)
         self.sender = self._parse_object(NamedUser, sender)
         self.check_run: Optional[CheckRun] = None
 
@@ -116,6 +112,8 @@ class Event:
 
     def _parse_object(self, clazz: type[T], value: Any) -> Optional[T]:
         """Return the PyGithub object"""
+        if value is None:
+            return None
         self.fix_attributes(value)
         return clazz(
             requester=self.requester,

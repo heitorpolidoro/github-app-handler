@@ -5,8 +5,9 @@ from github.Branch import Branch
 from github.CheckRun import CheckRun
 from github.CheckSuite import CheckSuite
 from github.Commit import Commit
-from github.GithubObject import GithubObject
+from github.GitCommit import GitCommit
 from github.GitRelease import GitRelease
+from github.GithubObject import GithubObject
 from github.Issue import Issue
 from github.IssueComment import IssueComment
 from github.NamedUser import NamedUser
@@ -90,6 +91,26 @@ def test_lazy_fix_url_when_is_correct():
     attributes = {"url": "correct_url"}
     Event.fix_attributes(attributes)
     assert attributes["url"] == "correct_url"
+
+
+# noinspection PyTypeChecker
+def test_parse_object():
+    mocked_class = Mock()
+    self = Mock(requester="requester")
+    EventTest._parse_object(self, mocked_class, {"a": 1})
+    self.fix_attributes.assert_called_with({"a": 1})
+    mocked_class.assert_called_with(
+        requester="requester", headers={}, attributes={"a": 1}, completed=False
+    )
+
+
+# noinspection PyTypeChecker
+def test_parse_object_when_value_is_none():
+    mocked_class = Mock()
+    self = Mock(requester="requester")
+    EventTest._parse_object(self, mocked_class, None)
+    self.fix_attributes.assert_not_called()
+    mocked_class.assert_not_called()
 
 
 @pytest.fixture(autouse=True, scope="session")
@@ -200,12 +221,12 @@ TEST_INSTANTIATE_EVENTS_VALUES = {
             "after": str,
             "base_ref": str,
             "before": str,
-            "commits": [Commit],
+            "commits": [GitCommit],
             "compare": str,
             "created": bool,
             "deleted": bool,
             "forced": bool,
-            "head_commit": Commit,
+            "head_commit": GitCommit,
             "pusher": NamedUser,
             "ref": str,
         },
