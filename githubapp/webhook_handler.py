@@ -187,6 +187,8 @@ def handle_with_flask(
     use_default_index=True,
     webhook_endpoint="/",
     auth_callback_handler=None,
+    version=None,
+    versions_to_show=None,
 ) -> None:
     """
     This function registers the webhook_handler with a Flask application.
@@ -196,6 +198,8 @@ def handle_with_flask(
         :param use_default_index: Whether to register the root handler with the Flask application. Default is False.
         :param webhook_endpoint: The endpoint to register the webhook_handler with. Default is "/".
         :param auth_callback_handler: The function to handle the auth_callback. Default is None.
+        :param version: The version of the App..
+        :param versions_to_show: The libraries to show the version.
 
     Returns:
         None
@@ -209,7 +213,9 @@ def handle_with_flask(
         raise TypeError("app must be a Flask instance")
 
     if use_default_index:
-        app.route("/", methods=["GET"])(default_index(app.name))
+        app.route("/", methods=["GET"])(
+            default_index(app.name, version=version, versions_to_show=versions_to_show)
+        )
 
     @app.route(webhook_endpoint, methods=["POST"])
     def webhook() -> str:
