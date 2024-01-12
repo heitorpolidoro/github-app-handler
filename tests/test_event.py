@@ -6,8 +6,8 @@ from github.CheckRun import CheckRun
 from github.CheckSuite import CheckSuite
 from github.Commit import Commit
 from github.GitCommit import GitCommit
-from github.GitRelease import GitRelease
 from github.GithubObject import GithubObject
+from github.GitRelease import GitRelease
 from github.Issue import Issue
 from github.IssueComment import IssueComment
 from github.NamedUser import NamedUser
