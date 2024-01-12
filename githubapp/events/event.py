@@ -138,6 +138,7 @@ class Event:
         )
 
     def update_check_run(self, status=None, conclusion=None, **output):
+        """ Updates the check run """
         args = {}
         if status is not None:
             args["status"] = status
