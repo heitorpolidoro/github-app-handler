@@ -1,4 +1,4 @@
-from unittest.mock import Mock, patch, ANY
+from unittest.mock import ANY, Mock, patch
 
 import pytest
 from github import GithubIntegration
@@ -6,11 +6,12 @@ from github.Auth import AppUserAuth, Token
 
 from githubapp import webhook_handler
 from githubapp.webhook_handler import _get_auth, default_index, handle
-from tests.mocks import SubEventTest, EventTest
+from tests.mocks import EventTest, SubEventTest
 
 
 class TestException(Exception):
     pass
+
 
 def test_call_handler_sub_event(method, event_action_request):
     """
