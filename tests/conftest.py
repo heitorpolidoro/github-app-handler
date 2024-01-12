@@ -5,6 +5,7 @@ import pytest
 from github.Auth import Auth
 
 from githubapp import webhook_handler
+from githubapp.events.event import Event
 
 
 @pytest.fixture(autouse=True)
@@ -74,3 +75,17 @@ def validate_signature():
         return_value=True,
     ):
         yield
+
+
+@pytest.fixture
+def event(event_action_request):
+    headers, _ = event_action_request
+    event = Event(
+        gh=Mock(),
+        requester=Mock(),
+        headers=headers,
+        sender=None,
+        repository={},
+    )
+    event.repository = Mock()
+    return event

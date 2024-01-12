@@ -1,12 +1,16 @@
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, patch, ANY
 
+import pytest
 from github import GithubIntegration
 from github.Auth import AppUserAuth, Token
 
 from githubapp import webhook_handler
-from githubapp.webhook_handler import _get_auth, default_index
-from tests.mocks import SubEventTest
+from githubapp.webhook_handler import _get_auth, default_index, handle
+from tests.mocks import SubEventTest, EventTest
 
+
+class ExceptionTest(Exception):
+    pass
 
 def test_call_handler_sub_event(method, event_action_request):
     """
@@ -88,3 +92,37 @@ def test_default_index_show_libraries_versions():
         == """<h1>name App up and running!</h1>
 name: 1.0<br>pygithub: 2.0"""
     )
+
+
+def test_when_exception_and_has_check_run(event, event_action_request, mock_auth):
+    def method(inner_event):
+        inner_event.repository = event.repository
+        inner_event.start_check_run("name", "sha", "title")
+        event.check_run = inner_event.check_run
+        raise ExceptionTest("test")
+
+    webhook_handler.add_handler(EventTest, method)
+    with pytest.raises(ExceptionTest):
+        handle(*event_action_request)
+
+    event.check_run.edit.assert_called_with(
+        conclusion="failure",
+        status="completed",
+        output={"title": ANY, "summary": ANY, "text": ANY},
+    )
+    output_text = event.check_run.edit.call_args_list[0].kwargs["output"]["text"]
+    assert output_text.startswith("Traceback (most recent call last):")
+    assert output_text.endswith("ExceptionTest: test\n")
+
+
+def test_when_exception_and_dont_has_check_run(event, event_action_request, mock_auth):
+    def method(inner_event):
+        inner_event.repository = event.repository
+        event.check_run = inner_event.check_run
+        raise ExceptionTest("test")
+
+    webhook_handler.add_handler(EventTest, method)
+    with pytest.raises(ExceptionTest):
+        handle(*event_action_request)
+
+    assert event.check_run is None
