@@ -4,7 +4,7 @@ from github import GithubIntegration
 from github.Auth import AppUserAuth, Token
 
 from githubapp import webhook_handler
-from githubapp.webhook_handler import _get_auth
+from githubapp.webhook_handler import _get_auth, default_index
 from tests.mocks import SubEventTest
 
 
@@ -64,3 +64,27 @@ def test_get_auth_app_auth_when_private_key_in_env(monkeypatch):
         GithubIntegrationMock.assert_called_once_with(auth=appauth.return_value)
         get_access_token.assert_called_once_with("installation_id")
         TokenMock.assert_called_once_with("token")
+
+
+def test_default_index():
+    wrapper = default_index("name")
+    assert wrapper() == "<h1>name App up and running!</h1>"
+
+
+def test_default_index_show_version():
+    wrapper = default_index("name", version="1.0")
+    assert (
+        wrapper()
+        == """<h1>name App up and running!</h1>
+name: 1.0"""
+    )
+
+
+def test_default_index_show_libraries_versions():
+    with patch("githubapp.webhook_handler.get_version", return_value="2.0"):
+        wrapper = default_index("name", "1.0", ["pygithub"])
+    assert (
+        wrapper()
+        == """<h1>name App up and running!</h1>
+name: 1.0<br>pygithub: 2.0"""
+    )
