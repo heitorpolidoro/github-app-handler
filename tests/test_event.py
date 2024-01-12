@@ -285,12 +285,12 @@ TEST_INSTANTIATE_EVENTS_VALUES = {
     ],
 )
 def test_instantiate_events(event_class, event_action_request, all_events):
-    event, event_identifier, check_instance = TEST_INSTANTIATE_EVENTS_VALUES.get(
+    test_event, event_identifier, check_instance = TEST_INSTANTIATE_EVENTS_VALUES.get(
         event_class
     )
     check_instance.update({"sender": NamedUser, "repository": Repository})
     headers, default_body = event_action_request
-    headers["X-Github-Event"] = event
+    headers["X-Github-Event"] = test_event
 
     body = default_body.copy()
     body.pop("action")
@@ -326,3 +326,56 @@ def test_instantiate_events(event_class, event_action_request, all_events):
             value, attr_type
         ), f"{attribute} is {type(value)} not {attr_type}"
     all_events.remove(event_class)
+
+
+def test_start_check_run(event):
+    event.start_check_run("name", "sha", "title")
+    event.repository.create_check_run.assert_called_with(
+        "name", "sha", status="in_progress", output={"title": "title", "summary": ""}
+    )
+
+
+def test_start_check_run_with_summary_and_text(event):
+    event.start_check_run("name", "sha", "title", summary="summary", text="text")
+    event.repository.create_check_run.assert_called_with(
+        "name",
+        "sha",
+        status="in_progress",
+        output={"title": "title", "summary": "summary", "text": "text"},
+    )
+
+
+def test_update_check_run_with_only_status(event):
+    event.start_check_run("name", "sha", "title")
+    event.update_check_run(status="status")
+    event.check_run.edit.assert_called_with(status="status")
+
+
+def test_update_check_run_with_only_conclusion(event):
+    event.start_check_run("name", "sha", "title")
+    event.update_check_run(conclusion="conclusion")
+    event.check_run.edit.assert_called_with(status="completed", conclusion="conclusion")
+
+
+def test_update_check_run_with_output(event):
+    event.start_check_run("name", "sha", "title", "summary")
+    event.update_check_run(title="new_title", summary="new_summary")
+    event.check_run.edit.assert_called_with(
+        output={"title": "new_title", "summary": "new_summary"}
+    )
+
+
+def test_update_check_run_with_only_output_text(event):
+    event.start_check_run("name", "sha", "title")
+    event.check_run.output.title = "title"
+    event.check_run.output.summary = "summary"
+    event.update_check_run(text="text")
+    event.check_run.edit.assert_called_with(
+        output={"title": "title", "summary": "summary", "text": "text"}
+    )
+
+
+def test_update_check_run_with_nothing(event):
+    event.start_check_run("name", "sha", "title")
+    event.update_check_run()
+    event.check_run.edit.assert_not_called()

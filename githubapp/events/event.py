@@ -151,4 +151,5 @@ class Event:
             output["summary"] = output.get("summary", self.check_run.output.summary)
             args["output"] = output
 
-        self.check_run.edit(**args)
+        if args:
+            self.check_run.edit(**args)
