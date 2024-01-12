@@ -3,6 +3,7 @@ import os
 import traceback
 from collections import defaultdict
 from functools import wraps
+from importlib.metadata import version as get_version
 from typing import Any, Callable
 
 from github import Consts, Github, GithubIntegration, GithubRetry
@@ -132,19 +133,34 @@ def handle(
             raise
 
 
-def default_index(name):
+def default_index(name, version=None, versions_to_show=None):
     """Decorator to register a default root handler.
 
     Args:
-        name: The name of the App.
-
-    Returns:
-        A decorator that registers the method as the root handler.
+        :param name: The name of the App.
+        :param version: The version of the App..
+        :param versions_to_show: The libraries to show the version.
     """
+    versions_to_show_ = {}
+    if version:
+        versions_to_show_[name] = version
+
+    for lib in versions_to_show or []:
+        versions_to_show_[lib] = get_version(lib)
 
     def root_wrapper():
         """A wrapper function to return a default home screen for all Apps"""
-        return f"<h1>{name} App up and running!</h1>"
+        resp = f"<h1>{name} App up and running!</h1>"
+        if versions_to_show_:
+            resp = (
+                resp
+                + "\n"
+                + "\n".join(
+                    f"{name_}: {version_}"
+                    for name_, version_ in versions_to_show_.items()
+                )
+            )
+        return resp
 
     return wraps(root_wrapper)(root_wrapper)
 
