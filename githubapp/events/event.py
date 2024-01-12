@@ -1,6 +1,7 @@
 import re
 from typing import Any, Optional, TypeVar
 
+from github.CheckRun import CheckRun
 from github.NamedUser import NamedUser
 from github.Repository import Repository
 
@@ -47,6 +48,7 @@ class Event:
             else None
         )
         self.sender = self._parse_object(NamedUser, sender)
+        self.check_run: Optional[CheckRun] = None
 
     @staticmethod
     def normalize_dicts(*dicts) -> dict[str, str]:
@@ -106,15 +108,49 @@ class Event:
     def fix_attributes(attributes):
         """Fix the url value"""
         if attributes.get("url", "").startswith("https://github"):
-            attributes["url"] = attributes["url"].replace(
-                "https://github.com", "https://api.github.com/repos"
+            attributes["url"] = (
+                attributes["url"]
+                .replace("https://github.com", "https://api.github.com/repos")
+                .replace("/commit/", "/commits/")
             )
 
     def _parse_object(self, clazz: type[T], value: Any) -> Optional[T]:
         """Return the PyGithub object"""
+        self.fix_attributes(value)
         return clazz(
             requester=self.requester,
             headers={},
             attributes=value,
             completed=False,
         )
+
+    def start_check_run(
+        self, name, sha, title, summary=None, text=None, status="in_progress"
+    ):
+        """Start a check run"""
+        output = {"title": title or name, "summary": summary or ""}
+        if text:
+            output["text"] = text
+
+        self.check_run = self.repository.create_check_run(
+            name,
+            sha,
+            status=status,
+            output=output,
+        )
+
+    def update_check_run(self, status=None, conclusion=None, **output):
+        args = {}
+        if status is not None:
+            args["status"] = status
+
+        if conclusion is not None:
+            args["conclusion"] = conclusion
+            args["status"] = "completed"
+
+        if output:
+            output["title"] = output.get("title", self.check_run.output.title)
+            output["summary"] = output.get("summary", self.check_run.output.summary)
+            args["output"] = output
+
+        self.check_run.edit(**args)

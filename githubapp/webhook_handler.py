@@ -1,5 +1,6 @@
 import inspect
 import os
+import traceback
 from collections import defaultdict
 from functools import wraps
 from typing import Any, Callable
@@ -89,14 +90,17 @@ def _get_auth(hook_installation_target_id=None, installation_id=None) -> Auth:
     return Token(token)
 
 
-def handle(headers: dict[str, Any], body: dict[str, Any]):
+def handle(
+    headers: dict[str, Any],
+    body: dict[str, Any],
+):
     """Handle a webhook request.
 
     The request headers and body are passed to the appropriate handler methods.
 
     Args:
-        headers: The request headers.
-        body: The request body.
+        :param headers: The request headers.
+        :param body: The request body.
     """
     event_class = Event.get_event(headers, body)
     hook_installation_target_id = int(headers["X-Github-Hook-Installation-Target-Id"])
@@ -116,7 +120,16 @@ def handle(headers: dict[str, Any], body: dict[str, Any]):
     )
 
     for handler in handlers.get(event_class, []):
-        handler(event_class(gh=gh, requester=requester, headers=headers, **body))
+        event = event_class(gh=gh, requester=requester, headers=headers, **body)
+        try:
+            handler(event)
+        except Exception:
+            if event.check_run:
+                event.update_check_run(
+                    conclusion="failure",
+                    text=traceback.format_exc(),
+                )
+            raise
 
 
 def default_index(name):
@@ -154,7 +167,10 @@ def _validate_signature(method: Callable[[Any], Any]):
 
 
 def handle_with_flask(
-    app, use_default_index=True, webhook_endpoint="/", auth_callback_handler=None
+    app,
+    use_default_index=True,
+    webhook_endpoint="/",
+    auth_callback_handler=None,
 ) -> None:
     """
     This function registers the webhook_handler with a Flask application.
