@@ -13,13 +13,13 @@ class ReleaseEvent(Event):
         self.release = self._parse_object(GitRelease, release)
 
 
-class ReleaseReleasedEvent(ReleaseEvent):
-    """This class represents an event when a release is released."""
-
-    event_identifier = {"action": "released"}
-
-
 class ReleaseCreatedEvent(ReleaseEvent):
     """This class represents an event when a release is created."""
 
     event_identifier = {"action": "created"}
+
+
+class ReleaseReleasedEvent(ReleaseEvent):
+    """This class represents an event when a release is released."""
+
+    event_identifier = {"action": "released"}

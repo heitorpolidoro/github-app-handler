@@ -20,10 +20,10 @@ class PullRequestReviewEvent(Event):
         self.review = self._parse_object(PullRequestReview, review)
 
 
-class PullRequestReviewDismissedEvent(PullRequestReviewEvent):
-    """This class represents a pull request review dismissed event."""
+class PullRequestReviewSubmittedEvent(PullRequestReviewEvent):
+    """This class represents a pull request review submitted event."""
 
-    event_identifier = {"action": "dismissed"}
+    event_identifier = {"action": "submitted"}
 
 
 class PullRequestReviewEditedEvent(PullRequestReviewEvent):
@@ -36,7 +36,7 @@ class PullRequestReviewEditedEvent(PullRequestReviewEvent):
         self.changes = changes
 
 
-class PullRequestReviewSubmittedEvent(PullRequestReviewEvent):
-    """This class represents a pull request review submitted event."""
+class PullRequestReviewDismissedEvent(PullRequestReviewEvent):
+    """This class represents a pull request review dismissed event."""
 
-    event_identifier = {"action": "submitted"}
+    event_identifier = {"action": "dismissed"}

@@ -21,7 +21,7 @@ from .issue_comment import (
     IssueCommentEditedEvent,
     IssueCommentEvent,
 )
-from .issues import IssueOpenedEvent, IssuesEvent
+from .issues import IssueOpenedEvent, IssuesEvent, IssueEditedEvent
 from .pull_request_review import (
     PullRequestReviewDismissedEvent,
     PullRequestReviewEditedEvent,
@@ -29,31 +29,33 @@ from .pull_request_review import (
     PullRequestReviewSubmittedEvent,
 )
 from .push import PushEvent
-from .release import ReleaseCreatedEvent, ReleaseReleasedEvent
+from .release import ReleaseCreatedEvent, ReleaseReleasedEvent, ReleaseEvent
 from .status import StatusEvent
 
 __all__ = [
-    "CheckRunCompletedEvent",
     "CheckRunEvent",
+    "CheckRunCompletedEvent",
     "CheckSuiteEvent",
-    "CheckSuiteCompletedEvent",
     "CheckSuiteRequestedEvent",
+    "CheckSuiteCompletedEvent",
     "CheckSuiteRerequestedEvent",
-    "CreateBranchEvent",
     "CreateEvent",
+    "CreateBranchEvent",
     "CreateTagEvent",
-    "IssueCommentCreatedEvent",
-    "IssueCommentDeletedEvent",
-    "IssueCommentEditedEvent",
     "IssueCommentEvent",
-    "IssueOpenedEvent",
+    "IssueCommentCreatedEvent",
+    "IssueCommentEditedEvent",
+    "IssueCommentDeletedEvent",
     "IssuesEvent",
+    "IssueOpenedEvent",
+    "IssueEditedEvent",
     "PullRequestReviewEvent",
+    "PullRequestReviewSubmittedEvent",
     "PullRequestReviewEditedEvent",
     "PullRequestReviewDismissedEvent",
-    "PullRequestReviewSubmittedEvent",
     "PushEvent",
-    "ReleaseCreatedEvent",
+    "ReleaseEvent",
     "ReleaseReleasedEvent",
+    "ReleaseCreatedEvent",
     "StatusEvent",
 ]

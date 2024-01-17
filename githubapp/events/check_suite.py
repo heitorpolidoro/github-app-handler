@@ -21,16 +21,16 @@ class CheckSuiteEvent(Event):
         self.check_suite = self._parse_object(CheckSuite, check_suite)
 
 
-class CheckSuiteCompletedEvent(CheckSuiteEvent):
-    """This class represents an check suite completed event."""
-
-    event_identifier = {"action": "completed"}
-
-
 class CheckSuiteRequestedEvent(CheckSuiteEvent):
     """This class represents an check suite requested event."""
 
     event_identifier = {"action": "requested"}
+
+
+class CheckSuiteCompletedEvent(CheckSuiteEvent):
+    """This class represents an check suite completed event."""
+
+    event_identifier = {"action": "completed"}
 
 
 class CheckSuiteRerequestedEvent(CheckSuiteEvent):

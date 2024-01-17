@@ -21,12 +21,6 @@ class IssueCommentCreatedEvent(IssueCommentEvent):
     event_identifier = {"action": "created"}
 
 
-class IssueCommentDeletedEvent(IssueCommentEvent):
-    """This class represents an event when a comment in an Issue is deleted."""
-
-    event_identifier = {"action": "deleted"}
-
-
 class IssueCommentEditedEvent(IssueCommentEvent):
     """This class represents an event when a comment in an Issue is edited."""
 
@@ -35,3 +29,9 @@ class IssueCommentEditedEvent(IssueCommentEvent):
     def __init__(self, changes, **kwargs):
         super().__init__(**kwargs)
         self.changes = changes
+
+
+class IssueCommentDeletedEvent(IssueCommentEvent):
+    """This class represents an event when a comment in an Issue is deleted."""
+
+    event_identifier = {"action": "deleted"}
