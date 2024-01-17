@@ -21,7 +21,7 @@ from .issue_comment import (
     IssueCommentEditedEvent,
     IssueCommentEvent,
 )
-from .issues import IssueOpenedEvent, IssuesEvent, IssueEditedEvent
+from .issues import IssueEditedEvent, IssueOpenedEvent, IssuesEvent
 from .pull_request_review import (
     PullRequestReviewDismissedEvent,
     PullRequestReviewEditedEvent,
@@ -29,7 +29,7 @@ from .pull_request_review import (
     PullRequestReviewSubmittedEvent,
 )
 from .push import PushEvent
-from .release import ReleaseCreatedEvent, ReleaseReleasedEvent, ReleaseEvent
+from .release import ReleaseCreatedEvent, ReleaseEvent, ReleaseReleasedEvent
 from .status import StatusEvent
 
 __all__ = [

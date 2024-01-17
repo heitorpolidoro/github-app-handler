@@ -45,7 +45,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
     if args.record:
         print(1)
-        with Popen("smee -u https://smee.io/polidoro-testing -p 3333 -P /".split()) as p:
+        with Popen(
+            "smee -u https://smee.io/polidoro-testing -p 3333 -P /".split()
+        ) as p:
             print(2)
             app.debug = True
             app.run(port=3333)
