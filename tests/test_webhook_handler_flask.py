@@ -1,3 +1,4 @@
+import os
 from unittest import TestCase
 from unittest.mock import MagicMock, Mock, call, patch
 
@@ -76,10 +77,20 @@ class TestApp(TestCase):
         auth_callback = Mock()
         app = Flask("Test")
         handle_with_flask(app, auth_callback_handler=auth_callback)
-        with patch("githubapp.webhook_handler.Github"):
-            response = app.test_client().get("/auth-callback")
+        os.environ["CLIENT_ID"] = "id"
+        os.environ["CLIENT_SECRET"] = "secret"
+        with patch("githubapp.webhook_handler.Github") as gh:
+            response = app.test_client().get(
+                "/auth-callback?code=user_code&installation_id=123456&setup_action=install"
+            )
+
+        get_oauth_application = gh.return_value.get_oauth_application
+        get_oauth_application.assert_called_once_with("id", "secret")
+        get_access_token = get_oauth_application.return_value.get_access_token
+        get_access_token.assert_called_once_with("user_code")
+
         assert response.status_code == 200
-        auth_callback.assert_called_once()
+        auth_callback.assert_called_with(123456, get_access_token.return_value)
 
     def test_webhook(self):
         """
