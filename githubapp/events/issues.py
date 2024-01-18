@@ -55,4 +55,5 @@ class IssueEditedEvent(IssuesEvent):
 
 class IssueClosedEvent(IssuesEvent):
     """This class represents an issue closed event."""
+
     event_identifier = {"action": "closed"}
