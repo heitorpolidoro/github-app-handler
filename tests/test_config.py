@@ -1,11 +1,9 @@
-import tempfile
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 
 import pytest
 from github import UnknownObjectException
 
 from githubapp import Config
-from githubapp.config import ConfigValue
 
 CONFIG_TEST = """
 config1: value1
