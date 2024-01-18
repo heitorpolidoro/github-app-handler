@@ -51,3 +51,7 @@ class IssueEditedEvent(IssuesEvent):
     ):
         super().__init__(**kwargs)
         self.changes = changes
+
+
+class IssueClosedEvent(IssuesEvent):
+    event_identifier = {"action": "closed"}

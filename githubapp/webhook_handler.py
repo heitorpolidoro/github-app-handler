@@ -10,6 +10,7 @@ from github import Consts, Github, GithubIntegration, GithubRetry
 from github.Auth import AppAuth, AppUserAuth, Auth, Token
 from github.Requester import Requester
 
+from githubapp import Config
 from githubapp.events.event import Event
 
 
@@ -28,7 +29,7 @@ class SignatureError(Exception):
         )
 
 
-def webhook_handler(event: type[Event]):
+def add_handler(event: type[Event]):
     """Decorator to register a method as a webhook handler.
 
     The method must accept only one argument of the Event type.
@@ -42,13 +43,13 @@ def webhook_handler(event: type[Event]):
 
     def decorator(method):
         """Register the method as a handler for the event"""
-        add_handler(event, method)
+        register_method_for_event(event, method)
         return method
 
     return decorator
 
 
-def add_handler(event: type[Event], method: Callable):
+def register_method_for_event(event: type[Event], method: Callable):
     """Add a handler for a specific event type.
 
     The handler must accept only one argument of the Event type.
@@ -59,7 +60,7 @@ def add_handler(event: type[Event], method: Callable):
     """
     if subclasses := event.__subclasses__():
         for sub_event in subclasses:
-            add_handler(sub_event, method)
+            register_method_for_event(sub_event, method)
     else:
         _validate_signature(method)
         handlers[event].append(method)
@@ -91,10 +92,7 @@ def _get_auth(hook_installation_target_id=None, installation_id=None) -> Auth:
     return Token(token)
 
 
-def handle(
-    headers: dict[str, Any],
-    body: dict[str, Any],
-):
+def handle(headers: dict[str, Any], body: dict[str, Any], config_file=None):
     """Handle a webhook request.
 
     The request headers and body are passed to the appropriate handler methods.
@@ -102,6 +100,7 @@ def handle(
     Args:
         :param headers: The request headers.
         :param body: The request body.
+        :param config_file: The path to the configuration file.
     """
     event_class = Event.get_event(headers, body)
     hook_installation_target_id = int(headers["X-Github-Hook-Installation-Target-Id"])
@@ -122,6 +121,8 @@ def handle(
 
     for handler in handlers.get(event_class, []):
         event = event_class(gh=gh, requester=requester, headers=headers, **body)
+        if config_file:
+            Config.load_config_from_file(config_file, event.repository)
         try:
             handler(event)
         except Exception:
@@ -189,6 +190,7 @@ def handle_with_flask(
     auth_callback_handler=None,
     version=None,
     versions_to_show=None,
+    config_file=None,
 ) -> None:
     """
     This function registers the webhook_handler with a Flask application.
@@ -200,7 +202,7 @@ def handle_with_flask(
         :param auth_callback_handler: The function to handle the auth_callback. Default is None.
         :param version: The version of the App..
         :param versions_to_show: The libraries to show the version.
-
+        :param config_file: Tha config file path to autoload
     Returns:
         None
 
@@ -225,7 +227,7 @@ def handle_with_flask(
         """
         headers = dict(request.headers)
         body = request.json
-        handle(headers, body)
+        handle(headers, body, config_file)
         return "OK"
 
     if auth_callback_handler:

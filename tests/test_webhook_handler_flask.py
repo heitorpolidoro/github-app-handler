@@ -99,4 +99,4 @@ class TestApp(TestCase):
                 "X-Github-Event": "pull_request",
             }
             self.client.post("/", headers=headers, json=request_json)
-            mock_handle.assert_called_once_with(headers, request_json)
+            mock_handle.assert_called_once_with(headers, request_json, None)

@@ -35,7 +35,7 @@ from githubapp.events import (
     StatusEvent,
 )
 from githubapp.events.event import Event
-from githubapp.events.issues import IssueEditedEvent
+from githubapp.events.issues import IssueEditedEvent, IssueClosedEvent
 from tests.conftest import event_action_request
 from tests.mocks import EventTest, SubEventTest
 
@@ -199,6 +199,11 @@ TEST_INSTANTIATE_EVENTS_VALUES = {
         {"action": "edited"},
         {"issue": Issue, "changes": dict},
     ),
+    IssueClosedEvent: (
+        "issues",
+        {"action": "closed"},
+        {"issue": Issue},
+    ),
     PullRequestReviewDismissedEvent: (
         "pull_request_review",
         {"action": "dismissed"},
@@ -274,6 +279,7 @@ TEST_INSTANTIATE_EVENTS_VALUES = {
         IssueCommentDeletedEvent,
         IssueCommentEditedEvent,
         IssueOpenedEvent,
+        IssueClosedEvent,
         IssueEditedEvent,
         PullRequestReviewDismissedEvent,
         PullRequestReviewEditedEvent,

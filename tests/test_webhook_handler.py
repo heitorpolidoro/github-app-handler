@@ -27,7 +27,7 @@ def test_call_handler_sub_event(method, event_action_request):
     Example:
         test_call_handler_sub_event(method, event_action_request)
     """
-    assert webhook_handler.webhook_handler(SubEventTest)(method) == method
+    assert webhook_handler.add_handler(SubEventTest)(method) == method
 
     assert len(webhook_handler.handlers) == 1
     assert webhook_handler.handlers.get(SubEventTest) == [method]
@@ -102,7 +102,7 @@ def test_when_exception_and_has_check_run(event, event_action_request, mock_auth
         event.check_run = inner_event.check_run
         raise ExceptionTest("test")
 
-    webhook_handler.add_handler(EventTest, method)
+    webhook_handler.register_method_for_event(EventTest, method)
     with pytest.raises(ExceptionTest):
         handle(*event_action_request)
 
@@ -122,7 +122,7 @@ def test_when_exception_and_dont_has_check_run(event, event_action_request, mock
         event.check_run = inner_event.check_run
         raise ExceptionTest("test")
 
-    webhook_handler.add_handler(EventTest, method)
+    webhook_handler.register_method_for_event(EventTest, method)
     with pytest.raises(ExceptionTest):
         handle(*event_action_request)
 
