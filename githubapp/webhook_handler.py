@@ -7,16 +7,18 @@ from importlib.metadata import version as get_version
 from typing import Any, Callable
 
 from github import Consts, Github, GithubIntegration, GithubRetry
+from github.AccessToken import AccessToken
 from github.Auth import AppAuth, AppUserAuth, Auth, Token
 from github.Requester import Requester
 
+from githubapp import Config
 from githubapp.events.event import Event
 
 
 class SignatureError(Exception):
     """Exception when the method has a wrong signature"""
 
-    def __init__(self, method: Callable[[Any], Any], signature):
+    def __init__(self, method: Callable[[Any], Any], signature: str) -> None:
         """
         Args:
         method (Callable): The method to be validated.
@@ -28,7 +30,7 @@ class SignatureError(Exception):
         )
 
 
-def webhook_handler(event: type[Event]):
+def add_handler(event: type[Event]) -> Callable[[Callable[[Event], None]], Callable]:
     """Decorator to register a method as a webhook handler.
 
     The method must accept only one argument of the Event type.
@@ -40,15 +42,17 @@ def webhook_handler(event: type[Event]):
         A decorator that registers the method as a webhook handler.
     """
 
-    def decorator(method):
+    def decorator(method: Callable[[Event], None]) -> Callable[[Event], None]:
         """Register the method as a handler for the event"""
-        add_handler(event, method)
+        register_method_for_event(event, method)
         return method
 
     return decorator
 
 
-def add_handler(event: type[Event], method: Callable):
+def register_method_for_event(
+    event: type[Event], method: Callable[[Event], None]
+) -> None:
     """Add a handler for a specific event type.
 
     The handler must accept only one argument of the Event type.
@@ -59,7 +63,7 @@ def add_handler(event: type[Event], method: Callable):
     """
     if subclasses := event.__subclasses__():
         for sub_event in subclasses:
-            add_handler(sub_event, method)
+            register_method_for_event(sub_event, method)
     else:
         _validate_signature(method)
         handlers[event].append(method)
@@ -68,7 +72,9 @@ def add_handler(event: type[Event], method: Callable):
 handlers = defaultdict(list)
 
 
-def _get_auth(hook_installation_target_id=None, installation_id=None) -> Auth:
+def _get_auth(
+    hook_installation_target_id: int = None, installation_id: int = None
+) -> Auth:
     """
     This method is used to get the authentication object for the GitHub API.
     It checks if the environment variables CLIENT_ID, CLIENT_SECRET, and TOKEN are set.
@@ -91,10 +97,7 @@ def _get_auth(hook_installation_target_id=None, installation_id=None) -> Auth:
     return Token(token)
 
 
-def handle(
-    headers: dict[str, Any],
-    body: dict[str, Any],
-):
+def handle(headers: dict[str, Any], body: dict[str, Any], config_file=None) -> None:
     """Handle a webhook request.
 
     The request headers and body are passed to the appropriate handler methods.
@@ -102,6 +105,7 @@ def handle(
     Args:
         :param headers: The request headers.
         :param body: The request body.
+        :param config_file: The path to the configuration file.
     """
     event_class = Event.get_event(headers, body)
     hook_installation_target_id = int(headers["X-Github-Hook-Installation-Target-Id"])
@@ -122,6 +126,8 @@ def handle(
 
     for handler in handlers.get(event_class, []):
         event = event_class(gh=gh, requester=requester, headers=headers, **body)
+        if config_file:
+            Config.load_config_from_file(config_file, event.repository)
         try:
             handler(event)
         except Exception:
@@ -133,7 +139,7 @@ def handle(
             raise
 
 
-def default_index(name, version=None, versions_to_show=None):
+def default_index(name, version=None, versions_to_show=None) -> Callable[[], str]:
     """Decorator to register a default root handler.
 
     Args:
@@ -148,7 +154,7 @@ def default_index(name, version=None, versions_to_show=None):
     for lib in versions_to_show or []:
         versions_to_show_[lib] = get_version(lib)
 
-    def root_wrapper():
+    def root_wrapper() -> str:
         """A wrapper function to return a default home screen for all Apps"""
         resp = f"<h1>{name} App up and running!</h1>"
         if versions_to_show_:
@@ -165,7 +171,7 @@ def default_index(name, version=None, versions_to_show=None):
     return wraps(root_wrapper)(root_wrapper)
 
 
-def _validate_signature(method: Callable[[Any], Any]):
+def _validate_signature(method: Callable[[Event], None]) -> None:
     """Validate the signature of a webhook handler method.
 
     The method must accept only one argument of the Event type.
@@ -184,11 +190,12 @@ def _validate_signature(method: Callable[[Any], Any]):
 
 def handle_with_flask(
     app,
-    use_default_index=True,
-    webhook_endpoint="/",
-    auth_callback_handler=None,
-    version=None,
-    versions_to_show=None,
+    use_default_index: bool = True,
+    webhook_endpoint: str = "/",
+    auth_callback_handler: Callable[[int, AccessToken], None] = None,
+    version: str = None,
+    versions_to_show: list[str] = None,
+    config_file: str = None,
 ) -> None:
     """
     This function registers the webhook_handler with a Flask application.
@@ -200,7 +207,7 @@ def handle_with_flask(
         :param auth_callback_handler: The function to handle the auth_callback. Default is None.
         :param version: The version of the App..
         :param versions_to_show: The libraries to show the version.
-
+        :param config_file: Tha config file path to autoload
     Returns:
         None
 
@@ -225,7 +232,7 @@ def handle_with_flask(
         """
         headers = dict(request.headers)
         body = request.json
-        handle(headers, body)
+        handle(headers, body, config_file)
         return "OK"
 
     if auth_callback_handler:
@@ -236,14 +243,14 @@ def handle_with_flask(
         # - retrieve access_token @user_oauth_retrieve
         # use @, pass as parameters to this function ou as a class?
         @app.route("/auth-callback")
-        def auth_callback():
+        def auth_callback() -> str:
             """
             This route is the endpoint that receives the GitHub auth_callback call.
             Call the auth_callback_handler with the installation_id and access_token to be saved.
             """
             args = request.args
             code = args.get("code")
-            installation_id = args.get("installation_id")
+            installation_id = int(args.get("installation_id"))
             access_token = (
                 Github()
                 .get_oauth_application(

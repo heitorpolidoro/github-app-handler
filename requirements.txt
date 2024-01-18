@@ -1,1 +1,2 @@
 PyGithub<=3.0
+pyyaml<=7.0
