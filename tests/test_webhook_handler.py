@@ -63,11 +63,11 @@ def test_get_auth_app_auth_when_private_key_in_env(monkeypatch):
         patch("githubapp.webhook_handler.Token", autospec=Token) as TokenMock,
     ):
         assert isinstance(
-            _get_auth("hook_installation_target_id", "installation_id"), Token
+            _get_auth(123456, 654321), Token
         )
-        appauth.assert_called_once_with("hook_installation_target_id", "private_key")
+        appauth.assert_called_once_with(123456, "private_key")
         GithubIntegrationMock.assert_called_once_with(auth=appauth.return_value)
-        get_access_token.assert_called_once_with("installation_id")
+        get_access_token.assert_called_once_with(654321)
         TokenMock.assert_called_once_with("token")
 
 

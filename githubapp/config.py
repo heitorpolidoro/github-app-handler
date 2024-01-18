@@ -1,11 +1,20 @@
+"""
+Config module
+
+This module handles loading configuration values from a YAML file
+and provides access to those values via the ConfigValue class.
+"""
+from typing import Any
+
 import yaml
 from github import UnknownObjectException
+from github.Repository import Repository
 
 
 class ConfigValue:
     """The configuration loaded from the config file"""
 
-    def set_values(self, data):
+    def set_values(self, data: dict[str, Any]) -> None:
         """Set the attributes from a data dict"""
         for attr, value in data.items():
             if isinstance(value, dict):
@@ -15,7 +24,7 @@ class ConfigValue:
             else:
                 setattr(self, attr, value)
 
-    def load_config_from_file(self, filename, repository):
+    def load_config_from_file(self, filename: str, repository: Repository) -> None:
         """Load the config from a file"""
         try:
             raw_data = (
@@ -30,7 +39,7 @@ class ConfigValue:
         except UnknownObjectException:
             pass
 
-    def __getattr__(self, item):
+    def __getattr__(self, item: str) -> Any:
         if item.startswith("is_") and item.endswith("_enabled"):
             return getattr(self, item[3:-8]) is not False
         return None
