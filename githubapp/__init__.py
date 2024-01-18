@@ -5,3 +5,4 @@ It is the entry point for the githubapp package and is responsible for initializ
 the necessary components and configurations. Any global settings for the package should be defined here.
 """
 __version__ = "0.21"
+

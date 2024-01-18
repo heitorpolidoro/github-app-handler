@@ -39,12 +39,14 @@ def test_config():
 
 def test_is_feature_enables():
     repository = Mock()
-    repository.get_contents.return_value = Mock(decoded_content="""
+    repository.get_contents.return_value = Mock(
+        decoded_content="""
 feature1: True
 feature2:
     attr: x
 feature3: False
-""")
+"""
+    )
     Config.load_config_from_file("file", repository)
 
     assert Config.is_feature1_enabled
@@ -52,11 +54,10 @@ feature3: False
     assert not Config.is_feature3_enabled
     assert Config.is_feature4_enabled
 
+
 def test_config_on_file_not_found():
     repository = Mock()
     repository.get_contents.side_effect = UnknownObjectException(404)
     Config.load_config_from_file("file", repository)
 
     assert Config.config1 is None
-
-

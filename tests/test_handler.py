@@ -1,8 +1,8 @@
-from unittest.mock import Mock, patch, ANY
+from unittest.mock import ANY, Mock, patch
 
 import pytest
 
-from githubapp import webhook_handler, Config
+from githubapp import Config, webhook_handler
 from githubapp.webhook_handler import _validate_signature, handle
 from tests.mocks import EventTest, SubEventTest
 
