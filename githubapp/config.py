@@ -3,6 +3,7 @@ from github import UnknownObjectException
 
 
 class ConfigValue:
+    """ The configuration loaded from the config file"""
     def set_values(self, data):
         """Set the attributes from a data dict"""
         for attr, value in data.items():

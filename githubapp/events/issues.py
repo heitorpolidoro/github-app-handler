@@ -40,7 +40,7 @@ class IssueOpenedEvent(IssuesEvent):
 
 
 class IssueEditedEvent(IssuesEvent):
-    """This class represents an issue opened event."""
+    """This class represents an issue edited event."""
 
     event_identifier = {"action": "edited"}
 
@@ -54,4 +54,5 @@ class IssueEditedEvent(IssuesEvent):
 
 
 class IssueClosedEvent(IssuesEvent):
+    """This class represents an issue closed event."""
     event_identifier = {"action": "closed"}
