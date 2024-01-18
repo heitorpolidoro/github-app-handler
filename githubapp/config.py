@@ -4,6 +4,7 @@ from github import UnknownObjectException
 
 class ConfigValue:
     def set_values(self, data):
+        """ Set the attributes from a data dict """
         for attr, value in data.items():
             if isinstance(value, dict):
                 config_value = ConfigValue()
@@ -13,6 +14,7 @@ class ConfigValue:
                 setattr(self, attr, value)
 
     def load_config_from_file(self, filename, repository):
+        """ Load the config from a file """
         try:
             raw_data = (
                 yaml.safe_load(
