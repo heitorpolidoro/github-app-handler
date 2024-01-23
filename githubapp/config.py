@@ -11,8 +11,15 @@ from github import UnknownObjectException
 from github.Repository import Repository
 
 
+class ConfigError(AttributeError):
+    pass
+
+
 class ConfigValue:
     """The configuration loaded from the config file"""
+
+    def __init__(self, value: Any = None) -> None:
+        self._value = value
 
     def set_values(self, data: dict[str, Any]) -> None:
         """Set the attributes from a data dict"""
@@ -23,6 +30,17 @@ class ConfigValue:
                 setattr(self, attr, config_value)
             else:
                 setattr(self, attr, value)
+
+    def create_config(self, name, *, default=None, **values):
+        if default is not None and values:
+            raise ConfigError(
+                "You cannot set the default value AND default values for sub values"
+            )
+        default = default or ConfigValue()
+        self.set_values({name: default})
+        if values:
+            default.set_values(values)
+        return getattr(self, name)
 
     def load_config_from_file(self, filename: str, repository: Repository) -> None:
         """Load the config from a file"""
@@ -40,9 +58,9 @@ class ConfigValue:
             pass
 
     def __getattr__(self, item: str) -> Any:
-        if item.startswith("is_") and item.endswith("_enabled"):
-            return getattr(self, item[3:-8]) is not False
-        return None
+        raise ConfigError(
+            f"No such config value: {item}. And there is no default value for it"
+        )
 
 
 Config = ConfigValue()

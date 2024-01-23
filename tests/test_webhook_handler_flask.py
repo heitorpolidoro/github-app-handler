@@ -15,18 +15,6 @@ def app():
     return mock
 
 
-#     class Flask:
-#         pass
-#
-#     mock_flask = MagicMock(name="Flask")
-#     mock_flask_module = MagicMock(Flask=mock_flask)
-#     mock_flask_module.Flask = Flask
-#     sys.modules["flask"] = mock_flask_module
-#     app = mock_flask()
-#     app.__class__ = Flask
-#     yield app
-
-
 def test_handle_with_flask(app):
     handle_with_flask(app)
     assert app.route.call_count == 2
