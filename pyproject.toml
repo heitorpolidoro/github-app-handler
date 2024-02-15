@@ -35,4 +35,4 @@ omit = ["tests/*", "payload_helper.py"]
 relative_files = true
 
 [tool.black]
-max_line_length = 120
+line_length = 120
