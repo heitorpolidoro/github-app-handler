@@ -118,7 +118,15 @@ class Event:
             completed=False,
         )
 
-    def start_check_run(self, name, sha, title, summary=None, text=None, status="in_progress"):
+    def start_check_run(
+        self,
+        name: str,
+        sha: str,
+        title: str,
+        summary: Optional[str] = None,
+        text: Optional[str] = None,
+        status: str = "in_progress",
+    ):
         """Start a check run"""
         output = {"title": title or name, "summary": summary or ""}
         if text:
