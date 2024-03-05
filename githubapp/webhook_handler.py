@@ -203,7 +203,9 @@ def handle_with_flask(
         app (Flask): The Flask application to register the webhook_handler with.
         use_default_index (bool): Whether to register the root handler with the Flask application. Default is False.
         webhook_endpoint (str): The endpoint to register the webhook_handler with. Default is "/".
-        auth_callback_handler (Callable[[int, AccessToken], None]): The function to handle the auth_callback. Default is None.
+        auth_callback_handler (Callable[[int, AccessToken], None]): The function to handle the auth_callback.
+        Default is None.
+
         version (str): The version of the App.
         versions_to_show (str): The libraries to show the version.
         config_file (str): The config file path to autoload
