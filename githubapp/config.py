@@ -13,6 +13,13 @@ from github.Repository import Repository
 
 
 class ConfigError(AttributeError):
+    """
+    Exception raised for errors in the configuration.
+
+    Attributes:
+        message - explanation of the error
+    """
+
     pass
 
 
@@ -33,6 +40,17 @@ class ConfigValue:
                 setattr(self, attr, value)
 
     def create_config(self, name, *, default=None, **values):
+        """
+        Create a configuration value and nested values.
+
+        Args:
+            name (str): The name of the configuration value
+            default: The default value. If set, values cannot be provided
+            values (dict): Nested configuration values
+
+        Returns:
+            ConfigValue: The created configuration value
+        """
         if default is not None and values:
             raise ConfigError("You cannot set the default value AND default values for sub values")
         default = default or ConfigValue()
