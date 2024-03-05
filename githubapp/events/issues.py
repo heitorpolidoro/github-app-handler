@@ -29,14 +29,8 @@ class IssueOpenedEvent(IssuesEvent):
         **kwargs,
     ):
         super().__init__(**kwargs)
-        self.old_issue = (
-            self._parse_object(Issue, changes.get("old_issue")) if changes else None
-        )
-        self.old_repository = (
-            self._parse_object(Repository, changes.get("old_repository"))
-            if changes
-            else None
-        )
+        self.old_issue = self._parse_object(Issue, changes.get("old_issue")) if changes else None
+        self.old_repository = self._parse_object(Repository, changes.get("old_repository")) if changes else None
 
 
 class IssueEditedEvent(IssuesEvent):

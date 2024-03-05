@@ -68,16 +68,10 @@ def test_no_config_value():
     with pytest.raises(ConfigError) as err:
         # noinspection PyStatementEffect
         Config.config1
-    assert (
-        str(err.value)
-        == "No such config value: config1. And there is no default value for it"
-    )
+    assert str(err.value) == "No such config value: config1. And there is no default value for it"
 
 
 def test_validate_default_or_values():
     with pytest.raises(ConfigError) as err:
         Config.create_config("config1", default="value1", value2="value2")
-    assert (
-        str(err.value)
-        == "You cannot set the default value AND default values for sub values"
-    )
+    assert str(err.value) == "You cannot set the default value AND default values for sub values"

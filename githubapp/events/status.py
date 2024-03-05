@@ -1,4 +1,3 @@
-from typing import Optional
 
 from github.Branch import Branch
 from github.Commit import Commit

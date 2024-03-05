@@ -1,5 +1,5 @@
 import re
-from typing import Any, Optional, TypeVar
+from typing import Any, TypeVar, Optional
 
 from github.CheckRun import CheckRun
 from github.NamedUser import NamedUser
@@ -32,12 +32,11 @@ class Event:
         Event.delivery = headers["X-Github-Delivery"]
         Event.github_event = headers["X-Github-Event"]
         Event.hook_id = int(headers["X-Github-Hook-Id"])
-        Event.hook_installation_target_id = int(
-            headers["X-Github-Hook-Installation-Target-Id"]
-        )
-        Event.hook_installation_target_type = headers[
-            "X-Github-Hook-Installation-Target-Type"
-        ]
+        Event.hook_installation_target_id = int(headers["X-Github-Hook-Installation-Target-Id"])
+        Event.hook_installation_target_type = headers["X-Github-Hook-Installation-Target-Type"]
+        if installation_id := kwargs.get("installation", {}).get("id"):
+            installation_id = int(installation_id)
+        Event.installation_id = installation_id
         Event._raw_headers = headers
         Event._raw_body = kwargs
         self.gh = gh
@@ -95,10 +94,7 @@ class Event:
         Returns:
             bool: True if the event matches the event_identifier, False otherwise
         """
-        return all(
-            (attr in data and value == data[attr])
-            for attr, value in cls.event_identifier.items()
-        )
+        return all((attr in data and value == data[attr]) for attr, value in cls.event_identifier.items())
 
     @staticmethod
     def fix_attributes(attributes):
@@ -122,9 +118,7 @@ class Event:
             completed=False,
         )
 
-    def start_check_run(
-        self, name, sha, title, summary=None, text=None, status="in_progress"
-    ):
+    def start_check_run(self, name, sha, title, summary=None, text=None, status="in_progress"):
         """Start a check run"""
         output = {"title": title or name, "summary": summary or ""}
         if text:
