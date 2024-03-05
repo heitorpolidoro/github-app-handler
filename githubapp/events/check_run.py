@@ -2,6 +2,7 @@
 Module for handling GitHub check_run webhook events.
 https://docs.github.com/en/webhooks/webhook-events-and-payloads#check_run
 """
+
 from github.CheckRun import CheckRun
 
 from githubapp.events.event import Event

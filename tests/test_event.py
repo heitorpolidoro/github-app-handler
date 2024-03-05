@@ -99,9 +99,7 @@ def test_parse_object():
     self = Mock(requester="requester")
     EventTest._parse_object(self, mocked_class, {"a": 1})
     self.fix_attributes.assert_called_with({"a": 1})
-    mocked_class.assert_called_with(
-        requester="requester", headers={}, attributes={"a": 1}, completed=False
-    )
+    mocked_class.assert_called_with(requester="requester", headers={}, attributes={"a": 1}, completed=False)
 
 
 # noinspection PyTypeChecker
@@ -291,9 +289,7 @@ TEST_INSTANTIATE_EVENTS_VALUES = {
     ],
 )
 def test_instantiate_events(event_class, event_action_request, all_events):
-    test_event, event_identifier, check_instance = TEST_INSTANTIATE_EVENTS_VALUES.get(
-        event_class
-    )
+    test_event, event_identifier, check_instance = TEST_INSTANTIATE_EVENTS_VALUES.get(event_class)
     check_instance.update({"sender": NamedUser, "repository": Repository})
     headers, default_body = event_action_request
     headers["X-Github-Event"] = test_event
@@ -316,9 +312,7 @@ def test_instantiate_events(event_class, event_action_request, all_events):
             "old_issue": body.pop("old_issue"),
             "old_repository": body.pop("old_repository"),
         }
-    event_instance = Event.get_event(headers, body)(
-        gh=Mock(), requester=Mock(), headers=headers, **body
-    )
+    event_instance = Event.get_event(headers, body)(gh=Mock(), requester=Mock(), headers=headers, **body)
     assert isinstance(event_instance, event_class)
     assert isinstance(event_instance.repository, Repository)
     assert isinstance(event_instance.sender, NamedUser)
@@ -328,9 +322,7 @@ def test_instantiate_events(event_class, event_action_request, all_events):
             attr_type = attr_type[0]
         else:
             value = getattr(event_instance, attribute)
-        assert isinstance(
-            value, attr_type
-        ), f"{attribute} is {type(value)} not {attr_type}"
+        assert isinstance(value, attr_type), f"{attribute} is {type(value)} not {attr_type}"
     all_events.remove(event_class)
 
 
@@ -366,9 +358,7 @@ def test_update_check_run_with_only_conclusion(event):
 def test_update_check_run_with_output(event):
     event.start_check_run("name", "sha", "title", "summary")
     event.update_check_run(title="new_title", summary="new_summary")
-    event.check_run.edit.assert_called_with(
-        output={"title": "new_title", "summary": "new_summary"}
-    )
+    event.check_run.edit.assert_called_with(output={"title": "new_title", "summary": "new_summary"})
 
 
 def test_update_check_run_with_only_output_text(event):
@@ -376,9 +366,7 @@ def test_update_check_run_with_only_output_text(event):
     event.check_run.output.title = "title"
     event.check_run.output.summary = "summary"
     event.update_check_run(text="text")
-    event.check_run.edit.assert_called_with(
-        output={"title": "title", "summary": "summary", "text": "text"}
-    )
+    event.check_run.edit.assert_called_with(output={"title": "title", "summary": "summary", "text": "text"})
 
 
 def test_update_check_run_with_nothing(event):
