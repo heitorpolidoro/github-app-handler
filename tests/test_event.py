@@ -15,17 +15,25 @@ from github.PullRequest import PullRequest
 from github.PullRequestReview import PullRequestReview
 from github.Repository import Repository
 
-from githubapp.events import (CheckRunCompletedEvent, CheckSuiteCompletedEvent,
-                              CheckSuiteRequestedEvent,
-                              CheckSuiteRerequestedEvent, CreateBranchEvent,
-                              CreateTagEvent, IssueCommentCreatedEvent,
-                              IssueCommentDeletedEvent,
-                              IssueCommentEditedEvent, IssueOpenedEvent,
-                              PullRequestReviewDismissedEvent,
-                              PullRequestReviewEditedEvent,
-                              PullRequestReviewSubmittedEvent, PushEvent,
-                              ReleaseCreatedEvent, ReleaseReleasedEvent,
-                              StatusEvent)
+from githubapp.events import (
+    CheckRunCompletedEvent,
+    CheckSuiteCompletedEvent,
+    CheckSuiteRequestedEvent,
+    CheckSuiteRerequestedEvent,
+    CreateBranchEvent,
+    CreateTagEvent,
+    IssueCommentCreatedEvent,
+    IssueCommentDeletedEvent,
+    IssueCommentEditedEvent,
+    IssueOpenedEvent,
+    PullRequestReviewDismissedEvent,
+    PullRequestReviewEditedEvent,
+    PullRequestReviewSubmittedEvent,
+    PushEvent,
+    ReleaseCreatedEvent,
+    ReleaseReleasedEvent,
+    StatusEvent,
+)
 from githubapp.events.event import Event
 from githubapp.events.issues import IssueClosedEvent, IssueEditedEvent
 from tests.conftest import event_action_request

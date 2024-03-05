@@ -9,16 +9,26 @@ common interface for handling different event types in the application code.
 """
 
 from .check_run import CheckRunCompletedEvent, CheckRunEvent
-from .check_suite import (CheckSuiteCompletedEvent, CheckSuiteEvent,
-                          CheckSuiteRequestedEvent, CheckSuiteRerequestedEvent)
+from .check_suite import (
+    CheckSuiteCompletedEvent,
+    CheckSuiteEvent,
+    CheckSuiteRequestedEvent,
+    CheckSuiteRerequestedEvent,
+)
 from .create import CreateBranchEvent, CreateEvent, CreateTagEvent
-from .issue_comment import (IssueCommentCreatedEvent, IssueCommentDeletedEvent,
-                            IssueCommentEditedEvent, IssueCommentEvent)
+from .issue_comment import (
+    IssueCommentCreatedEvent,
+    IssueCommentDeletedEvent,
+    IssueCommentEditedEvent,
+    IssueCommentEvent,
+)
 from .issues import IssueEditedEvent, IssueOpenedEvent, IssuesEvent
-from .pull_request_review import (PullRequestReviewDismissedEvent,
-                                  PullRequestReviewEditedEvent,
-                                  PullRequestReviewEvent,
-                                  PullRequestReviewSubmittedEvent)
+from .pull_request_review import (
+    PullRequestReviewDismissedEvent,
+    PullRequestReviewEditedEvent,
+    PullRequestReviewEvent,
+    PullRequestReviewSubmittedEvent,
+)
 from .push import PushEvent
 from .release import ReleaseCreatedEvent, ReleaseEvent, ReleaseReleasedEvent
 from .status import StatusEvent

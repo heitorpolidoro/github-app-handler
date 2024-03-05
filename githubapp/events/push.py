@@ -1,4 +1,3 @@
-
 from github.GitCommit import GitCommit
 from github.NamedUser import NamedUser
 

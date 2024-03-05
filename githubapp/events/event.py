@@ -1,5 +1,5 @@
 import re
-from typing import Any, TypeVar, Optional
+from typing import Any, Optional, TypeVar
 
 from github.CheckRun import CheckRun
 from github.NamedUser import NamedUser
