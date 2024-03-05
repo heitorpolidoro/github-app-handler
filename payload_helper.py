@@ -23,14 +23,12 @@ def github_payload():
     print()
     file_name = f"payloads/{event_full_name}.json"
     with open(file_name, "w") as file:
-        file.write(
-            json.dumps(
-                {
+        json.dump(
+            {
                     "headers": dict(headers),
                     "data": data,
-                }
-            )
-        )
+                }, 
+            file)
     print("-" * 100)
 
     return "Ok"
