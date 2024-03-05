@@ -20,8 +20,6 @@ class ConfigError(AttributeError):
         message - explanation of the error
     """
 
-    pass
-
 
 class ConfigValue:
     """The configuration loaded from the config file"""
