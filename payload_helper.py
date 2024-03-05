@@ -25,10 +25,11 @@ def github_payload():
     with open(file_name, "w") as file:
         json.dump(
             {
-                    "headers": dict(headers),
-                    "data": data,
-                }, 
-            file)
+                "headers": dict(headers),
+                "data": data,
+            },
+            file,
+        )
     print("-" * 100)
 
     return "Ok"
