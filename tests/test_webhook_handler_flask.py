@@ -141,7 +141,7 @@ class TestCaseAppHandler(TestCase):
             self.client.post("/", headers=headers, json=request_json)
             mock_handle.assert_called_once_with(headers, request_json, None)
 
-    def test_event(self, event):
+    def send_event(self, event):
         event_identifier = event.event_identifier.copy()
         headers = {
             "Content-Type": "application/json",
@@ -183,7 +183,7 @@ def test_webhook(event: type[Event], client):
 
     handler.called = lambda: called
 
-    response = TestCaseAppHandler.test_event(Mock(client=client), event)
+    response = TestCaseAppHandler.send_event(Mock(client=client), event)
 
     assert response.status_code == 200
     assert handler.called()
