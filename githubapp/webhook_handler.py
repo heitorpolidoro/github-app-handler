@@ -141,7 +141,7 @@ def handle(headers: dict[str, Any], body: dict[str, Any], config_file: str = Non
         raise
 
 
-def default_index(name, version=None, versions_to_show=None) -> Callable[[], str]:
+def default_index(name, version=None, versions_to_show: Optional[list] = None) -> Callable[[], str]:
     """Decorator to register a default root handler.
 
     Args:

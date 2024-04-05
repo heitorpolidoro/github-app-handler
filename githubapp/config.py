@@ -37,7 +37,7 @@ class ConfigValue:
             else:
                 setattr(self, attr, value)
 
-    def create_config(self, name, *, default=None, **values):
+    def create_config(self, name, *, default=None, **values: dict[str, Any]):
         """
         Create a configuration value and nested values.
 
