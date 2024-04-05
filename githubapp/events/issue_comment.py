@@ -9,7 +9,7 @@ class IssueCommentEvent(Event):
 
     event_identifier = {"event": "issue_comment"}
 
-    def __init__(self, issue: dict, issue_comment: dict, **kwargs:dict):
+    def __init__(self, issue: dict, issue_comment: dict, **kwargs: dict):
         super().__init__(**kwargs)
         self.issue = self._parse_object(Issue, issue)
         self.issue_comment = self._parse_object(IssueComment, issue_comment)

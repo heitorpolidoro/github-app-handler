@@ -16,7 +16,7 @@ class CheckRunEvent(Event):
     def __init__(
         self,
         check_run: dict,
-        **kwargs:dict,
+        **kwargs: dict,
     ):
         super().__init__(**kwargs)
         self.check_run = self._parse_object(CheckRun, check_run)

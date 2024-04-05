@@ -16,7 +16,7 @@ class CheckSuiteEvent(Event):
     def __init__(
         self,
         check_suite: dict,
-        **kwargs:dict,
+        **kwargs: dict,
     ) -> None:
         super().__init__(**kwargs)
         self.check_suite = self._parse_object(CheckSuite, check_suite)
