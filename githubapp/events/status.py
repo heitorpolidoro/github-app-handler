@@ -13,18 +13,18 @@ class StatusEvent(Event):
 
     def __init__(
         self,
-        branches,
-        commit,
-        context,
-        created_at,
-        description,
-        id,
-        name,
-        sha,
-        state,
-        target_url,
-        updated_at,
-        **kwargs,
+        branches: list[dict],
+        commit: dict,
+        context: str,
+        created_at: str,
+        description: Optional[str],
+        id: int,
+        name: str,
+        sha: str,
+        state: str,
+        target_url: Optional[str],
+        updated_at: str,
+        **kwargs: dict,
     ):
         """
         Initialize a new instance of the class.

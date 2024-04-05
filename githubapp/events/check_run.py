@@ -9,20 +9,20 @@ from githubapp.events.event import Event
 
 
 class CheckRunEvent(Event):
-    """This class represents an check run event."""
+    """This class represents a check run event."""
 
     event_identifier = {"event": "check_run"}
 
     def __init__(
         self,
-        check_run,
-        **kwargs,
+        check_run: dict,
+        **kwargs:dict,
     ):
         super().__init__(**kwargs)
         self.check_run = self._parse_object(CheckRun, check_run)
 
 
 class CheckRunCompletedEvent(CheckRunEvent):
-    """This class represents an check run completed event."""
+    """This class represents a check run completed event."""
 
     event_identifier = {"action": "completed"}
