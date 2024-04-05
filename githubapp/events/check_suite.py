@@ -15,7 +15,7 @@ class CheckSuiteEvent(Event):
 
     def __init__(
         self,
-        check_suite: dict,
+        check_suite: dict[str,str],
         **kwargs,
     ) -> None:
         super().__init__(**kwargs)

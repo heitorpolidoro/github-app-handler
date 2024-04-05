@@ -15,7 +15,7 @@ class CheckRunEvent(Event):
 
     def __init__(
         self,
-        check_run: dict,
+        check_run: dict[str,str],
         **kwargs,
     ):
         super().__init__(**kwargs)

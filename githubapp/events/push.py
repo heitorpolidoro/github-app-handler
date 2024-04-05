@@ -21,8 +21,8 @@ class PushEvent(Event):
         created: bool,
         deleted: bool,
         forced: bool,
-        head_commit: dict,
-        pusher: dict,
+        head_commit: dict[str,str],
+        pusher: dict[str,str],
         ref: str,
         **kwargs,
     ):

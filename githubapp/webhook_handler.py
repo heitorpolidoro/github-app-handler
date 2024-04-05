@@ -102,7 +102,7 @@ def _get_auth(hook_installation_target_id: int = None, installation_id: int = No
     return Token(token)
 
 
-def handle(headers: dict[str, Any], body: dict[str, Any], config_file: str = None) -> None:
+def handle(headers: dict[str, str][str, Any], body: dict[str, dict][str, Any], config_file: str = None) -> None:
     """Handle a webhook request.
 
     The request headers and body are passed to the appropriate handler methods.
@@ -141,7 +141,7 @@ def handle(headers: dict[str, Any], body: dict[str, Any], config_file: str = Non
         raise
 
 
-def default_index(name, version=None, versions_to_show=None) -> Callable[[], str]:
+def default_index(name, version=None, versions_to_show: Optional[list] = None) -> Callable[[], str]:
     """Decorator to register a default root handler.
 
     Args:
