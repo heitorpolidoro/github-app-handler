@@ -25,7 +25,7 @@ def github_payload():
     with open(file_name, "w") as file:
         json.dump(
             {
-                "headers": dict[str,str](headers),
+                "headers": dict[str, str](headers),
                 "data": data,
             },
             file,

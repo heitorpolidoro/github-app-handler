@@ -14,7 +14,7 @@ class StatusEvent(Event):
     def __init__(
         self,
         branches: list[dict],
-        commit: dict[str,str],
+        commit: dict[str, str],
         context: str,
         created_at: str,
         description: Optional[str],

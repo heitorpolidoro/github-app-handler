@@ -11,7 +11,7 @@ class IssuesEvent(Event):
 
     def __init__(
         self,
-        issue: dict[str,str],
+        issue: dict[str, str],
         **kwargs,
     ):
         super().__init__(**kwargs)
@@ -25,7 +25,7 @@ class IssueOpenedEvent(IssuesEvent):
 
     def __init__(
         self,
-        changes: dict[str,str] = None,
+        changes: dict[str, str] = None,
         **kwargs,
     ):
         super().__init__(**kwargs)
@@ -40,7 +40,7 @@ class IssueEditedEvent(IssuesEvent):
 
     def __init__(
         self,
-        changes: dict[str,str],
+        changes: dict[str, str],
         **kwargs,
     ):
         super().__init__(**kwargs)
