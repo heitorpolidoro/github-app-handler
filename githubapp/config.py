@@ -27,7 +27,7 @@ class ConfigValue:
     def __init__(self, value: Any = None) -> None:
         self._value = value
 
-    def set_values(self, data: dict[str, str][str, Any]) -> None:
+    def set_values(self, data: dict[str, Any]) -> None:
         """Set the attributes from a data dict"""
         for attr, value in data.items():
             if isinstance(value, dict):
