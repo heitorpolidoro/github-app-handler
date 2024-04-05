@@ -28,7 +28,7 @@ class Event:
     _raw_headers = None
 
     #
-    def __init__(self, *, gh, requester, headers, sender, repository=None, **kwargs: dict):
+    def __init__(self, *, gh, requester, headers, sender, repository=None, **kwargs):
         Event.delivery = headers["X-Github-Delivery"]
         Event.github_event = headers["X-Github-Event"]
         Event.hook_id = int(headers["X-Github-Hook-Id"])

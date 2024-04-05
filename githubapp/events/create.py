@@ -13,7 +13,7 @@ class CreateEvent(Event):
         pusher_type: str,
         ref: str,
         ref_type: str,
-        **kwargs: dict,
+        **kwargs,
     ):
         super().__init__(**kwargs)
         self.description = description

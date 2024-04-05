@@ -24,7 +24,7 @@ class StatusEvent(Event):
         state: str,
         target_url: Optional[str],
         updated_at: str,
-        **kwargs: dict,
+        **kwargs,
     ):
         """
         Initialize a new instance of the class.
