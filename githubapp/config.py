@@ -21,7 +21,7 @@ class ConfigError(AttributeError):
     """
 
 
-class ConfigValue:
+class ConfigValue(object):
     """The configuration loaded from the config file"""
 
     def __init__(self, value: Any = None) -> None:
@@ -37,7 +37,7 @@ class ConfigValue:
             else:
                 setattr(self, attr, value)
 
-    def create_config(self, name, *, default=None, **values: dict[str, Any]):
+    def create_config(self, name: str, *, default: Any = None, **values: Any):
         """
         Create a configuration value and nested values.
 
