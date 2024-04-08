@@ -128,7 +128,6 @@ def handle(headers: dict[str, Any], body: dict[str, Any], config_file: str = Non
         retry=GithubRetry(),
         pool_size=None,
     )
-    # TODO find out what to do with requester in body
     body.pop("requester", None)
 
     event = event_class(gh=gh, requester=requester, headers=headers, **body)
