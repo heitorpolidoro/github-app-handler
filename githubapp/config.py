@@ -23,7 +23,7 @@ class ConfigError(AttributeError):
     """
 
 
-class ConfigValue(object):
+class ConfigValue:
     """The configuration loaded from the config file"""
 
     def __init__(self, value: AnyBasic = None) -> NoReturn:
