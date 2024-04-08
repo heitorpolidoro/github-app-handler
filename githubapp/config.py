@@ -5,11 +5,13 @@ This module handles loading configuration values from a YAML file
 and provides access to those values via the ConfigValue class.
 """
 
-from typing import Any
+from typing import NoReturn, Union
 
 import yaml
 from github import UnknownObjectException
 from github.Repository import Repository
+
+AnyBasic = Union[int, float, bool, str, list, dict, tuple]
 
 
 class ConfigError(AttributeError):
@@ -24,10 +26,10 @@ class ConfigError(AttributeError):
 class ConfigValue:
     """The configuration loaded from the config file"""
 
-    def __init__(self, value: Any = None) -> None:
+    def __init__(self, value: AnyBasic = None) -> NoReturn:
         self._value = value
 
-    def set_values(self, data: dict[str, Any]) -> None:
+    def set_values(self, data: dict[str, AnyBasic]) -> NoReturn:
         """Set the attributes from a data dict"""
         for attr, value in data.items():
             if isinstance(value, dict):
@@ -37,7 +39,7 @@ class ConfigValue:
             else:
                 setattr(self, attr, value)
 
-    def create_config(self, name, *, default=None, **values: dict[str, Any]):
+    def create_config(self, name: str, *, default: AnyBasic = None, **values: AnyBasic) -> NoReturn:
         """
         Create a configuration value and nested values.
 
@@ -57,7 +59,7 @@ class ConfigValue:
             default.set_values(values)
         return getattr(self, name)
 
-    def load_config_from_file(self, filename: str, repository: Repository) -> None:
+    def load_config_from_file(self, filename: str, repository: Repository) -> NoReturn:
         """Load the config from a file"""
         try:
             raw_data = (
@@ -67,7 +69,7 @@ class ConfigValue:
         except UnknownObjectException:
             pass
 
-    def __getattr__(self, item: str) -> Any:
+    def __getattr__(self, item: str) -> AnyBasic:
         raise ConfigError(f"No such config value: {item}. And there is no default value for it")
 
 
