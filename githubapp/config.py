@@ -5,7 +5,7 @@ This module handles loading configuration values from a YAML file
 and provides access to those values via the ConfigValue class.
 """
 
-from typing import Union, NoReturn
+from typing import NoReturn, Union
 
 import yaml
 from github import UnknownObjectException
