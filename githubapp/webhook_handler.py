@@ -132,7 +132,7 @@ def handle(headers: dict[str, Any], body: dict[str, Any], config_file: str = Non
     body.pop("requester", None)
 
     event = event_class(gh=gh, requester=requester, headers=headers, **body)
-    if config_file:
+    if config_file and event.repository:
         Config.load_config_from_file(config_file, event.repository)
     try:
         for handler in handlers.get(event_class, []):
