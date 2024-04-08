@@ -13,6 +13,7 @@ from github.Repository import Repository
 
 AnyBasic = Union[int, float, bool, str, list, dict, tuple]
 
+
 class ConfigError(AttributeError):
     """
     Exception raised for errors in the configuration.
