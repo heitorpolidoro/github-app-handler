@@ -5,7 +5,7 @@ This module handles loading configuration values from a YAML file
 and provides access to those values via the ConfigValue class.
 """
 
-from typing import Union
+from typing import Union, NoReturn
 
 import yaml
 from github import UnknownObjectException
@@ -39,7 +39,7 @@ class ConfigValue(object):
             else:
                 setattr(self, attr, value)
 
-    def create_config(self, name: str, *, default: AnyBasic = None, **values: AnyBasic):
+    def create_config(self, name: str, *, default: AnyBasic = None, **values: AnyBasic) -> NoReturn:
         """
         Create a configuration value and nested values.
 
