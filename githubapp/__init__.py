@@ -7,6 +7,6 @@ the necessary components and configurations. Any global settings for the package
 
 from githubapp.config import Config
 
-__version__ = "0.24.1"
+__version__ = "0.24.4"
 
 __all__ = ["Config"]
