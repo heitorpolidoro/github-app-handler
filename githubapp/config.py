@@ -57,7 +57,6 @@ class ConfigValue:
         self.set_values({name: default})
         if values:
             default.set_values(values)
-        return getattr(self, name)
 
     def load_config_from_file(self, filename: str, repository: Repository) -> NoReturn:
         """Load the config from a file"""
