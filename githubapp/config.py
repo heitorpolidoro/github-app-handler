@@ -26,10 +26,10 @@ class ConfigError(AttributeError):
 class ConfigValue(object):
     """The configuration loaded from the config file"""
 
-    def __init__(self, value: AnyBasic = None) -> None:
+    def __init__(self, value: AnyBasic = None) -> NoReturn:
         self._value = value
 
-    def set_values(self, data: dict[str, AnyBasic]) -> None:
+    def set_values(self, data: dict[str, AnyBasic]) -> NoReturn:
         """Set the attributes from a data dict"""
         for attr, value in data.items():
             if isinstance(value, dict):
@@ -59,7 +59,7 @@ class ConfigValue(object):
             default.set_values(values)
         return getattr(self, name)
 
-    def load_config_from_file(self, filename: str, repository: Repository) -> None:
+    def load_config_from_file(self, filename: str, repository: Repository) -> NoReturn:
         """Load the config from a file"""
         try:
             raw_data = (
