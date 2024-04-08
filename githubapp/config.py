@@ -31,7 +31,7 @@ class ConfigValue:
         """Set the attributes from a data dict"""
         for attr, value in data.items():
             if isinstance(value, dict):
-                config_value = ConfigValue()
+                config_value = getattr(self, attr, ConfigValue())
                 config_value.set_values(value)
                 setattr(self, attr, config_value)
             else:
