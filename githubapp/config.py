@@ -6,10 +6,11 @@ and provides access to those values via the ConfigValue class.
 """
 
 from functools import wraps
-from typing import NoReturn, TypeVar, Union
+from typing import NoReturn, Union, TypeVar, Callable, Any
 
 import yaml
 from github import UnknownObjectException
+from github.GithubObject import NotSet
 from github.Repository import Repository
 
 AnyBasic = Union[int, float, bool, str, list, dict, tuple]
@@ -72,26 +73,26 @@ class ConfigValue:
         except UnknownObjectException:
             pass
 
-    def __getattr__(self, item: str) -> AnyBasic:
+    def __getattr__(self, item: str):
         raise ConfigError(f"No such config value: {item}. And there is no default value for it")
 
-    def get(self, config_name: str, default: AnyBasic = "__NO_DEFAULT__"):
-        value = self
-        for name in config_name.split("."):
-            if default == "__NO_DEFAULT__":
-                value = getattr(value, name)
-            else:
-                value = getattr(value, name, default)
-        return value
-
     @staticmethod
-    def call_if(config_name: str, value: AnyBasic = None):
-        config_value = Config.get(config_name)
+    def call_if(config_name: str, value: AnyBasic = NotSet) -> Callable[[Callable], Callable]:
+        """
+        Decorator to configure a method to be called on if the config is true or is == value
 
-        def decorator(method):
+        :param config_name: The configuration name
+        :param value: Tha value to compare to the config, default: bool value for the config value
+        """
+        config_value = eval(f"Config.{config_name}")
+
+        def decorator(method: Callable) -> Callable:
+            """ Decorator to call a method based on the configuration"""
             @wraps(method)
-            def wrapper(*args, **kwargs):
-                if value is not None and config_value == value or value is None and config_value:
+            def wrapper(*args, **kwargs) -> Any:
+                """ Call the method based on the configuration
+                """
+                if value == NotSet and config_value or config_value == value:
                     return method(*args, **kwargs)
 
             return wrapper

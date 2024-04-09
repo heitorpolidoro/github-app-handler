@@ -77,24 +77,6 @@ def test_validate_default_or_values():
     assert str(err.value) == "You cannot set the default value AND default values for sub values"
 
 
-def test_get():
-    Config.create_config("feature", value1="value")
-    assert Config.get("feature.value1") == "value"
-
-
-def test_get_with_default():
-    Config.create_config("feature", value1="value")
-    assert Config.get("feature.value2", "value") == "value"
-
-
-def test_get_no_config():
-    Config.create_config("feature", value1="value")
-    with pytest.raises(ConfigError) as err:
-        # noinspection PyStatementEffect
-        Config.get("feature.config1")
-    assert str(err.value) == "No such config value: config1. And there is no default value for it"
-
-
 def test_config_call_if_call():
     Config.create_config("config", enabled=True)
     called = False
@@ -115,6 +97,36 @@ def test_config_call_if_dont_call():
     called = False
 
     @Config.call_if("config.enabled")
+    def call():
+        nonlocal called
+        called = True
+
+    call.called = lambda: called
+
+    call()
+    assert call.called() is False
+
+
+def test_config_call_if_call_compare_with_value():
+    Config.create_config("config", value="value")
+    called = False
+
+    @Config.call_if("config.value", "value")
+    def call():
+        nonlocal called
+        called = True
+
+    call.called = lambda: called
+
+    call()
+    assert call.called()
+
+
+def test_config_call_if_dont_call_compare_with_value():
+    Config.create_config("config", value="value")
+    called = False
+
+    @Config.call_if("config.value", "other_value")
     def call():
         nonlocal called
         called = True
