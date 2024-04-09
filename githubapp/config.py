@@ -5,13 +5,16 @@ This module handles loading configuration values from a YAML file
 and provides access to those values via the ConfigValue class.
 """
 
-from typing import NoReturn, Union
+from functools import wraps
+from typing import Any, Callable, NoReturn, TypeVar, Union
 
 import yaml
 from github import UnknownObjectException
+from github.GithubObject import NotSet
 from github.Repository import Repository
 
 AnyBasic = Union[int, float, bool, str, list, dict, tuple]
+ConfigValueType = TypeVar("ConfigValueType", bound="ConfigValue")
 
 
 class ConfigError(AttributeError):
@@ -39,7 +42,7 @@ class ConfigValue:
             else:
                 setattr(self, attr, value)
 
-    def create_config(self, name: str, *, default: AnyBasic = None, **values: AnyBasic) -> NoReturn:
+    def create_config(self, name: str, *, default: AnyBasic = None, **values: AnyBasic) -> ConfigValueType:
         """
         Create a configuration value and nested values.
 
@@ -54,9 +57,11 @@ class ConfigValue:
         if default is not None and values:
             raise ConfigError("You cannot set the default value AND default values for sub values")
         default = default or ConfigValue()
-        self.set_values({name: default})
         if values:
             default.set_values(values)
+        self.set_values({name: default})
+
+        return self
 
     def load_config_from_file(self, filename: str, repository: Repository) -> NoReturn:
         """Load the config from a file"""
@@ -68,8 +73,34 @@ class ConfigValue:
         except UnknownObjectException:
             pass
 
-    def __getattr__(self, item: str) -> AnyBasic:
+    def __getattr__(self, item: str):
         raise ConfigError(f"No such config value: {item}. And there is no default value for it")
+
+    @staticmethod
+    def call_if(config_name: str, value: AnyBasic = NotSet) -> Callable[[Callable], Callable]:
+        """
+        Decorator to configure a method to be called on if the config is true or is == value
+
+        :param config_name: The configuration name
+        :param value: Tha value to compare to the config, default: bool value for the config value
+        """
+        config_value = Config
+        for name in config_name.split("."):
+            config_value = getattr(config_value, name)
+
+        def decorator(method: Callable) -> Callable:
+            """Decorator to call a method based on the configuration"""
+
+            @wraps(method)
+            def wrapper(*args, **kwargs) -> Any:
+                """Call the method based on the configuration"""
+                if value == NotSet and config_value or config_value == value:
+                    return method(*args, **kwargs)
+                return None
+
+            return wrapper
+
+        return decorator
 
 
 Config = ConfigValue()
