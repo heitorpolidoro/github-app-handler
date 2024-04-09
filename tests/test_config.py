@@ -85,10 +85,11 @@ def test_config_call_if_call():
     def call():
         nonlocal called
         called = True
+        return "value"
 
     call.called = lambda: called
 
-    call()
+    assert call() == "value"
     assert call.called()
 
 
@@ -100,10 +101,27 @@ def test_config_call_if_dont_call():
     def call():
         nonlocal called
         called = True
+        return "value"
 
     call.called = lambda: called
 
-    call()
+    assert call() is None
+    assert call.called() is False
+
+
+def test_config_call_if_dont_call_with_default_return_value():
+    Config.create_config("config", enabled=False)
+    called = False
+
+    @Config.call_if("config.enabled", return_on_not_call="returned_value")
+    def call():
+        nonlocal called
+        called = True
+        return "value"
+
+    call.called = lambda: called
+
+    assert call() == "returned_value"
     assert call.called() is False
 
 
@@ -135,3 +153,18 @@ def test_config_call_if_dont_call_compare_with_value():
 
     call()
     assert call.called() is False
+
+
+def test_config_call_if_with_env(monkeypatch):
+    monkeypatch.setenv("SHOULD_CALL", "YES")
+    called = False
+
+    @Config.call_if("SHOULD_CALL")
+    def call():
+        nonlocal called
+        called = True
+
+    call.called = lambda: called
+
+    call()
+    assert call.called() is True
