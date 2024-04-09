@@ -84,7 +84,9 @@ class ConfigValue:
         :param config_name: The configuration name
         :param value: Tha value to compare to the config, default: bool value for the config value
         """
-        config_value = eval(f"Config.{config_name}")
+        config_value = Config
+        for name in config_name.split("."):
+            config_value = getattr(config_value, name)
 
         def decorator(method: Callable) -> Callable:
             """Decorator to call a method based on the configuration"""

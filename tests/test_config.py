@@ -108,10 +108,10 @@ def test_config_call_if_dont_call():
 
 
 def test_config_call_if_call_compare_with_value():
-    Config.create_config("config", value="value")
+    Config.create_config("config", inner={"value": "value"})
     called = False
 
-    @Config.call_if("config.value", "value")
+    @Config.call_if("config.inner.value", "value")
     def call():
         nonlocal called
         called = True
