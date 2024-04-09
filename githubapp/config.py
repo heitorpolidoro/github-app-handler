@@ -6,7 +6,7 @@ and provides access to those values via the ConfigValue class.
 """
 
 from functools import wraps
-from typing import NoReturn, Union, TypeVar, Callable, Any
+from typing import Any, Callable, NoReturn, TypeVar, Union
 
 import yaml
 from github import UnknownObjectException
@@ -87,11 +87,11 @@ class ConfigValue:
         config_value = eval(f"Config.{config_name}")
 
         def decorator(method: Callable) -> Callable:
-            """ Decorator to call a method based on the configuration"""
+            """Decorator to call a method based on the configuration"""
+
             @wraps(method)
             def wrapper(*args, **kwargs) -> Any:
-                """ Call the method based on the configuration
-                """
+                """Call the method based on the configuration"""
                 if value == NotSet and config_value or config_value == value:
                     return method(*args, **kwargs)
                 return None
