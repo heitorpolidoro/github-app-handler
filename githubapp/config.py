@@ -4,14 +4,15 @@ Config module
 This module handles loading configuration values from a YAML file
 and provides access to those values via the ConfigValue class.
 """
-
-from typing import NoReturn, Union
+from functools import wraps
+from typing import NoReturn, Union, TypeVar
 
 import yaml
 from github import UnknownObjectException
 from github.Repository import Repository
 
 AnyBasic = Union[int, float, bool, str, list, dict, tuple]
+ConfigValueType = TypeVar("ConfigValueType", bound="ConfigValue")
 
 
 class ConfigError(AttributeError):
@@ -39,7 +40,7 @@ class ConfigValue:
             else:
                 setattr(self, attr, value)
 
-    def create_config(self, name: str, *, default: AnyBasic = None, **values: AnyBasic) -> NoReturn:
+    def create_config(self, name: str, *, default: AnyBasic = None, **values: AnyBasic) -> ConfigValueType:
         """
         Create a configuration value and nested values.
 
@@ -54,9 +55,11 @@ class ConfigValue:
         if default is not None and values:
             raise ConfigError("You cannot set the default value AND default values for sub values")
         default = default or ConfigValue()
-        self.set_values({name: default})
         if values:
             default.set_values(values)
+        self.set_values({name: default})
+
+        return self
 
     def load_config_from_file(self, filename: str, repository: Repository) -> NoReturn:
         """Load the config from a file"""
@@ -70,6 +73,29 @@ class ConfigValue:
 
     def __getattr__(self, item: str) -> AnyBasic:
         raise ConfigError(f"No such config value: {item}. And there is no default value for it")
+
+    def get(self, config_name: str, default: AnyBasic = "__NO_DEFAULT__"):
+        value = self
+        for name in config_name.split("."):
+            if default == "__NO_DEFAULT__":
+                value = getattr(value, name)
+            else:
+                value = getattr(value, name, default)
+        return value
+
+    @staticmethod
+    def call_if(config_name: str, value: AnyBasic = None):
+        config_value = Config.get(config_name)
+
+        def decorator(method):
+            @wraps(method)
+            def wrapper(*args, **kwargs):
+                if value is not None and config_value == value or value is None and config_value:
+                    return method(*args, **kwargs)
+
+            return wrapper
+
+        return decorator
 
 
 Config = ConfigValue()
