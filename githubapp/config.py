@@ -94,6 +94,7 @@ class ConfigValue:
                 """
                 if value == NotSet and config_value or config_value == value:
                     return method(*args, **kwargs)
+                return None
 
             return wrapper
 
