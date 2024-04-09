@@ -4,8 +4,9 @@ Config module
 This module handles loading configuration values from a YAML file
 and provides access to those values via the ConfigValue class.
 """
+
 from functools import wraps
-from typing import NoReturn, Union, TypeVar
+from typing import NoReturn, TypeVar, Union
 
 import yaml
 from github import UnknownObjectException
