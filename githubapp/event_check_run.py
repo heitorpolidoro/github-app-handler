@@ -5,6 +5,24 @@ from github.Repository import Repository
 
 
 class EventCheckRun:
+    """
+    EventCheckRun
+
+    This class represents a check run for a GitHub repository commit. It allows starting, updating
+    and completing a check run.
+
+    Attributes:
+      - repository: The GitHub Repository object
+      - name: The name of the check run
+      - sha: The commit SHA being checked
+      - check_run: The GitHub CheckRun object, populated after starting the run
+
+    Methods:
+      - start: Starts a new check run
+      - update: Updates an in-progress check run
+      - complete: Completes a check run with a conclusion
+    """
+
     def __init__(self, repository: Repository, name: str, sha: str):
         self.repository = repository
         self.name = name
