@@ -1,9 +1,10 @@
 import re
 from typing import Any, Optional, TypeVar
 
-from github.CheckRun import CheckRun
 from github.NamedUser import NamedUser
 from github.Repository import Repository
+
+from githubapp import EventCheckRun
 
 T = TypeVar("T")
 
@@ -43,7 +44,7 @@ class Event:
         self.requester = requester
         self.repository = self._parse_object(Repository, repository)
         self.sender = self._parse_object(NamedUser, sender)
-        self.check_run: Optional[CheckRun] = None
+        self.check_runs: list[EventCheckRun] = []
 
     @staticmethod
     def normalize_dicts(*dicts) -> dict[str, str]:
@@ -122,37 +123,13 @@ class Event:
         self,
         name: str,
         sha: str,
-        title: str,
+        title: Optional[str] = None,
         summary: Optional[str] = None,
         text: Optional[str] = None,
         status: str = "in_progress",
     ):
         """Start a check run"""
-        output = {"title": title or name, "summary": summary or ""}
-        if text:
-            output["text"] = text
+        event_check_run = EventCheckRun(self.repository, name, sha)
+        event_check_run.start(title=title, summary=summary, text=text, status=status)
+        self.check_runs.append(event_check_run)
 
-        self.check_run = self.repository.create_check_run(
-            name,
-            sha,
-            status=status,
-            output=output,
-        )
-
-    def update_check_run(self, status=None, conclusion=None, **output):
-        """Updates the check run"""
-        args = {}
-        if status is not None:
-            args["status"] = status
-
-        if conclusion is not None:
-            args["conclusion"] = conclusion
-            args["status"] = "completed"
-
-        if output:
-            output["title"] = output.get("title", self.check_run.output.title)
-            output["summary"] = output.get("summary", self.check_run.output.summary)
-            args["output"] = output
-
-        if args:
-            self.check_run.edit(**args)

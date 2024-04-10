@@ -90,20 +90,22 @@ name: 1.0<br>pygithub: 2.0"""
 def test_when_exception_and_has_check_run(event, event_action_request, mock_auth):
     def method(inner_event):
         inner_event.repository = event.repository
-        inner_event.start_check_run("name", "sha", "title")
-        event.check_run = inner_event.check_run
+        inner_event.start_check_run("name", "sha", title="title")
+        event.check_runs = inner_event.check_runs
         raise ExceptionTest("test")
 
     webhook_handler.register_method_for_event(EventTest, method)
     with pytest.raises(ExceptionTest):
         handle(*event_action_request)
 
-    event.check_run.edit.assert_called_with(
+    assert len(event.check_runs) == 1
+    check_run = event.check_runs[0].check_run
+    check_run.edit.assert_called_with(
         conclusion="failure",
         status="completed",
         output={"title": ANY, "summary": ANY, "text": ANY},
     )
-    output_text = event.check_run.edit.call_args_list[0].kwargs["output"]["text"]
+    output_text = check_run.edit.call_args_list[0].kwargs["output"]["text"]
     assert output_text.startswith("Traceback (most recent call last):")
     assert output_text.endswith("ExceptionTest: test\n")
 
@@ -111,11 +113,11 @@ def test_when_exception_and_has_check_run(event, event_action_request, mock_auth
 def test_when_exception_and_dont_has_check_run(event, event_action_request, mock_auth):
     def method(inner_event):
         inner_event.repository = event.repository
-        event.check_run = inner_event.check_run
+        event.check_runs = inner_event.check_runs
         raise ExceptionTest("test")
 
     webhook_handler.register_method_for_event(EventTest, method)
     with pytest.raises(ExceptionTest):
         handle(*event_action_request)
 
-    assert event.check_run is None
+    assert event.check_runs == []
