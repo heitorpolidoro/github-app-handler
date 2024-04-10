@@ -132,4 +132,3 @@ class Event:
         event_check_run = EventCheckRun(self.repository, name, sha)
         event_check_run.start(title=title, summary=summary, text=text, status=status)
         self.check_runs.append(event_check_run)
-
