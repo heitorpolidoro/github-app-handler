@@ -138,7 +138,8 @@ def handle(headers: dict[str, Any], body: dict[str, Any], config_file: str = Non
             handler(event)
     except Exception:
         for cr in event.check_runs:
-            cr.update(conclusion="failure", text=traceback.format_exc())
+            if cr.check_run.status != "completed":
+                cr.update(conclusion="failure", text=traceback.format_exc())
         raise
 
 
