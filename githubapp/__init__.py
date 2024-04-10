@@ -6,7 +6,8 @@ the necessary components and configurations. Any global settings for the package
 """
 
 from githubapp.config import Config
+from githubapp.event_check_run import EventCheckRun
 
-__version__ = "0.26.0"
+__version__ = "0.27.0"
 
-__all__ = ["Config"]
+__all__ = ["Config", "EventCheckRun"]

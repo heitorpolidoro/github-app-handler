@@ -137,8 +137,8 @@ def handle(headers: dict[str, Any], body: dict[str, Any], config_file: str = Non
         for handler in handlers.get(event_class, []):
             handler(event)
     except Exception:
-        if event.check_run:
-            event.update_check_run(conclusion="failure", text=traceback.format_exc())
+        for cr in event.check_runs:
+            cr.update(conclusion="failure", text=traceback.format_exc())
         raise
 
 
