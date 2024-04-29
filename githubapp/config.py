@@ -91,8 +91,9 @@ class ConfigValue:
         :param value: Tha value to compare to the config, default: bool value for the config value
         :param return_on_not_call: Default value to return when the method is not called, default: None
         """
+
         def hide_sensitive_info(info):
-            return re.sub( r"gh._[a-zA-Z0-9]{40}", "github-token", info)
+            return re.sub(r"gh._[a-zA-Z0-9]{40}", "github-token", info)
 
         def decorator(method: Callable) -> Callable:
             """Decorator to call a method based on the configuration"""
