@@ -68,7 +68,7 @@ def test_no_config_value():
     with pytest.raises(ConfigError) as err:
         # noinspection PyStatementEffect
         Config.config1
-    assert str(err.value) == "No such config value: config1. And there is no default value for it"
+    assert str(err.value) == "No such config value for config1. And there is no default value for it"
 
 
 def test_validate_default_or_values():

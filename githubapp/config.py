@@ -77,7 +77,7 @@ class ConfigValue:
     def __getattr__(self, item: str):
         if item.isupper():
             return os.getenv(item)
-        raise ConfigError(f"No such config or env value for {item}. And there is no default value for it")
+        raise ConfigError(f"No such config value for {item}. And there is no default value for it")
 
     @staticmethod
     def call_if(
