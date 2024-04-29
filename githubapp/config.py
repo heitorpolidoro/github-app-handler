@@ -100,7 +100,8 @@ class ConfigValue:
                 config_value = Config
                 for name in config_name.split("."):
                     config_value = getattr(config_value, name)
-                if value == NotSet and config_value or config_value == value:
+                print(f"{config_name=} {config_value=} {value=}")
+                if (value == NotSet and config_value) or config_value == value:
                     return method(*args, **kwargs)
                 return return_on_not_call
 
