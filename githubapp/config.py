@@ -6,6 +6,7 @@ and provides access to those values via the ConfigValue class.
 """
 
 import os
+import re
 from functools import wraps
 from typing import Any, Callable, NoReturn, TypeVar, Union
 
@@ -90,6 +91,8 @@ class ConfigValue:
         :param value: Tha value to compare to the config, default: bool value for the config value
         :param return_on_not_call: Default value to return when the method is not called, default: None
         """
+        def hide_sensitive_info(info):
+            return re.sub( r"gh._[a-zA-Z0-9]{40}", "github-token", info)
 
         def decorator(method: Callable) -> Callable:
             """Decorator to call a method based on the configuration"""
@@ -100,7 +103,7 @@ class ConfigValue:
                 config_value = Config
                 for name in config_name.split("."):
                     config_value = getattr(config_value, name)
-                print(f"{config_name=} {config_value=} {value=}")
+                print(f"{config_name=} {hide_sensitive_info(config_value)=} {value=}")
                 if (value == NotSet and config_value) or config_value == value:
                     return method(*args, **kwargs)
                 return return_on_not_call
