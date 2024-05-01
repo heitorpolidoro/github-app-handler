@@ -24,7 +24,9 @@ def requester():
 
 @pytest.fixture
 def mock_auth():
-    with patch("githubapp.webhook_handler._get_auth", return_value=Mock(autospec=Auth)) as mock:
+    with patch(
+        "githubapp.webhook_handler._get_auth", return_value=Mock(autospec=Auth)
+    ) as mock:
         yield mock
 
 

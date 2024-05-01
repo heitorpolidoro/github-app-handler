@@ -61,7 +61,9 @@ def client():
 def test_handle_with_flask(app):
     handle_with_flask(app)
     assert app.route.call_count == 2
-    app.route.assert_has_calls([call("/", methods=["GET"]), call("/", methods=["POST"])], any_order=True)
+    app.route.assert_has_calls(
+        [call("/", methods=["GET"]), call("/", methods=["POST"])], any_order=True
+    )
 
 
 def test_handle_with_flask_validation(app):
