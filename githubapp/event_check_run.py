@@ -1,3 +1,4 @@
+"""Class to represents an Event Check Run, a wrapper to Github CheckRun"""
 from typing import Optional
 
 from github.CheckRun import CheckRun

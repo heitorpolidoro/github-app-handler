@@ -1,3 +1,4 @@
+"""Class to represents the Github Push events"""
 from typing import Optional
 
 from github.GitCommit import GitCommit

@@ -1,3 +1,4 @@
+"""Class to represents the Github Issue Comment events"""
 from github.Issue import Issue
 from github.IssueComment import IssueComment
 

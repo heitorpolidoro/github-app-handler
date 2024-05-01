@@ -36,3 +36,16 @@ relative_files = true
 
 [tool.black]
 line_length = 120
+
+[tool.pylint]
+max-line-length = 120
+disable = [
+    "R0902",
+    "R0913",
+    "W0622",
+    "C0103",
+    "C0415",
+]
+
+[tool.mypy]
+exclude = "tests/*"

@@ -1,3 +1,4 @@
+"""Class to represents the Github Pull Request Review events"""
 from github.PullRequest import PullRequest
 from github.PullRequestReview import PullRequestReview
 

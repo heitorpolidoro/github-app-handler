@@ -1,3 +1,4 @@
+"""Class to represents the Github Release events"""
 from github.GitRelease import GitRelease
 
 from githubapp.events.event import Event

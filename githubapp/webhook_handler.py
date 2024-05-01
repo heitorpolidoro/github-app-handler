@@ -1,3 +1,4 @@
+"""Module to helps handle the Github webhooks events"""
 import inspect
 import os
 import traceback

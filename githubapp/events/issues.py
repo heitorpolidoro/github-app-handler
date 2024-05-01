@@ -1,3 +1,4 @@
+"""Class to represents the Github Issues events"""
 from github.Issue import Issue
 from github.Repository import Repository
 

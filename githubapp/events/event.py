@@ -1,3 +1,4 @@
+"""Parent class to represents the Github events"""
 import re
 from typing import Any, Optional, TypeVar
 
