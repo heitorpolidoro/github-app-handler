@@ -10,7 +10,7 @@ from functools import wraps
 from typing import Any, Callable, NoReturn, TypeVar, Union
 
 import yaml
-from github import UnknownObjectException, GithubException
+from github import GithubException, UnknownObjectException
 from github.GithubObject import NotSet
 from github.Repository import Repository
 
