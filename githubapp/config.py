@@ -6,12 +6,11 @@ and provides access to those values via the ConfigValue class.
 """
 
 import os
-import re
 from functools import wraps
 from typing import Any, Callable, NoReturn, TypeVar, Union
 
 import yaml
-from github import UnknownObjectException
+from github import UnknownObjectException, GithubException
 from github.GithubObject import NotSet
 from github.Repository import Repository
 
@@ -74,6 +73,9 @@ class ConfigValue:
             self.set_values(raw_data)
         except UnknownObjectException:
             pass
+        except GithubException as ghe:
+            if ghe.message == "This repository is empty.":
+                return
 
     def __getattr__(self, item: str):
         if item.isupper():
