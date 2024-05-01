@@ -22,7 +22,7 @@ from .issue_comment import (
     IssueCommentEditedEvent,
     IssueCommentEvent,
 )
-from .issues import IssueEditedEvent, IssueOpenedEvent, IssuesEvent, IssueClosedEvent
+from .issues import IssueClosedEvent, IssueEditedEvent, IssueOpenedEvent, IssuesEvent
 from .pull_request_review import (
     PullRequestReviewDismissedEvent,
     PullRequestReviewEditedEvent,
