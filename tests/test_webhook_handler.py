@@ -37,16 +37,22 @@ def test_get_auth_app_user_auth(monkeypatch):
     monkeypatch.setenv("CLIENT_ID", "client_id")
     monkeypatch.setenv("CLIENT_SECRET", "client_secret")
     monkeypatch.setenv("TOKEN", "token")
-    with patch("githubapp.webhook_handler.AppUserAuth", autospec=AppUserAuth) as appuserauth:
+    with patch(
+        "githubapp.webhook_handler.AppUserAuth", autospec=AppUserAuth
+    ) as appuserauth:
         assert isinstance(_get_auth(), AppUserAuth)
-        appuserauth.assert_called_once_with(client_id="client_id", client_secret="client_secret", token="token")
+        appuserauth.assert_called_once_with(
+            client_id="client_id", client_secret="client_secret", token="token"
+        )
 
 
 def test_get_auth_app_auth_when_private_key_in_env(monkeypatch):
     monkeypatch.setenv("PRIVATE_KEY", "private_key")
 
     get_access_token = Mock(return_value=Mock(token="token"))
-    githubintegration = Mock(autospec=GithubIntegration, get_access_token=get_access_token)
+    githubintegration = Mock(
+        autospec=GithubIntegration, get_access_token=get_access_token
+    )
     with (
         patch("githubapp.webhook_handler.AppAuth") as appauth,
         patch(
@@ -115,7 +121,9 @@ def test_when_exception_and_has_check_run(event, event_action_request, mock_auth
     assert output_text.endswith("ExceptionTest: test\n")
 
 
-def test_when_exception_and_has_completed_check_run(event, event_action_request, mock_auth):
+def test_when_exception_and_has_completed_check_run(
+    event, event_action_request, mock_auth
+):
     def method(inner_event):
         inner_event.repository = event.repository
         inner_event.start_check_run("name", "sha", title="title")

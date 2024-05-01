@@ -63,7 +63,9 @@ def test_parse_object():
     self = Mock(requester="requester")
     EventTest._parse_object(self, mocked_class, {"a": 1})
     self.fix_attributes.assert_called_with({"a": 1})
-    mocked_class.assert_called_with(requester="requester", headers={}, attributes={"a": 1}, completed=False)
+    mocked_class.assert_called_with(
+        requester="requester", headers={}, attributes={"a": 1}, completed=False
+    )
 
 
 # noinspection PyTypeChecker
