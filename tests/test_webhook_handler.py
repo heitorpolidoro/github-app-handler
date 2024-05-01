@@ -37,16 +37,22 @@ def test_get_auth_app_user_auth(monkeypatch):
     monkeypatch.setenv("CLIENT_ID", "client_id")
     monkeypatch.setenv("CLIENT_SECRET", "client_secret")
     monkeypatch.setenv("TOKEN", "token")
-    with patch("githubapp.webhook_handler.AppUserAuth", autospec=AppUserAuth) as appuserauth:
+    with patch(
+        "githubapp.webhook_handler.AppUserAuth", autospec=AppUserAuth
+    ) as appuserauth:
         assert isinstance(_get_auth(), AppUserAuth)
-        appuserauth.assert_called_once_with(client_id="client_id", client_secret="client_secret", token="token")
+        appuserauth.assert_called_once_with(
+            client_id="client_id", client_secret="client_secret", token="token"
+        )
 
 
 def test_get_auth_app_auth_when_private_key_in_env(monkeypatch):
     monkeypatch.setenv("PRIVATE_KEY", "private_key")
 
     get_access_token = Mock(return_value=Mock(token="token"))
-    githubintegration = Mock(autospec=GithubIntegration, get_access_token=get_access_token)
+    githubintegration = Mock(
+        autospec=GithubIntegration, get_access_token=get_access_token
+    )
     with (
         patch("githubapp.webhook_handler.AppAuth") as appauth,
         patch(
@@ -91,6 +97,36 @@ def test_when_exception_and_has_check_run(event, event_action_request, mock_auth
     def method(inner_event):
         inner_event.repository = event.repository
         inner_event.start_check_run("name", "sha", title="title")
+        inner_event.start_check_run("other", "sha2", title="title")
+        event.check_runs = inner_event.check_runs
+        raise ExceptionTest("test")
+
+    event.repository.create_check_run.side_effect = [
+        Mock(status="pending"),
+        Mock(status="completed"),
+    ]
+    webhook_handler.register_method_for_event(EventTest, method)
+    with pytest.raises(ExceptionTest):
+        handle(*event_action_request)
+
+    assert len(event.check_runs) == 2
+    check_run = event.check_runs[0].check_run
+    check_run.edit.assert_called_with(
+        conclusion="failure",
+        status="completed",
+        output={"title": ANY, "summary": ANY, "text": ANY},
+    )
+    output_text = check_run.edit.call_args_list[0].kwargs["output"]["text"]
+    assert output_text.startswith("Traceback (most recent call last):")
+    assert output_text.endswith("ExceptionTest: test\n")
+
+
+def test_when_exception_and_has_completed_check_run(
+    event, event_action_request, mock_auth
+):
+    def method(inner_event):
+        inner_event.repository = event.repository
+        inner_event.start_check_run("name", "sha", title="title")
         event.check_runs = inner_event.check_runs
         raise ExceptionTest("test")
 
@@ -100,6 +136,7 @@ def test_when_exception_and_has_check_run(event, event_action_request, mock_auth
 
     assert len(event.check_runs) == 1
     check_run = event.check_runs[0].check_run
+    check_run.status = "not completed"
     check_run.edit.assert_called_with(
         conclusion="failure",
         status="completed",
