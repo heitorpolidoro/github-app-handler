@@ -6,8 +6,9 @@ and provides access to those values via the ConfigValue class.
 """
 
 import os
+from collections.abc import Callable
 from functools import wraps
-from typing import Any, Callable, NoReturn, TypeVar, Union
+from typing import Any, NoReturn, TypeVar, Union
 
 import yaml
 from github import GithubException, UnknownObjectException
@@ -74,10 +75,10 @@ class ConfigValue:
         except UnknownObjectException:
             pass
         except GithubException as ghe:
-            if ghe.message == "This repository is empty.":
-                return
+            if ghe.data.get("message") != "This repository is empty.":
+                raise
 
-    def __getattr__(self, item: str):
+    def __getattr__(self, item: str) -> Any:
         if item.isupper():
             return os.getenv(item)
         raise ConfigError(f"No such config value for {item}. And there is no default value for it")
