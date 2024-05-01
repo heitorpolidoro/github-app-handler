@@ -14,6 +14,7 @@ name = "python"
   runtime_version = "3.x.x"
   max_line_length = 120
   type_checker = "mypy"
+  exclude_patterns = ["payload_helper.py"]
 
 [[transformers]]
 name = "black"
