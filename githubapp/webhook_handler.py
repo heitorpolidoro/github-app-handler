@@ -58,7 +58,9 @@ def add_handler(event: type[Event]) -> Callable[[Callable[[Event], None]], Calla
     return decorator
 
 
-def register_method_for_event(event: type[Event], handler: Callable[[Event], None]) -> None:
+def register_method_for_event(
+    event: type[Event], handler: Callable[[Event], None]
+) -> None:
     """Add a handler for a specific event type.
 
     The handler must accept only one argument of the Event type.
@@ -75,7 +77,9 @@ def register_method_for_event(event: type[Event], handler: Callable[[Event], Non
         handlers[event].append(handler)
 
 
-def _get_auth(hook_installation_target_id: int = None, installation_id: int = None) -> Auth:
+def _get_auth(
+    hook_installation_target_id: int = None, installation_id: int = None
+) -> Auth:
     """This method is used to get the authentication object for the GitHub API.
     It checks if the environment variables CLIENT_ID, CLIENT_SECRET, and TOKEN are set.
     If they are set, it uses the AppUserAuth object with the CLIENT_ID, CLIENT_SECRET, and TOKEN.
@@ -102,7 +106,9 @@ def _get_auth(hook_installation_target_id: int = None, installation_id: int = No
     return Token(token)
 
 
-def handle(headers: dict[str, Any], body: dict[str, Any], config_file: str = None) -> None:
+def handle(
+    headers: dict[str, Any], body: dict[str, Any], config_file: str = None
+) -> None:
     """Handle a webhook request.
 
     The request headers and body are passed to the appropriate handler methods.
@@ -143,7 +149,9 @@ def handle(headers: dict[str, Any], body: dict[str, Any], config_file: str = Non
         raise
 
 
-def default_index(name: str, version: str = None, versions_to_show: Optional[list] = None) -> Callable[[], str]:
+def default_index(
+    name: str, version: str = None, versions_to_show: Optional[list] = None
+) -> Callable[[], str]:
     """Decorator to register a default root handler.
 
     Args:
@@ -166,7 +174,14 @@ def default_index(name: str, version: str = None, versions_to_show: Optional[lis
         """
         resp = f"<h1>{name} App up and running!</h1>"
         if versions_to_show_:
-            resp = resp + "\n" + "<br>".join(f"{name_}: {version_}" for name_, version_ in versions_to_show_.items())
+            resp = (
+                resp
+                + "\n"
+                + "<br>".join(
+                    f"{name_}: {version_}"
+                    for name_, version_ in versions_to_show_.items()
+                )
+            )
         return resp
 
     return wraps(root_wrapper)(root_wrapper)
@@ -223,7 +238,9 @@ def handle_with_flask(
         raise TypeError("app must be a Flask instance")
 
     if use_default_index:
-        app.route("/", methods=["GET"])(default_index(app.name, version=version, versions_to_show=versions_to_show))
+        app.route("/", methods=["GET"])(
+            default_index(app.name, version=version, versions_to_show=versions_to_show)
+        )
 
     @app.route(webhook_endpoint, methods=["POST"])
     def webhook() -> str:
@@ -254,7 +271,9 @@ def handle_with_flask(
             installation_id = int(args.get("installation_id"))
             access_token = (
                 Github()
-                .get_oauth_application(os.getenv("CLIENT_ID"), os.getenv("CLIENT_SECRET"))
+                .get_oauth_application(
+                    os.getenv("CLIENT_ID"), os.getenv("CLIENT_SECRET")
+                )
                 .get_access_token(code)
             )
 
