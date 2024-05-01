@@ -1,7 +1,7 @@
 from unittest.mock import Mock
 
 import pytest
-from github import UnknownObjectException
+from github import UnknownObjectException, GithubException
 
 from githubapp import Config
 from githubapp.config import ConfigError
@@ -58,6 +58,22 @@ def test_config_on_file_not_found():
     Config.create_config("config1", default="default1")
 
     assert Config.config1 == "default1"
+
+
+def test_config_on_empty_repository():
+    repository = Mock()
+    repository.get_contents.side_effect = GithubException(404, data={"message": "This repository is empty."})
+    Config.load_config_from_file("file", repository)
+    Config.create_config("config1", default="default1")
+
+    assert Config.config1 == "default1"
+
+
+def test_config_on_other_github_error():
+    repository = Mock()
+    repository.get_contents.side_effect = GithubException(404, data={"message": "Other error"})
+    with pytest.raises(GithubException):
+        Config.load_config_from_file("file", repository)
 
 
 def test_no_config_value():

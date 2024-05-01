@@ -91,14 +91,19 @@ def test_when_exception_and_has_check_run(event, event_action_request, mock_auth
     def method(inner_event):
         inner_event.repository = event.repository
         inner_event.start_check_run("name", "sha", title="title")
+        inner_event.start_check_run("other", "sha2", title="title")
         event.check_runs = inner_event.check_runs
         raise ExceptionTest("test")
 
+    event.repository.create_check_run.side_effect = [
+        Mock(status="pending"),
+        Mock(status="completed"),
+    ]
     webhook_handler.register_method_for_event(EventTest, method)
     with pytest.raises(ExceptionTest):
         handle(*event_action_request)
 
-    assert len(event.check_runs) == 1
+    assert len(event.check_runs) == 2
     check_run = event.check_runs[0].check_run
     check_run.edit.assert_called_with(
         conclusion="failure",
