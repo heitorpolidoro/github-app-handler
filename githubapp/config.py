@@ -6,12 +6,12 @@ and provides access to those values via the ConfigValue class.
 """
 
 import os
-import re
+from collections.abc import Callable
 from functools import wraps
-from typing import Any, Callable, NoReturn, TypeVar, Union
+from typing import Any, NoReturn, TypeVar, Union
 
 import yaml
-from github import UnknownObjectException
+from github import GithubException, UnknownObjectException
 from github.GithubObject import NotSet
 from github.Repository import Repository
 
@@ -44,7 +44,9 @@ class ConfigValue:
             else:
                 setattr(self, attr, value)
 
-    def create_config(self, name: str, *, default: AnyBasic = None, **values: AnyBasic) -> ConfigValueType:
+    def create_config(
+        self, name: str, *, default: AnyBasic = None, **values: AnyBasic
+    ) -> ConfigValueType:
         """
         Create a configuration value and nested values.
 
@@ -57,7 +59,9 @@ class ConfigValue:
             ConfigValue: The created configuration value
         """
         if default is not None and values:
-            raise ConfigError("You cannot set the default value AND default values for sub values")
+            raise ConfigError(
+                "You cannot set the default value AND default values for sub values"
+            )
         default = default or ConfigValue()
         if values:
             default.set_values(values)
@@ -69,16 +73,26 @@ class ConfigValue:
         """Load the config from a file"""
         try:
             raw_data = (
-                yaml.safe_load(repository.get_contents(filename, ref=repository.default_branch).decoded_content) or {}
+                yaml.safe_load(
+                    repository.get_contents(
+                        filename, ref=repository.default_branch
+                    ).decoded_content
+                )
+                or {}
             )
             self.set_values(raw_data)
         except UnknownObjectException:
             pass
+        except GithubException as ghe:
+            if ghe.data.get("message") != "This repository is empty.":
+                raise
 
-    def __getattr__(self, item: str):
+    def __getattr__(self, item: str) -> Any:
         if item.isupper():
             return os.getenv(item)
-        raise ConfigError(f"No such config value for {item}. And there is no default value for it")
+        raise ConfigError(
+            f"No such config value for {item}. And there is no default value for it"
+        )
 
     @staticmethod
     def call_if(
