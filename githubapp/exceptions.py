@@ -1,0 +1,2 @@
+class GithubAppRuntimeException(Exception):
+    pass

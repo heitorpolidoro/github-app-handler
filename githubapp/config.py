@@ -31,10 +31,10 @@ class ConfigError(AttributeError):
 class ConfigValue:
     """The configuration loaded from the config file"""
 
-    def __init__(self, value: AnyBasic = None) -> NoReturn:
+    def __init__(self, value: AnyBasic = None) -> None:
         self._value = value
 
-    def set_values(self, data: dict[str, AnyBasic]) -> NoReturn:
+    def set_values(self, data: dict[str, AnyBasic]) -> None:
         """Set the attributes from a data dict"""
         for attr, value in data.items():
             if isinstance(value, dict):
@@ -44,9 +44,7 @@ class ConfigValue:
             else:
                 setattr(self, attr, value)
 
-    def create_config(
-        self, name: str, *, default: AnyBasic = None, **values: AnyBasic
-    ) -> ConfigValueType:
+    def create_config(self, name: str, *, default: AnyBasic = None, **values: AnyBasic) -> ConfigValueType:
         """
         Create a configuration value and nested values.
 
@@ -59,9 +57,7 @@ class ConfigValue:
             ConfigValue: The created configuration value
         """
         if default is not None and values:
-            raise ConfigError(
-                "You cannot set the default value AND default values for sub values"
-            )
+            raise ConfigError("You cannot set the default value AND default values for sub values")
         default = default or ConfigValue()
         if values:
             default.set_values(values)
@@ -69,16 +65,11 @@ class ConfigValue:
 
         return self
 
-    def load_config_from_file(self, filename: str, repository: Repository) -> NoReturn:
+    def load_config_from_file(self, filename: str, repository: Repository) -> None:
         """Load the config from a file"""
         try:
             raw_data = (
-                yaml.safe_load(
-                    repository.get_contents(
-                        filename, ref=repository.default_branch
-                    ).decoded_content
-                )
-                or {}
+                yaml.safe_load(repository.get_contents(filename, ref=repository.default_branch).decoded_content) or {}
             )
             self.set_values(raw_data)
         except UnknownObjectException:
@@ -90,9 +81,7 @@ class ConfigValue:
     def __getattr__(self, item: str) -> Any:
         if item.isupper():
             return os.getenv(item)
-        raise ConfigError(
-            f"No such config value for {item}. And there is no default value for it"
-        )
+        raise ConfigError(f"No such config value for {item}. And there is no default value for it")
 
     @staticmethod
     def call_if(
