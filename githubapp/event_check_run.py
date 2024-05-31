@@ -1,7 +1,7 @@
 """Class to represents an Event Check Run, a wrapper to Github CheckRun"""
 
 from enum import Enum
-from typing import Optional, Any
+from typing import Any, Optional
 
 from github.CheckRun import CheckRun
 from github.Repository import Repository
@@ -204,7 +204,9 @@ class EventCheckRun:
         output = clean_dict(output) or None
         args = {
             "status": status.value if isinstance(status, Enum) else status,
-            "conclusion": conclusion.value if isinstance(conclusion, Enum) else conclusion,
+            "conclusion": conclusion.value
+            if isinstance(conclusion, Enum)
+            else conclusion,
             "output": output,
         }
         if args := clean_dict(args):
@@ -225,8 +227,14 @@ class EventCheckRun:
         conclusions_list_order = {c: i for i, c in enumerate(CheckRunConclusion)}
         for sub_run in self.sub_runs:
             if not sub_run.conclusion:
-                sub_run.update(conclusion=CheckRunConclusion.CANCELLED, update_check_run=False)
-            if conclusion is None or conclusions_list_order[sub_run.conclusion] < conclusions_list_order[conclusion]:
+                sub_run.update(
+                    conclusion=CheckRunConclusion.CANCELLED, update_check_run=False
+                )
+            if (
+                conclusion is None
+                or conclusions_list_order[sub_run.conclusion]
+                < conclusions_list_order[conclusion]
+            ):
                 conclusion = sub_run.conclusion
                 title = None
             if title is None and conclusion == sub_run.conclusion:

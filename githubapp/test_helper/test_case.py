@@ -1,13 +1,13 @@
-""" Class to help apps to create testing emulating webhooks events"""
+"""Class to help apps to create testing emulating webhooks events"""
 
 import inspect
 import json
 import os
 from collections import defaultdict
 from itertools import zip_longest
-from typing import Optional, TypeVar, Any, Callable
+from typing import Any, Callable, Optional, TypeVar
 from unittest import TestCase as UnittestTestCase
-from unittest.mock import patch, Mock, call
+from unittest.mock import Mock, call, patch
 
 from github import GithubException
 from github.CheckRun import CheckRun
@@ -15,7 +15,7 @@ from github.GithubObject import GithubObject
 from github.Repository import Repository
 
 from githubapp import EventCheckRun
-from githubapp.event_check_run import CheckRunStatus, CheckRunConclusion
+from githubapp.event_check_run import CheckRunConclusion, CheckRunStatus
 from githubapp.events.event import Event
 from githubapp.test_helper.spy import spy
 
@@ -62,7 +62,9 @@ class TestCase(UnittestTestCase):
         super().__init__(*args, **kwargs)
         self.client = None
         self.event = None
-        defaults_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "defaults.json")
+        defaults_file = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)), "defaults.json"
+        )
         self.defaults = self.get_info_from_file(defaults_file)
         self._check_runs = defaultdict(dict)
         self._sub_run_call_index = 0
@@ -107,15 +109,21 @@ class TestCase(UnittestTestCase):
     def create_sub_runs(self, check_run_name: str, *sub_run_names: str):
         sub_runs = self._check_runs[check_run_name]
         for sub_run_name in sub_run_names:
-            sub_runs[sub_run_name] = EventCheckRun.SubRun(Mock(spec=EventCheckRun), sub_run_name)
+            sub_runs[sub_run_name] = EventCheckRun.SubRun(
+                Mock(spec=EventCheckRun), sub_run_name
+            )
 
-    def assert_sub_run_call(self, check_run_name: str, sub_run_name: str, **params) -> None:
+    def assert_sub_run_call(
+        self, check_run_name: str, sub_run_name: str, **params
+    ) -> None:
         check_run = self.get_check_run(check_run_name)
         # if check_run_name not in self._sub_runs:
         #     self._sub_runs[check_run_name] = defaultdict(list)
         sub_runs = self._check_runs[check_run_name]
         if sub_run_name not in sub_runs:
-            sub_runs[sub_run_name] = EventCheckRun.SubRun(Mock(spec=EventCheckRun), sub_run_name)
+            sub_runs[sub_run_name] = EventCheckRun.SubRun(
+                Mock(spec=EventCheckRun), sub_run_name
+            )
 
         sub_run = sub_runs[sub_run_name]
         for k, v in params.items():
@@ -163,7 +171,9 @@ class TestCase(UnittestTestCase):
         check_run = self.get_check_run(name)
         start, *updates = calls
         check_run.start.assert_called_once_with(*start.args, **start.kwargs)
-        for actual_call, expected_call in zip_longest(check_run.update.mock_calls, updates):
+        for actual_call, expected_call in zip_longest(
+            check_run.update.mock_calls, updates
+        ):
             assert actual_call == expected_call
 
     def get_check_run(self, name):

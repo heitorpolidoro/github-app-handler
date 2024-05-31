@@ -1,4 +1,4 @@
-""" Module to create a spy"""
+"""Module to create a spy"""
 
 from contextlib import contextmanager
 from typing import Any
