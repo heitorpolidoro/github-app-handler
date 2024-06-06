@@ -36,12 +36,8 @@ class Event:
         Event.delivery = headers["X-Github-Delivery"]
         Event.github_event = headers["X-Github-Event"]
         Event.hook_id = int(headers["X-Github-Hook-Id"])
-        Event.hook_installation_target_id = int(
-            headers["X-Github-Hook-Installation-Target-Id"]
-        )
-        Event.hook_installation_target_type = headers[
-            "X-Github-Hook-Installation-Target-Type"
-        ]
+        Event.hook_installation_target_id = int(headers["X-Github-Hook-Installation-Target-Id"])
+        Event.hook_installation_target_type = headers["X-Github-Hook-Installation-Target-Type"]
         if installation_id := kwargs.get("installation", {}).get("id"):
             installation_id = int(installation_id)
         Event.installation_id = installation_id
@@ -102,10 +98,7 @@ class Event:
         Returns:
             bool: True if the event matches the event_identifier, False otherwise
         """
-        return all(
-            (attr in data and value == data[attr])
-            for attr, value in cls.event_identifier.items()
-        )
+        return all((attr in data and value == data[attr]) for attr, value in cls.event_identifier.items())
 
     @staticmethod
     def fix_attributes(attributes):
