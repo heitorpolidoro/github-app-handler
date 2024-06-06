@@ -5,13 +5,12 @@ import json
 import os
 from collections import defaultdict
 from itertools import zip_longest
-from typing import Any, Callable, Optional, TypeVar
+from typing import Any, Optional, TypeVar
 from unittest import TestCase as UnittestTestCase
 from unittest.mock import Mock, call, patch
 
 from github import GithubException
 from github.CheckRun import CheckRun
-from github.GithubObject import GithubObject
 from github.Repository import Repository
 
 from githubapp import EventCheckRun
@@ -39,7 +38,6 @@ def recursive_update(main_dict: dict[str, Any], updates: dict[str, Any]) -> None
             main_dict[key] = value
 
 
-# TODO change to be possible to mock the configs
 def get_config(*_args, **_kwargs) -> Mock:
     """Mock the reading of the config file"""
     return Mock(decoded_content="")
@@ -62,9 +60,7 @@ class TestCase(UnittestTestCase):
         super().__init__(*args, **kwargs)
         self.client = None
         self.event = None
-        defaults_file = os.path.join(
-            os.path.dirname(os.path.abspath(__file__)), "defaults.json"
-        )
+        defaults_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "defaults.json")
         self.defaults = self.get_info_from_file(defaults_file)
         self._check_runs = defaultdict(dict)
         self._sub_run_call_index = 0
@@ -106,24 +102,17 @@ class TestCase(UnittestTestCase):
 
         return call(title=title, summary=final_summary)
 
-    def create_sub_runs(self, check_run_name: str, *sub_run_names: str):
+    def create_sub_runs(self, check_run_name: str, *sub_run_names: str) -> None:
+        """Create sub runs for a given check run."""
         sub_runs = self._check_runs[check_run_name]
         for sub_run_name in sub_run_names:
-            sub_runs[sub_run_name] = EventCheckRun.SubRun(
-                Mock(spec=EventCheckRun), sub_run_name
-            )
+            sub_runs[sub_run_name] = EventCheckRun.SubRun(Mock(spec=EventCheckRun), sub_run_name)
 
-    def assert_sub_run_call(
-        self, check_run_name: str, sub_run_name: str, **params
-    ) -> None:
+    def assert_sub_run_call(self, check_run_name: str, sub_run_name: str, **params) -> None:
         check_run = self.get_check_run(check_run_name)
-        # if check_run_name not in self._sub_runs:
-        #     self._sub_runs[check_run_name] = defaultdict(list)
         sub_runs = self._check_runs[check_run_name]
         if sub_run_name not in sub_runs:
-            sub_runs[sub_run_name] = EventCheckRun.SubRun(
-                Mock(spec=EventCheckRun), sub_run_name
-            )
+            sub_runs[sub_run_name] = EventCheckRun.SubRun(Mock(spec=EventCheckRun), sub_run_name)
 
         sub_run = sub_runs[sub_run_name]
         for k, v in params.items():
@@ -151,7 +140,8 @@ class TestCase(UnittestTestCase):
             not check_runs or not check_run
         ), f"There is a Check Run with the name {name}. {[cr.name for cr in check_runs]}"
 
-    def assert_check_run_start(self, name: str, **kwargs):
+    def assert_check_run_start(self, name: str, **kwargs) -> None:
+        """Asserts that a check run with the given name has been started."""
         check_run = self.get_check_run(name)
         kwargs.setdefault("summary", None)
         kwargs.setdefault("text", None)
@@ -168,15 +158,30 @@ class TestCase(UnittestTestCase):
         :raise AssertionError: If there are no check runs, or if there is no check run with the given name,
          or if there are missing calls.
         """
+
+        def set_defaults(call_: call) -> None:
+            """
+            Set default values for the summary and text attributes of the call.
+            """
+            for attr in ["summary", "text"]:
+                call_.kwargs.setdefault(attr, None)
+
         check_run = self.get_check_run(name)
         start, *updates = calls
+        set_defaults(start)
         check_run.start.assert_called_once_with(*start.args, **start.kwargs)
-        for actual_call, expected_call in zip_longest(
-            check_run.update.mock_calls, updates
-        ):
+        mock_calls = check_run.update.mock_calls
+        for actual_call, expected_call in zip_longest(mock_calls, updates):
+            assert expected_call is not None, "Missing call(s): " + "\n".join(
+                str(c) for c in mock_calls[len(updates) :]
+            )
+            assert actual_call is not None, "Unexpected call(s): " + "\n".join(
+                str(c) for c in updates[len(mock_calls) :]
+            )
             assert actual_call == expected_call
 
-    def get_check_run(self, name):
+    def get_check_run(self, name: str) -> EventCheckRun:
+        """Get a Check Run by its name."""
         check_runs = self.event.check_runs
         assert check_runs, "There is no Check Runs"
         check_run = next(iter(filter(lambda cr: cr.name == name, check_runs)), None)
@@ -190,8 +195,17 @@ class TestCase(UnittestTestCase):
         summary: str = None,
         status: CheckRunStatus = None,
         conclusion: CheckRunConclusion = None,
-    ):
-        # Todo move to another method, replace in method above
+    ) -> None:
+        """
+        Asserts that the final state of a check run matches the given parameters.
+
+        :param name: The name of the check run to check.
+        :param title: (optional) The expected title of the check run output.
+        :param summary: (optional) The expected summary of the check run output.
+        :param status: (optional) The expected status of the check run.
+        :param conclusion: (optional) The expected conclusion of the check run.
+        :return: None
+        """
         check_run = self.get_check_run(name)
         github_check_run = check_run._check_run
         if title:
@@ -238,11 +252,12 @@ class TestCase(UnittestTestCase):
         original_event_init = Event.__init__
 
         def event_init_mock(event_instance: Event, *args, **kwargs) -> None:
-            """Justo to retrieve the created Event"""
+            """Just to retrieve the created Event"""
             original_event_init(event_instance, *args, **kwargs)
             self.event = event_instance
 
         def define_event_identifier(event_type_: type[Event]) -> dict[str, str]:
+            """Define the event_identifier for the given event type."""
             event_identifier_ = {}
             if event_type_.event_identifier:
                 event_identifier_ = define_event_identifier(event_type_.__base__)
@@ -252,7 +267,8 @@ class TestCase(UnittestTestCase):
 
         event_identifier = define_event_identifier(event_type)
 
-        def create_check_run(_, name, sha, **attributes):
+        def create_check_run(_, name: str, sha: str, **attributes) -> Mock:
+            """Creates a check run object with the given attributes."""
             attributes["name"] = name
             attributes["sha"] = sha
             attributes["url"] = "url"
