@@ -31,7 +31,7 @@ exclude = ["payloads", "tests"]
 
 [tool.coverage.run]
 source = ["."]
-omit = ["tests/*", "payload_helper.py"]
+omit = ["tests/*", "payload_helper.py", "spy.py", "test_case.py"]
 relative_files = true
 
 [tool.black]

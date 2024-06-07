@@ -5,9 +5,10 @@ import os
 import sys
 import traceback
 from collections import defaultdict
+from collections.abc import Callable
 from functools import wraps
 from importlib.metadata import version as get_version
-from typing import Any, Callable, Optional
+from typing import Any, Optional
 
 from github import Consts, Github, GithubIntegration, GithubRetry
 from github.AccessToken import AccessToken
@@ -149,7 +150,7 @@ def handle(headers: dict[str, Any], body: dict[str, Any], config_file: str = Non
             raise
 
 
-def default_index(name: str, version: str = None, versions_to_show: Optional[list] = None) -> Callable[[], str]:
+def default_index(name: str, version: str = None, versions_to_show: Optional[list[str]] = None) -> Callable[[], str]:
     """Decorator to register a default root handler.
 
     Args:
@@ -196,7 +197,7 @@ def _validate_signature(method: Callable[[Event], None]) -> None:
 
 
 def handle_with_flask(
-    app,
+    app: "Flask",
     use_default_index: bool = True,
     webhook_endpoint: str = "/",
     auth_callback_handler: Optional[Callable[[int, AccessToken], None]] = None,
@@ -223,7 +224,7 @@ def handle_with_flask(
     Raises:
         TypeError: If the app parameter is not a Flask instance.
     """
-    from flask import Flask, jsonify, request
+    from flask import Flask, jsonify, request, Response
 
     if not isinstance(app, Flask):
         raise TypeError("app must be a Flask instance")
@@ -232,7 +233,8 @@ def handle_with_flask(
         app.route("/", methods=["GET"])(default_index(app.name, version=version, versions_to_show=versions_to_show))
 
     @app.errorhandler(Exception)
-    def handle_error(e):
+    def handle_error(e: Exception) -> tuple[Response, int]:
+        """Handles an exception that occurred during the execution of the application."""
         tb_info = traceback.extract_tb(sys.exc_info()[2])
         filename, line, func, _ = tb_info[-1]
         response = {

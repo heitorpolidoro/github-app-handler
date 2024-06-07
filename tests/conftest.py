@@ -3,6 +3,7 @@ from unittest.mock import Mock, patch
 
 import pytest
 from github.Auth import Auth
+from github.Repository import Repository
 
 from githubapp import webhook_handler
 from githubapp.events.event import Event
@@ -87,5 +88,5 @@ def event(event_action_request):
         sender=None,
         repository={},
     )
-    event.repository = Mock()
+    event.repository = Mock(spec=Repository)
     return event

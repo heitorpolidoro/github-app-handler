@@ -46,13 +46,26 @@ ICONS = {}
 
 
 def set_icons() -> None:
+    """
+    Set the CheckRun icon set from SUB_RUNS_ICONS env.
+    :raises AttributeError: If the specified icon set is not found in the default configuration or if
+                            the icon set is not a string or a dictionary.
+    """
     global ICONS
     if icons_set := Config.SUB_RUNS_ICONS:
         if isinstance(icons_set, str):
-            if ICONS := ICONS_DEFAULT.get(icons_set) is None:
+            ICONS = ICONS_DEFAULT.get(icons_set)
+            if ICONS is None:
                 raise AttributeError(
                     f"There is no icon set '{icons_set} in default configuration. {ICONS_DEFAULT.keys()}"
                 )
+        elif isinstance(icons_set, dict):
+            ICONS = icons_set
+        else:
+            raise AttributeError(f"Icons set must be a string or a dictionary. {type(icons_set)}")
+
+
+set_icons()
 
 
 class EventCheckRun:
@@ -75,6 +88,12 @@ class EventCheckRun:
     """
 
     class SubRun:
+        """
+        A "sub" check run.
+
+        If creates a sub check runs, they will be shown as a list in parent check run summary
+        """
+
         def __init__(
             self,
             parent_check_run: "EventCheckRun",
@@ -89,7 +108,7 @@ class EventCheckRun:
             self.conclusion = None
             self.title = ""
 
-        def __repr__(self) -> str:
+        def __repr__(self) -> str:  # pragma: no cover
             _dict = self.__dict__.copy()
             _dict.pop("parent_check_run")
             return f"SubRun({_dict})"
@@ -111,14 +130,14 @@ class EventCheckRun:
             if update_check_run:
                 self.parent_check_run.update_sub_runs(title=self.title)
 
-    def __init__(self, repository: Repository, name: str, sha: str):
+    def __init__(self, repository: Repository, name: str, sha: str) -> None:
         self.repository = repository
         self.name = name
         self.sha = sha
         self._check_run: Optional[CheckRun] = None
         self.sub_runs = []
 
-    def __repr__(self) -> str:
+    def __repr__(self) -> str:  # pragma:no cover
         _dict = self.__dict__.copy()
         _dict.pop("repository")
         _dict.pop("_check_run")
@@ -133,11 +152,10 @@ class EventCheckRun:
                 result = getattr(self._check_run.output, attr)
             else:
                 raise AttributeError(f"'CheckRun' object has no attribute '{attr}'")
-            if result:
-                if attr == "status":
-                    result = CheckRunStatus[result.upper()]
-                elif attr == "conclusion":
-                    result = CheckRunConclusion[result.upper()]
+            if attr == "status":
+                result = CheckRunStatus[result.upper()]
+            elif attr == "conclusion":
+                result = CheckRunConclusion[result.upper()]
             return result
         return None
 
@@ -147,7 +165,7 @@ class EventCheckRun:
         summary: str = None,
         title: str = None,
         text: str = None,
-    ):
+    ) -> None:
         """Start a check run"""
         output = {"title": title or self.name, "summary": summary or ""}
         if text:
@@ -165,7 +183,8 @@ class EventCheckRun:
         self.update(title=title, summary=summary)
 
     @staticmethod
-    def build_summary(sub_runs):
+    def build_summary(sub_runs: list[SubRun]) -> str:
+        """Build the summary of the sub runs"""
         runs_summary = []
         for run in sub_runs:
             if run_status_icon := ICONS.get(run.conclusion or run.status, ""):
@@ -195,8 +214,8 @@ class EventCheckRun:
             status = CheckRunStatus.COMPLETED
         output.update(
             {
-                "title": title,
-                "summary": summary,
+                "title": title or self._check_run.output.title,
+                "summary": summary or self._check_run.output.summary,
                 "text": text,
             }
         )
@@ -220,17 +239,16 @@ class EventCheckRun:
         **output,
     ) -> None:
         """Finish the Check Run"""
-        # TODO
-
         conclusions_list_order = {c: i for i, c in enumerate(CheckRunConclusion)}
+        sub_run_name = None
         for sub_run in self.sub_runs:
             if not sub_run.conclusion:
                 sub_run.update(conclusion=CheckRunConclusion.CANCELLED, update_check_run=False)
             if conclusion is None or conclusions_list_order[sub_run.conclusion] < conclusions_list_order[conclusion]:
                 conclusion = sub_run.conclusion
-                title = None
-            if title is None and conclusion == sub_run.conclusion:
-                title = sub_run.title
+                sub_run_name = None
+            if sub_run_name is None and conclusion == sub_run.conclusion:
+                sub_run_name = sub_run.name
 
         if conclusion is None:
             conclusion = CheckRunConclusion.STALE
@@ -239,12 +257,14 @@ class EventCheckRun:
             title = "Done"
         elif conclusion == CheckRunConclusion.SKIPPED:
             title = "Skipped"
-        elif title is None:
-            title = f"{title}: {conclusion.value}"
+        elif title is None and sub_run_name:
+            title = f"{sub_run_name}: {conclusion.value.title()}"
+        else:
+            title = conclusion.value.title()
 
-        summary = self.build_summary(self.sub_runs) or None
+        summary = self.build_summary(self.sub_runs) or summary
 
-        self.update(conclusion=conclusion, title=title, summary=summary)
+        self.update(conclusion=conclusion, title=title, summary=summary, text=text, status=status, **output)
 
     def create_sub_run(self, name: str) -> SubRun:
         sub_run = self.SubRun(self, name, status=CheckRunStatus.WAITING)
