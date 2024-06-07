@@ -3,7 +3,7 @@ from unittest.mock import Mock, patch
 import pytest
 from github.CheckRun import CheckRun
 
-from githubapp import Config, EventCheckRun, event_check_run
+from githubapp import Config, EventCheckRun
 from githubapp.event_check_run import ICONS_DEFAULT, CheckRunConclusion, CheckRunStatus
 
 
