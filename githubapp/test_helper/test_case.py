@@ -44,9 +44,7 @@ def get_config(*_args, **_kwargs) -> Mock:
 
 
 def edit(self: CheckRun, **attributes) -> None:
-    """
-    Edit the object's attributes using the provided attributes.
-    """
+    """Edit the object's attributes using the provided attributes."""
     attributes.setdefault("output", {})
     for k, v in self.output.raw_data.items():
         attributes["output"].setdefault(k, v)
@@ -160,9 +158,7 @@ class TestCase(UnittestTestCase):
         """
 
         def set_defaults(call_: call) -> None:
-            """
-            Set default values for the summary and text attributes of the call.
-            """
+            """Set default values for the summary and text attributes of the call."""
             for attr in ["summary", "text"]:
                 call_.kwargs.setdefault(attr, None)
 
