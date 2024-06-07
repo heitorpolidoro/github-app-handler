@@ -6,7 +6,7 @@ from typing import Any, Optional
 from github.CheckRun import CheckRun
 from github.Repository import Repository
 
-from githubapp import Config
+from githubapp.config import Config
 
 
 class CheckRunStatus(Enum):
@@ -42,31 +42,6 @@ ICONS_DEFAULT = {
     },
 }
 
-ICONS = {}
-
-
-def set_icons() -> None:
-    """
-    Set the CheckRun icon set from SUB_RUNS_ICONS env.
-    :raises AttributeError: If the specified icon set is not found in the default configuration or if
-                            the icon set is not a string or a dictionary.
-    """
-    global ICONS
-    if icons_set := Config.SUB_RUNS_ICONS:
-        if isinstance(icons_set, str):
-            ICONS = ICONS_DEFAULT.get(icons_set)
-            if ICONS is None:
-                raise AttributeError(
-                    f"There is no icon set '{icons_set} in default configuration. {ICONS_DEFAULT.keys()}"
-                )
-        elif isinstance(icons_set, dict):
-            ICONS = icons_set
-        else:
-            raise AttributeError(f"Icons set must be a string or a dictionary. {type(icons_set)}")
-
-
-set_icons()
-
 
 class EventCheckRun:
     """
@@ -86,6 +61,8 @@ class EventCheckRun:
       - update: Updates an in-progress check run
       - complete: Completes a check run with a conclusion
     """
+
+    icons = {}
 
     class SubRun:
         """
@@ -121,6 +98,7 @@ class EventCheckRun:
             conclusion: CheckRunConclusion = None,
             update_check_run: bool = True,
         ) -> None:
+            """Update a sub run"""
             self.title = title or self.title
             self.status = status or self.status
             self.conclusion = conclusion or self.conclusion
@@ -159,6 +137,25 @@ class EventCheckRun:
             return result
         return None
 
+    @classmethod
+    def set_icons(cls) -> None:
+        """
+        Set the CheckRun icon set from SUB_RUNS_ICONS env.
+        :raises AttributeError: If the specified icon set is not found in the default configuration or if
+                                the icon set is not a string or a dictionary.
+        """
+        if icons_set := Config.SUB_RUNS_ICONS:
+            if isinstance(icons_set, str):
+                cls.icons = ICONS_DEFAULT.get(icons_set)
+                if cls.icons is None:
+                    raise AttributeError(
+                        f"There is no icon set '{icons_set} in default configuration. {ICONS_DEFAULT.keys()}"
+                    )
+            elif isinstance(icons_set, dict):
+                cls.icons = icons_set
+            else:
+                raise AttributeError(f"Icons set must be a string or a dictionary. {type(icons_set)}")
+
     def start(
         self,
         status: CheckRunStatus = CheckRunStatus.WAITING,
@@ -179,15 +176,16 @@ class EventCheckRun:
         )
 
     def update_sub_runs(self, title: str = None) -> None:
+        """Update the sub runs"""
         summary = self.build_summary(self.sub_runs)
         self.update(title=title, summary=summary)
 
-    @staticmethod
-    def build_summary(sub_runs: list[SubRun]) -> str:
+    @classmethod
+    def build_summary(cls, sub_runs: list[SubRun]) -> str:
         """Build the summary of the sub runs"""
         runs_summary = []
         for run in sub_runs:
-            if run_status_icon := ICONS.get(run.conclusion or run.status, ""):
+            if run_status_icon := cls.icons.get(run.conclusion or run.status, ""):
                 run_status_icon = f":{run_status_icon}: "
             runs_summary.append(f"{run_status_icon}{run.name}: {run.title}")
             if run.summary:
@@ -274,6 +272,7 @@ class EventCheckRun:
         )
 
     def create_sub_run(self, name: str) -> SubRun:
+        """Create a sub run"""
         sub_run = self.SubRun(self, name, status=CheckRunStatus.WAITING)
         self.sub_runs.append(sub_run)
         return sub_run

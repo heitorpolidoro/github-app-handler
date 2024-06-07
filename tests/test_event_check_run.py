@@ -8,7 +8,6 @@ from githubapp.event_check_run import (
     ICONS_DEFAULT,
     CheckRunConclusion,
     CheckRunStatus,
-    set_icons,
 )
 
 
@@ -40,10 +39,10 @@ def test_set_icons(sub_runs_icons, expected_icons):
     with patch.object(Config, "SUB_RUNS_ICONS", sub_runs_icons):
         if expected_icons == AttributeError:
             with pytest.raises(expected_icons):
-                set_icons()
+                EventCheckRun.set_icons()
         else:
-            set_icons()
-            assert event_check_run.ICONS == expected_icons
+            EventCheckRun.set_icons()
+            assert EventCheckRun.icons == expected_icons
 
 
 def test_start_check_run(event):

@@ -213,7 +213,7 @@ class TestCase(UnittestTestCase):
         if conclusion:
             assert github_check_run.conclusion == conclusion.value
 
-    def deliver(self, event_type: type[Event], **params) -> Event:
+    def deliver(self, event_type: type[Event], **params) -> Optional[Event]:
         """
         This method delivers an event of the specified type with the given parameters.
         It creates an event instance, updates the parameters, and then posts the event to the client.

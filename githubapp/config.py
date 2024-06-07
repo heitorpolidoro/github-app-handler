@@ -8,7 +8,7 @@ and provides access to those values via the ConfigValue class.
 import os
 from collections.abc import Callable
 from functools import wraps
-from typing import Any, NoReturn, TypeVar, Union
+from typing import Any, TypeVar, Union
 
 import yaml
 from github import GithubException, UnknownObjectException
@@ -44,7 +44,7 @@ class ConfigValue:
             else:
                 setattr(self, attr, value)
 
-    def create_config(self, name: str, *, default: AnyBasic = None, **values: AnyBasic) -> ConfigValueType:
+    def create_config(self, name: str, *, default: AnyBasic = None, **values: AnyBasic) -> "ConfigValue":
         """
         Create a configuration value and nested values.
 
