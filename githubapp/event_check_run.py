@@ -72,11 +72,11 @@ class EventCheckRun:
         """
 
         def __init__(
-                self,
-                parent_check_run: "EventCheckRun",
-                name: str,
-                status: CheckRunStatus = None,
-                summary: str = None,
+            self,
+            parent_check_run: "EventCheckRun",
+            name: str,
+            status: CheckRunStatus = None,
+            summary: str = None,
         ) -> None:
             self.parent_check_run = parent_check_run
             self.name = name
@@ -91,12 +91,12 @@ class EventCheckRun:
             return f"SubRun({_dict})"
 
         def update(
-                self,
-                title: str = None,
-                status: CheckRunStatus = None,
-                summary: str = None,
-                conclusion: CheckRunConclusion = None,
-                update_check_run: bool = True,
+            self,
+            title: str = None,
+            status: CheckRunStatus = None,
+            summary: str = None,
+            conclusion: CheckRunConclusion = None,
+            update_check_run: bool = True,
         ) -> None:
             """Update a sub run"""
             self.title = title or self.title
@@ -157,11 +157,11 @@ class EventCheckRun:
                 raise AttributeError(f"Icons set must be a string or a dictionary. {type(icons_set)}")
 
     def start(
-            self,
-            status: CheckRunStatus = CheckRunStatus.WAITING,
-            summary: str = None,
-            title: str = None,
-            text: str = None,
+        self,
+        status: CheckRunStatus = CheckRunStatus.WAITING,
+        summary: str = None,
+        title: str = None,
+        text: str = None,
     ) -> None:
         """Start a check run"""
         output = {"title": title or self.name, "summary": summary or ""}
@@ -194,13 +194,13 @@ class EventCheckRun:
         return summary
 
     def update(
-            self,
-            title: str = None,
-            status: CheckRunStatus = None,
-            summary: str = None,
-            conclusion: CheckRunConclusion = None,
-            text: str = None,
-            **output,
+        self,
+        title: str = None,
+        status: CheckRunStatus = None,
+        summary: str = None,
+        conclusion: CheckRunConclusion = None,
+        text: str = None,
+        **output,
     ) -> None:
         """Updates the check run"""
 
@@ -228,13 +228,13 @@ class EventCheckRun:
             self._check_run.edit(**args)
 
     def finish(
-            self,
-            title: str = None,
-            status: CheckRunStatus = None,
-            summary: str = None,
-            conclusion: CheckRunConclusion = None,
-            text: str = None,
-            **output,
+        self,
+        title: str = None,
+        status: CheckRunStatus = None,
+        summary: str = None,
+        conclusion: CheckRunConclusion = None,
+        text: str = None,
+        **output,
     ) -> None:
         """Finish the Check Run"""
         conclusions_list_order = {c: i for i, c in enumerate(CheckRunConclusion)}
