@@ -2,11 +2,13 @@
 
 import inspect
 import os
+import sys
 import traceback
 from collections import defaultdict
+from collections.abc import Callable
 from functools import wraps
 from importlib.metadata import version as get_version
-from typing import Any, Callable, Optional
+from typing import Any, Optional
 
 from github import Consts, Github, GithubIntegration, GithubRetry
 from github.AccessToken import AccessToken
@@ -14,7 +16,9 @@ from github.Auth import AppAuth, AppUserAuth, Auth, Token
 from github.Requester import Requester
 
 from githubapp import Config
+from githubapp.event_check_run import CheckRunConclusion, CheckRunStatus
 from githubapp.events.event import Event
+from githubapp.exceptions import GithubAppRuntimeException
 
 
 class SignatureError(Exception):
@@ -60,9 +64,7 @@ def add_handler(event: type[Event]) -> Callable[[Callable[[Event], None]], Calla
     return decorator
 
 
-def register_method_for_event(
-    event: type[Event], handler: Callable[[Event], None]
-) -> None:
+def register_method_for_event(event: type[Event], handler: Callable[[Event], None]) -> None:
     """Add a handler for a specific event type.
 
     The handler must accept only one argument of the Event type.
@@ -79,9 +81,7 @@ def register_method_for_event(
         handlers[event].append(handler)
 
 
-def _get_auth(
-    hook_installation_target_id: int = None, installation_id: int = None
-) -> Auth:
+def _get_auth(hook_installation_target_id: int = None, installation_id: int = None) -> Auth:
     """This method is used to get the authentication object for the GitHub API.
     It checks if the environment variables CLIENT_ID, CLIENT_SECRET, and TOKEN are set.
     If they are set, it uses the AppUserAuth object with the CLIENT_ID, CLIENT_SECRET, and TOKEN.
@@ -108,9 +108,7 @@ def _get_auth(
     return Token(token)
 
 
-def handle(
-    headers: dict[str, Any], body: dict[str, Any], config_file: str = None
-) -> None:
+def handle(headers: dict[str, Any], body: dict[str, Any], config_file: str = None) -> None:
     """Handle a webhook request.
 
     The request headers and body are passed to the appropriate handler methods.
@@ -144,16 +142,15 @@ def handle(
     try:
         for handler in handlers.get(event_class, []):
             handler(event)
-    except Exception:
+    except Exception as err:
         for cr in event.check_runs:
-            if cr.check_run.status != "completed":
-                cr.update(conclusion="failure", text=traceback.format_exc())
-        raise
+            if cr.status != CheckRunStatus.COMPLETED:
+                cr.finish(conclusion=CheckRunConclusion.FAILURE, text=traceback.format_exc())
+        if not isinstance(err, GithubAppRuntimeException):
+            raise
 
 
-def default_index(
-    name: str, version: str = None, versions_to_show: Optional[list] = None
-) -> Callable[[], str]:
+def default_index(name: str, version: str = None, versions_to_show: Optional[list[str]] = None) -> Callable[[], str]:
     """Decorator to register a default root handler.
 
     Args:
@@ -176,14 +173,7 @@ def default_index(
         """
         resp = f"<h1>{name} App up and running!</h1>"
         if versions_to_show_:
-            resp = (
-                resp
-                + "\n"
-                + "<br>".join(
-                    f"{name_}: {version_}"
-                    for name_, version_ in versions_to_show_.items()
-                )
-            )
+            resp = resp + "\n" + "<br>".join(f"{name_}: {version_}" for name_, version_ in versions_to_show_.items())
         return resp
 
     return wraps(root_wrapper)(root_wrapper)
@@ -207,7 +197,7 @@ def _validate_signature(method: Callable[[Event], None]) -> None:
 
 
 def handle_with_flask(
-    app,
+    app: "Flask",
     use_default_index: bool = True,
     webhook_endpoint: str = "/",
     auth_callback_handler: Optional[Callable[[int, AccessToken], None]] = None,
@@ -234,15 +224,32 @@ def handle_with_flask(
     Raises:
         TypeError: If the app parameter is not a Flask instance.
     """
-    from flask import Flask, request
+    from flask import Flask, Response, jsonify, request
 
     if not isinstance(app, Flask):
         raise TypeError("app must be a Flask instance")
 
     if use_default_index:
-        app.route("/", methods=["GET"])(
-            default_index(app.name, version=version, versions_to_show=versions_to_show)
-        )
+        app.route("/", methods=["GET"])(default_index(app.name, version=version, versions_to_show=versions_to_show))
+
+    @app.errorhandler(Exception)
+    def handle_error(e: Exception) -> tuple[Response, int]:
+        """Handles an exception that occurred during the execution of the application."""
+        tb_info = traceback.extract_tb(sys.exc_info()[2])
+        filename, line, func, _ = tb_info[-1]
+        response = {
+            "success": False,
+            "error": {
+                "message": str(e),
+                "exception_info": {
+                    "type": type(e).__name__,
+                    "filename": filename,
+                    "lineno": line,
+                    "func": func,
+                },
+            },
+        }
+        return jsonify(response), 500
 
     @app.route(webhook_endpoint, methods=["POST"])
     def webhook() -> str:
@@ -273,9 +280,7 @@ def handle_with_flask(
             installation_id = int(args.get("installation_id"))
             access_token = (
                 Github()
-                .get_oauth_application(
-                    os.getenv("CLIENT_ID"), os.getenv("CLIENT_SECRET")
-                )
+                .get_oauth_application(os.getenv("CLIENT_ID"), os.getenv("CLIENT_SECRET"))
                 .get_access_token(code)
             )
 

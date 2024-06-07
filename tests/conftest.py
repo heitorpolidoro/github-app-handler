@@ -3,6 +3,7 @@ from unittest.mock import Mock, patch
 
 import pytest
 from github.Auth import Auth
+from github.Repository import Repository
 
 from githubapp import webhook_handler
 from githubapp.events.event import Event
@@ -24,9 +25,7 @@ def requester():
 
 @pytest.fixture
 def mock_auth():
-    with patch(
-        "githubapp.webhook_handler._get_auth", return_value=Mock(autospec=Auth)
-    ) as mock:
+    with patch("githubapp.webhook_handler._get_auth", return_value=Mock(autospec=Auth)) as mock:
         yield mock
 
 
@@ -87,5 +86,5 @@ def event(event_action_request):
         sender=None,
         repository={},
     )
-    event.repository = Mock()
+    event.repository = Mock(spec=Repository)
     return event
