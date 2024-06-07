@@ -72,11 +72,11 @@ class EventCheckRun:
         """
 
         def __init__(
-            self,
-            parent_check_run: "EventCheckRun",
-            name: str,
-            status: CheckRunStatus = None,
-            summary: str = None,
+                self,
+                parent_check_run: "EventCheckRun",
+                name: str,
+                status: CheckRunStatus = None,
+                summary: str = None,
         ) -> None:
             self.parent_check_run = parent_check_run
             self.name = name
@@ -91,12 +91,12 @@ class EventCheckRun:
             return f"SubRun({_dict})"
 
         def update(
-            self,
-            title: str = None,
-            status: CheckRunStatus = None,
-            summary: str = None,
-            conclusion: CheckRunConclusion = None,
-            update_check_run: bool = True,
+                self,
+                title: str = None,
+                status: CheckRunStatus = None,
+                summary: str = None,
+                conclusion: CheckRunConclusion = None,
+                update_check_run: bool = True,
         ) -> None:
             """Update a sub run"""
             self.title = title or self.title
@@ -157,11 +157,11 @@ class EventCheckRun:
                 raise AttributeError(f"Icons set must be a string or a dictionary. {type(icons_set)}")
 
     def start(
-        self,
-        status: CheckRunStatus = CheckRunStatus.WAITING,
-        summary: str = None,
-        title: str = None,
-        text: str = None,
+            self,
+            status: CheckRunStatus = CheckRunStatus.WAITING,
+            summary: str = None,
+            title: str = None,
+            text: str = None,
     ) -> None:
         """Start a check run"""
         output = {"title": title or self.name, "summary": summary or ""}
@@ -194,13 +194,13 @@ class EventCheckRun:
         return summary
 
     def update(
-        self,
-        title: str = None,
-        status: CheckRunStatus = None,
-        summary: str = None,
-        conclusion: CheckRunConclusion = None,
-        text: str = None,
-        **output,
+            self,
+            title: str = None,
+            status: CheckRunStatus = None,
+            summary: str = None,
+            conclusion: CheckRunConclusion = None,
+            text: str = None,
+            **output,
     ) -> None:
         """Updates the check run"""
 
@@ -228,25 +228,28 @@ class EventCheckRun:
             self._check_run.edit(**args)
 
     def finish(
-        self,
-        title: str = None,
-        status: CheckRunStatus = None,
-        summary: str = None,
-        conclusion: CheckRunConclusion = None,
-        text: str = None,
-        **output,
+            self,
+            title: str = None,
+            status: CheckRunStatus = None,
+            summary: str = None,
+            conclusion: CheckRunConclusion = None,
+            text: str = None,
+            **output,
     ) -> None:
         """Finish the Check Run"""
         conclusions_list_order = {c: i for i, c in enumerate(CheckRunConclusion)}
         sub_run_name = None
+        sub_run_title = None
         for sub_run in self.sub_runs:
             if not sub_run.conclusion:
                 sub_run.update(conclusion=CheckRunConclusion.CANCELLED, update_check_run=False)
             if conclusion is None or conclusions_list_order[sub_run.conclusion] < conclusions_list_order[conclusion]:
                 conclusion = sub_run.conclusion
                 sub_run_name = None
+                sub_run_title = None
             if sub_run_name is None and conclusion == sub_run.conclusion:
                 sub_run_name = sub_run.name
+                sub_run_title = sub_run.title
 
         if conclusion is None:
             conclusion = CheckRunConclusion.STALE
@@ -255,6 +258,8 @@ class EventCheckRun:
             title = "Done"
         elif conclusion == CheckRunConclusion.SKIPPED:
             title = "Skipped"
+        elif title is None and sub_run_title:
+            title = sub_run_title
         elif title is None and sub_run_name:
             title = f"{sub_run_name}: {conclusion.value.title()}"
         else:

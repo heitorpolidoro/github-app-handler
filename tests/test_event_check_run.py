@@ -201,14 +201,14 @@ def test_finish_check_run(event, conclusion, expected_title):
         (
             CheckRunConclusion.SUCCESS,
             CheckRunConclusion.CANCELLED,
-            "sub 2: Cancelled",
+            "Sub 2 title",
             CheckRunConclusion.SKIPPED,
             None,
         ),
         (
             CheckRunConclusion.SUCCESS,
             CheckRunConclusion.FAILURE,
-            "sub 2: Failure",
+            "Sub 2 title",
             CheckRunConclusion.SKIPPED,
             CheckRunConclusion.FAILURE,
         ),
@@ -222,7 +222,7 @@ def test_finish_check_run(event, conclusion, expected_title):
         (
             CheckRunConclusion.SUCCESS,
             CheckRunConclusion.CANCELLED,
-            "sub 2: Cancelled",
+            "Sub 2 title",
             CheckRunConclusion.STALE,
             CheckRunConclusion.CANCELLED,
         ),
@@ -248,14 +248,14 @@ def test_finish_check_run_with_sub_runs(
     sub_run1 = check_run.create_sub_run("sub 1")
     sub_run2 = check_run.create_sub_run("sub 2")
 
-    sub_run1.conclusion = sub_run1_initial_conclusion
-    sub_run2.conclusion = sub_run2_initial_conclusion
+    sub_run1.update(conclusion=sub_run1_initial_conclusion, update_check_run=False)
+    sub_run2.update(title=f"Sub 2 title", conclusion=sub_run2_initial_conclusion, update_check_run=False)
     check_run.finish(conclusion=conclusion)
 
     check_run._check_run.edit.assert_called_once_with(
         status="completed",
         conclusion=expected_conclusion.value,
-        output={"summary": "sub 1: \nsub 2: ", "title": expected_title},
+        output={"summary": "sub 1: \nsub 2: Sub 2 title", "title": expected_title},
     )
     assert sub_run1.conclusion == sub_run1_initial_conclusion or CheckRunConclusion.CANCELLED
     assert sub_run2.conclusion == sub_run2_initial_conclusion or CheckRunConclusion.CANCELLED
