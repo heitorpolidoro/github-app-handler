@@ -1,4 +1,4 @@
-""" Github App Exceptions"""
+"""Github App Exceptions"""
 
 
 class GithubAppRuntimeException(Exception):

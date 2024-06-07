@@ -4,11 +4,7 @@ import pytest
 from github.CheckRun import CheckRun
 
 from githubapp import Config, EventCheckRun, event_check_run
-from githubapp.event_check_run import (
-    ICONS_DEFAULT,
-    CheckRunConclusion,
-    CheckRunStatus,
-)
+from githubapp.event_check_run import ICONS_DEFAULT, CheckRunConclusion, CheckRunStatus
 
 
 @pytest.fixture(autouse=True)
