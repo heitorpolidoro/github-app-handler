@@ -31,8 +31,7 @@ def mock_check_run(event):
     ],
 )
 def test_set_icons(sub_runs_icons, expected_icons):
-    event_check_run.ICONS = {}
-    with patch.object(Config, "SUB_RUNS_ICONS", sub_runs_icons):
+    with patch.object(Config, "SUB_RUNS_ICONS", sub_runs_icons), patch.object(EventCheckRun, "icons", {}):
         if expected_icons == AttributeError:
             with pytest.raises(expected_icons):
                 EventCheckRun.set_icons()
@@ -136,7 +135,7 @@ def test_sub_check_run_icons(event):
     check_run.start(title="title")
     sub_run1 = check_run.create_sub_run("sub 1")
     icons = {e: e.value for e in list(CheckRunStatus) + list(CheckRunConclusion)}
-    with patch("githubapp.event_check_run.ICONS", icons):
+    with patch.object(EventCheckRun, "icons", icons):
         for status in CheckRunStatus:
             sub_run1.update(status=status)
             check_run._check_run.edit.assert_called_with(output={"summary": f":{status.value}: sub 1: "})
