@@ -249,7 +249,11 @@ def test_finish_check_run_with_sub_runs(
     sub_run2 = check_run.create_sub_run("sub 2")
 
     sub_run1.update(conclusion=sub_run1_initial_conclusion, update_check_run=False)
-    sub_run2.update(title=f"Sub 2 title", conclusion=sub_run2_initial_conclusion, update_check_run=False)
+    sub_run2.update(
+        title=f"Sub 2 title",
+        conclusion=sub_run2_initial_conclusion,
+        update_check_run=False,
+    )
     check_run.finish(conclusion=conclusion)
 
     check_run._check_run.edit.assert_called_once_with(
