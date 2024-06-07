@@ -264,7 +264,14 @@ class EventCheckRun:
 
         summary = self.build_summary(self.sub_runs) or summary
 
-        self.update(conclusion=conclusion, title=title, summary=summary, text=text, status=status, **output)
+        self.update(
+            conclusion=conclusion,
+            title=title,
+            summary=summary,
+            text=text,
+            status=status,
+            **output,
+        )
 
     def create_sub_run(self, name: str) -> SubRun:
         sub_run = self.SubRun(self, name, status=CheckRunStatus.WAITING)

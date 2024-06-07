@@ -3,8 +3,13 @@ from unittest.mock import Mock, patch
 import pytest
 from github.CheckRun import CheckRun
 
-from githubapp import EventCheckRun, Config, event_check_run
-from githubapp.event_check_run import CheckRunStatus, CheckRunConclusion, set_icons, ICONS_DEFAULT
+from githubapp import Config, EventCheckRun, event_check_run
+from githubapp.event_check_run import (
+    ICONS_DEFAULT,
+    CheckRunConclusion,
+    CheckRunStatus,
+    set_icons,
+)
 
 
 @pytest.fixture(autouse=True)
@@ -106,7 +111,10 @@ def test_sub_check_run(event):
     sub_run1.update(title="sub 1 title", summary="sub 1 summary")
     check_run_edit = check_run._check_run.edit
     check_run_edit.assert_called_once_with(
-        output={"title": "sub 1 title", "summary": "sub 1: sub 1 title\nsub 1 summary\nsub 2: "}
+        output={
+            "title": "sub 1 title",
+            "summary": "sub 1: sub 1 title\nsub 1 summary\nsub 2: ",
+        }
     )
     check_run_edit.reset_mock()
     sub_run2.update(title="sub 2 title", summary="sub 2 summary")
@@ -146,7 +154,11 @@ def test_check_run_getattr(event):
     mocked_check_run = CheckRun(
         requester=Mock(),
         headers={},
-        attributes={"status": "queued", "conclusion": "success", "output": {"title": "title"}},
+        attributes={
+            "status": "queued",
+            "conclusion": "success",
+            "output": {"title": "title"},
+        },
         completed=True,
     )
     with patch.object(event.repository, "create_check_run", return_value=mocked_check_run):
@@ -175,7 +187,9 @@ def test_finish_check_run(event, conclusion, expected_title):
     check_run.finish(conclusion=conclusion)
     expected_conclusion = conclusion.value if conclusion else "stale"
     check_run._check_run.edit.assert_called_once_with(
-        status="completed", conclusion=expected_conclusion, output={"title": expected_title}
+        status="completed",
+        conclusion=expected_conclusion,
+        output={"title": expected_title},
     )
 
 
@@ -183,7 +197,13 @@ def test_finish_check_run(event, conclusion, expected_title):
     "conclusion,expected_conclusion,expected_title,sub_run1_initial_conclusion,sub_run2_initial_conclusion",
     [
         (None, CheckRunConclusion.CANCELLED, "sub 1: Cancelled", None, None),
-        (CheckRunConclusion.SUCCESS, CheckRunConclusion.CANCELLED, "sub 1: Cancelled", None, None),
+        (
+            CheckRunConclusion.SUCCESS,
+            CheckRunConclusion.CANCELLED,
+            "sub 1: Cancelled",
+            None,
+            None,
+        ),
         (
             CheckRunConclusion.SUCCESS,
             CheckRunConclusion.CANCELLED,
@@ -211,7 +231,8 @@ def test_finish_check_run(event, conclusion, expected_title):
             "sub 2: Cancelled",
             CheckRunConclusion.STALE,
             CheckRunConclusion.CANCELLED,
-        ),        (
+        ),
+        (
             CheckRunConclusion.FAILURE,
             CheckRunConclusion.FAILURE,
             "Failure",

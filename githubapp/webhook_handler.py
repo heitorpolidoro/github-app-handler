@@ -224,7 +224,7 @@ def handle_with_flask(
     Raises:
         TypeError: If the app parameter is not a Flask instance.
     """
-    from flask import Flask, jsonify, request, Response
+    from flask import Flask, Response, jsonify, request
 
     if not isinstance(app, Flask):
         raise TypeError("app must be a Flask instance")

@@ -2,7 +2,7 @@ import inspect
 import os
 from typing import Union
 from unittest import TestCase
-from unittest.mock import MagicMock, Mock, call, patch, ANY
+from unittest.mock import ANY, MagicMock, Mock, call, patch
 
 import pytest
 from flask import Flask
