@@ -102,12 +102,11 @@ class TestCaseAppHandler(TestCase):
         assert response.text == "index"
 
     @staticmethod
+    @patch.dict(os.environ, {"CLIENT_ID": "id", "CLIENT_SECRET": "secret"}, clear=True)
     def test_auth_callback():
         auth_callback = Mock()
         app = Flask("Test")
         handle_with_flask(app, auth_callback_handler=auth_callback)
-        os.environ["CLIENT_ID"] = "id"
-        os.environ["CLIENT_SECRET"] = "secret"
         with patch("githubapp.webhook_handler.Github") as gh:
             response = app.test_client().get(
                 "/auth-callback?code=user_code&installation_id=123456&setup_action=install"
