@@ -5,7 +5,7 @@ A handler helper to create GitHub App easily
 | |Code Quality| |CodeQL| |PyPi Package|
 | |Latest Version| |GitHub Release Date| |Documentation Status| |GitHub commits since latest release| |GitHub last commit|
 | |GitHub issues| |GitHub pull requests|
-
+|
 | |Coverage| |Quality Gate Status| |Security Rating| |Maintainability Rating| |Reliability Rating|
 | |Code Smells| |Duplicated Lines (%)| |Vulnerabilities| |Bugs| |Technical Debt|
 | |DeepSource|
