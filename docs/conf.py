@@ -18,7 +18,8 @@ release = "0.28.4"
 
 extensions = [
     "myst_parser",
-    # "sphinx.ext.autodoc",
+    "sphinx.ext.autodoc",
+    # "sphinx-autodoc2",
     # "sphinx.ext.intersphinx",
     # "sphinx.ext.viewcode",
     # "sphinxcontrib.bibtex",

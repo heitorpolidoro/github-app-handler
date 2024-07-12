@@ -16,3 +16,7 @@ Here's my admonition content.{sup}`1`
 
 $project
 
+```{eval-rst}
+.. autoclass:: ..githubapp.events.event.Event
+    :noindex:
+```
