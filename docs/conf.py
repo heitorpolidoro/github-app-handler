@@ -16,7 +16,17 @@ release = "0.28.4"
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ["myst_parser"]
+extensions = [
+    "myst_parser",
+    "sphinx.ext.autodoc",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.viewcode",
+    # "sphinxcontrib.bibtex",
+    #    "sphinx_panels",
+    # "sphinxext.rediraffe",
+    # "sphinxcontrib.mermaid",
+    # "sphinxext.opengraph",
+]
 myst_enable_extensions = ["colon_fence"]
 
 templates_path = ["_templates"]
