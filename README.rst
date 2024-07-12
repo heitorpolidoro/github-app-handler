@@ -1,16 +1,15 @@
 GithubAppHandler
 ================
-
 A handler helper to create GitHub App easily
 
-|Code Quality| |CodeQL| |PyPi Package| |Latest Version| |GitHub Release
-Date| |Documentation Status| |GitHub commits since latest release (by
-SemVer including pre-releases)| |GitHub last commit| |GitHub issues|
-|GitHub pull requests|
+| |Code Quality| |CodeQL| |PyPi Package|
+| |Latest Version| |GitHub Release Date| |Documentation Status| |GitHub commits since latest release| |GitHub last commit|
+| |GitHub issues| |GitHub pull requests|
 
-|Coverage| |Quality Gate Status| |Security Rating| |Maintainability
-Rating| |Reliability Rating| |Code Smells| |Duplicated Lines (%)|
-|Vulnerabilities| |Bugs| |Technical Debt| |DeepSource| |PyPI|
+| |Coverage| |Quality Gate Status| |Security Rating| |Maintainability Rating| |Reliability Rating|
+| |Code Smells| |Duplicated Lines (%)| |Vulnerabilities| |Bugs| |Technical Debt|
+| |DeepSource|
+| |PyPI|
 
 .. |Code Quality| image:: https://github.com/heitorpolidoro/github-app-handler/actions/workflows/code_quality.yml/badge.svg
    :target: https://github.com/heitorpolidoro/github-app-handler/actions/workflows/code_quality.yml
@@ -23,7 +22,7 @@ Rating| |Reliability Rating| |Code Smells| |Duplicated Lines (%)|
 .. |GitHub Release Date| image:: https://img.shields.io/github/release-date/heitorpolidoro/github-app-handler
 .. |Documentation Status| image:: https://readthedocs.org/projects/github-app-handler/badge/?version=latest
    :target: https://github-app-handler.readthedocs.io/en/latest/?badge=latest
-.. |GitHub commits since latest release (by SemVer including pre-releases)| image:: https://img.shields.io/github/commits-since/heitorpolidoro/github-app-handler/latest
+.. |GitHub commits since latest release| image:: https://img.shields.io/github/commits-since/heitorpolidoro/github-app-handler/latest
 .. |GitHub last commit| image:: https://img.shields.io/github/last-commit/heitorpolidoro/github-app-handler
 .. |GitHub issues| image:: https://img.shields.io/github/issues/heitorpolidoro/github-app-handler
    :target: https://github.com/heitorpolidoro/github-app-handler/issues
