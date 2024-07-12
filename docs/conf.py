@@ -11,7 +11,7 @@ https://www.sphinx-doc.org/en/master/usage/configuration.html#project-informatio
 project = "Github App Handler"
 copyright = "2024, Heitor Polidoro"
 author = "Heitor Polidoro"
-release = "0.28.4"
+# release = "0.28.4"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
