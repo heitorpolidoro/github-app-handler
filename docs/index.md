@@ -12,11 +12,18 @@ Here's my admonition content.{sup}`1`
 (header-label)=
 # A header
 
-[My reference](#header-label)
+[My rehference](#header-label)
 
-$project
+### Content
+```{toctree}
+:maxdepth: 2
 
-```{eval-rst}
-.. autoclass:: githubapp.events.event.Event
-    :noindex:
+Home <self>
+apidocs/index
 ```
+
+```{autodoc2-object} githubapp.events.event.Event
+render_plugin = "myst"
+no_index = true
+```
+
