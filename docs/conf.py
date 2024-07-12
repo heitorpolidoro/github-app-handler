@@ -18,7 +18,7 @@ author = "Heitor Polidoro"
 extensions = [
     "myst_parser",
     "sphinx.ext.autodoc",
-    "autodoc2"
+    "autodoc2",
     # "sphinx.ext.intersphinx",
     # "sphinx.ext.viewcode",
     # "sphinxcontrib.bibtex",
@@ -31,9 +31,7 @@ myst_enable_extensions = ["colon_fence"]
 
 # Autodoc2 Configuration
 autodoc2_render_plugin = "myst"
-autodoc2_packages = [
-    "../githubapp"
-]
+autodoc2_packages = ["../githubapp"]
 autodoc2_hidden_objects = ["inherited", "dunder", "private"]
 autodoc2_sort_names = True
 
@@ -45,4 +43,3 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 html_theme = "sphinx_rtd_theme"
 html_static_path = ["_static"]
-
