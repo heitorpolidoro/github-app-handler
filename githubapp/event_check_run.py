@@ -154,7 +154,9 @@ class EventCheckRun:
             elif isinstance(icons_set, dict):
                 cls.icons = icons_set
             else:
-                raise AttributeError(f"Icons set must be a string or a dictionary. {type(icons_set)}")
+                raise AttributeError(
+                    f"Icons set must be a string or a dictionary. {type(icons_set)}"
+                )
 
     def start(
         self,
@@ -221,7 +223,9 @@ class EventCheckRun:
         output = clean_dict(output) or None
         args = {
             "status": status.value if isinstance(status, Enum) else status,
-            "conclusion": conclusion.value if isinstance(conclusion, Enum) else conclusion,
+            "conclusion": conclusion.value
+            if isinstance(conclusion, Enum)
+            else conclusion,
             "output": output,
         }
         if args := clean_dict(args):
@@ -242,8 +246,14 @@ class EventCheckRun:
         sub_run_title = None
         for sub_run in self.sub_runs:
             if not sub_run.conclusion:
-                sub_run.update(conclusion=CheckRunConclusion.CANCELLED, update_check_run=False)
-            if conclusion is None or conclusions_list_order[sub_run.conclusion] < conclusions_list_order[conclusion]:
+                sub_run.update(
+                    conclusion=CheckRunConclusion.CANCELLED, update_check_run=False
+                )
+            if (
+                conclusion is None
+                or conclusions_list_order[sub_run.conclusion]
+                < conclusions_list_order[conclusion]
+            ):
                 conclusion = sub_run.conclusion
                 sub_run_name = None
                 sub_run_title = None
