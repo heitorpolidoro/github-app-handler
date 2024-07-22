@@ -10,7 +10,9 @@ from githubapp.event_check_run import ICONS_DEFAULT, CheckRunConclusion, CheckRu
 @pytest.fixture(autouse=True)
 def mock_check_run(event):
     repository = event.repository
-    repository.create_check_run.return_value = Mock(output=Mock(title=None, summary=None))
+    repository.create_check_run.return_value = Mock(
+        output=Mock(title=None, summary=None)
+    )
 
 
 @pytest.mark.parametrize(
@@ -31,7 +33,9 @@ def mock_check_run(event):
     ],
 )
 def test_set_icons(sub_runs_icons, expected_icons):
-    with patch.object(Config, "SUB_RUNS_ICONS", sub_runs_icons), patch.object(EventCheckRun, "icons", {}):
+    with patch.object(Config, "SUB_RUNS_ICONS", sub_runs_icons), patch.object(
+        EventCheckRun, "icons", {}
+    ):
         if expected_icons == AttributeError:
             with pytest.raises(expected_icons):
                 EventCheckRun.set_icons()
@@ -71,14 +75,18 @@ def test_update_check_run_with_only_conclusion(event):
     check_run = EventCheckRun(event.repository, "name", "sha")
     check_run.start(title="title")
     check_run.update(conclusion=CheckRunConclusion.SUCCESS)
-    check_run._check_run.edit.assert_called_with(status="completed", conclusion="success")
+    check_run._check_run.edit.assert_called_with(
+        status="completed", conclusion="success"
+    )
 
 
 def test_update_check_run_with_output(event):
     check_run = EventCheckRun(event.repository, "name", "sha")
     check_run.start(title="title", summary="summary")
     check_run.update(title="new_title", summary="new_summary")
-    check_run._check_run.edit.assert_called_with(output={"title": "new_title", "summary": "new_summary"})
+    check_run._check_run.edit.assert_called_with(
+        output={"title": "new_title", "summary": "new_summary"}
+    )
 
 
 def test_update_check_run_with_only_output_text(event):
@@ -87,7 +95,9 @@ def test_update_check_run_with_only_output_text(event):
     check_run._check_run.output.title = "title"
     check_run._check_run.output.summary = "summary"
     check_run.update(text="text")
-    check_run._check_run.edit.assert_called_with(output={"title": "title", "summary": "summary", "text": "text"})
+    check_run._check_run.edit.assert_called_with(
+        output={"title": "title", "summary": "summary", "text": "text"}
+    )
 
 
 def test_update_check_run_with_nothing(event):
@@ -119,7 +129,9 @@ def test_sub_check_run(event):
         }
     )
     check_run_edit.reset_mock()
-    sub_run1.update(title="sub 1 title", summary="sub 1 other summary", update_check_run=False)
+    sub_run1.update(
+        title="sub 1 title", summary="sub 1 other summary", update_check_run=False
+    )
     check_run_edit.assert_not_called()
     sub_run2.update(title="sub 2 title", summary="sub 2 other summary")
     check_run_edit.assert_called_once_with(
@@ -138,10 +150,14 @@ def test_sub_check_run_icons(event):
     with patch.object(EventCheckRun, "icons", icons):
         for status in CheckRunStatus:
             sub_run1.update(status=status)
-            check_run._check_run.edit.assert_called_with(output={"summary": f":{status.value}: sub 1: "})
+            check_run._check_run.edit.assert_called_with(
+                output={"summary": f":{status.value}: sub 1: "}
+            )
         for conclusion in CheckRunConclusion:
             sub_run1.update(conclusion=conclusion)
-            check_run._check_run.edit.assert_called_with(output={"summary": f":{conclusion.value}: sub 1: "})
+            check_run._check_run.edit.assert_called_with(
+                output={"summary": f":{conclusion.value}: sub 1: "}
+            )
 
 
 def test_check_run_getattr(event):
@@ -155,7 +171,9 @@ def test_check_run_getattr(event):
         },
         completed=True,
     )
-    with patch.object(event.repository, "create_check_run", return_value=mocked_check_run):
+    with patch.object(
+        event.repository, "create_check_run", return_value=mocked_check_run
+    ):
         check_run = EventCheckRun(event.repository, "name", "sha")
         assert check_run.anny_attr is None
         check_run.start()
@@ -249,7 +267,11 @@ def test_finish_check_run_with_sub_runs(
     sub_run2 = check_run.create_sub_run("sub 2")
 
     sub_run1.update(conclusion=sub_run1_initial_conclusion, update_check_run=False)
-    sub_run2.update(title=f"Sub 2 title", conclusion=sub_run2_initial_conclusion, update_check_run=False)
+    sub_run2.update(
+        title=f"Sub 2 title",
+        conclusion=sub_run2_initial_conclusion,
+        update_check_run=False,
+    )
     check_run.finish(conclusion=conclusion)
 
     check_run._check_run.edit.assert_called_once_with(
@@ -257,5 +279,11 @@ def test_finish_check_run_with_sub_runs(
         conclusion=expected_conclusion.value,
         output={"summary": "sub 1: \nsub 2: Sub 2 title", "title": expected_title},
     )
-    assert sub_run1.conclusion == sub_run1_initial_conclusion or CheckRunConclusion.CANCELLED
-    assert sub_run2.conclusion == sub_run2_initial_conclusion or CheckRunConclusion.CANCELLED
+    assert (
+        sub_run1.conclusion == sub_run1_initial_conclusion
+        or CheckRunConclusion.CANCELLED
+    )
+    assert (
+        sub_run2.conclusion == sub_run2_initial_conclusion
+        or CheckRunConclusion.CANCELLED
+    )
